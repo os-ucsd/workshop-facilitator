@@ -1,27 +1,20 @@
 import React from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
-
-import Home from "./routes/Home";
-import Create from "./routes/Create";
+import {BrowserRouter as Router, Route} from 'react-router-dom';
 import Host from "./routes/Host";
-import Join from "./routes/Join";
-import User from "./routes/User";
-
+import Home from "./routes/Home";
+import logo from './logo.svg';
 import './App.css';
 
-class App extends React.Component {
-  render() {
-    return(
+function App() {
+  return (
+    <div>
       <Router>
-
+        <Route exact path="/" component={Home}/>
+        <Route exact path="/home" component={Home}/>
+        <Route exact path="/host" component={Host}/>
       </Router>
-    )
-  }
+    </div>
+  );
 }
 
 export default App;
