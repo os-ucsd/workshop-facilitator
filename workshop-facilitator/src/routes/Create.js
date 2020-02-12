@@ -2,6 +2,7 @@ import React from 'react';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import "./Create.css";
 
 class Create extends React.Component{
     constructor(){
@@ -32,12 +33,12 @@ class Create extends React.Component{
                 <h1> Create page </h1>
                 {console.log("Rendered")}
 
-                <form onSubmit={this.submitForm} onChange={this.changeForms} >
-                    <TextField required id="nameForm" label="Required" defaultValue="John Smith" helperText = "Name" />
+                <form onSubmit={this.submitForm} onChange={this.changeForms} class = "CreateForm"  >
+                    <TextField required id="nameForm" label="Required" defaultValue="" helperText = "Name: John Smith" />
                     <br/>
                     <br/>
 
-                    <TextField required id="wsTitleForm" label="Required" defaultValue="React Workshop" helperText = "Workshop Title" />
+                    <TextField required id="wsTitleForm" label="Required" defaultValue="" helperText = "Workshop Title: React Workshop" />
                     <br/>
                     <br/>
 
