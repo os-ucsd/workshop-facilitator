@@ -1,4 +1,5 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -31,8 +32,7 @@ class Create extends React.Component{
         return(
             <div>
                 <h1> Create page </h1>
-                {console.log("Rendered")}
-
+                <NavLink to='/' >Back</NavLink>
                 <form onSubmit={this.submitForm} onChange={this.changeForms} class = "CreateForm"  >
                     <TextField required id="nameForm" label="Required" defaultValue="" helperText = "Name: John Smith" />
                     <br/>
