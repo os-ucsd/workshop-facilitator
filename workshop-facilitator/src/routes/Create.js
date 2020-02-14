@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import "./Create.css";
 
-import generateRandomCode from '../utils';
+import {generateRandomCode} from '../utils';
 
 class Create extends React.Component{
     constructor(){
