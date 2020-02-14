@@ -55,16 +55,18 @@ class Create extends React.Component{
 
         return(
             <div>
-                <h1> Create page </h1>
-                <Button variant="contained" color="primary" href="/">
-                  Back
-                </Button>
+                <div class = "BackButton">
+                    <Button variant="contained" color="primary" href="/">
+                      Back
+                    </Button>
+                </div>
+                <h1 class = "Title"> Create your workshop </h1>
                 <form onSubmit={this.submitForm} onChange={this.changeForms} class = "CreateForm"  >
-                    <TextField required multiline id="nameForm" label="Required" defaultValue="" helperText = "Name: John Smith" />
+                    <TextField required multiline fullWidth id="nameForm" label="Required" defaultValue="" helperText = "Name: John Smith" />
                     <br/>
                     <br/>
 
-                    <TextField required multiline id="wsTitleForm" label="Required" defaultValue="" helperText = "Workshop Title: React Workshop" />
+                    <TextField required multiline fullWidth id="wsTitleForm" label="Required" defaultValue="" helperText = "Workshop Title: React Workshop" />
                     <br/>
                     <br/>
 
