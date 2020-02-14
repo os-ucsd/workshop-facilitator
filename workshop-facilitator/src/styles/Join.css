@@ -1,4 +1,4 @@
-.Home{
+.Join {
   height: auto;
   text-align: center;
 }
@@ -17,14 +17,22 @@
   left: 50%;
 }
 
-.createLink {
+.TextField {
   margin: 0;
-  padding-right: 3%;
+  left: 50%;
+}
+
+.userLink {
+  margin: 0;
+  padding-left: 0%;
   width: 50px;
 }
 
-.joinLink {
+.back {
   margin: 0;
-  padding-left: 3%;
-  width: 50px;
+  position: absolute;
+  top: 3%;
+  left: 4%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
 }
