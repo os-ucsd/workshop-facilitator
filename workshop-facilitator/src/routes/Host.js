@@ -24,7 +24,7 @@ class Host extends React.Component {
         now, there exists a websocket between this client and our server, so
         we can emit events to our server 
         */
-        socket = io(this.state.ENDPOINT);
+        //socket = io(this.state.ENDPOINT);
     }
 
     render() {
