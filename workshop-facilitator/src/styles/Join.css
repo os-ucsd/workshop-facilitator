@@ -1,0 +1,38 @@
+.Join {
+  height: auto;
+  text-align: center;
+}
+
+.vertical-center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.Buttons {
+  margin: 0;
+  left: 50%;
+}
+
+.TextField {
+  margin: 0;
+  left: 50%;
+}
+
+.userLink {
+  margin: 0;
+  padding-left: 0%;
+  width: 50px;
+}
+
+.back {
+  margin: 0;
+  position: absolute;
+  top: 3%;
+  left: 4%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
