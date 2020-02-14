@@ -1,6 +1,7 @@
 .CreateForm{
     /* https://www.templatemonster.com/help/css-understanding-border-margin-and-padding-properties.html */
-    margin-left: 50px; /* defines space around the border */
+    margin-left: auto; /* defines space around the border */
+    margin-right: auto;
     padding-left: 25px; /* defines space between border and element */
     padding-bottom: 10px;
     width: 25%;
@@ -8,3 +9,11 @@
     border-width:3px;  
     border-style:groove;
 }
+
+.Title{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+

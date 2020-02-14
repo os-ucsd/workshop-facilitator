@@ -32,13 +32,15 @@ class Create extends React.Component{
         return(
             <div>
                 <h1> Create page </h1>
-                <NavLink to='/' >Back</NavLink>
+                <Button variant="contained" color="primary" href="/">
+                  Back
+                </Button>
                 <form onSubmit={this.submitForm} onChange={this.changeForms} class = "CreateForm"  >
-                    <TextField required id="nameForm" label="Required" defaultValue="" helperText = "Name: John Smith" />
+                    <TextField required multiline id="nameForm" label="Required" defaultValue="" helperText = "Name: John Smith" />
                     <br/>
                     <br/>
 
-                    <TextField required id="wsTitleForm" label="Required" defaultValue="" helperText = "Workshop Title: React Workshop" />
+                    <TextField required multiline id="wsTitleForm" label="Required" defaultValue="" helperText = "Workshop Title: React Workshop" />
                     <br/>
                     <br/>
 
