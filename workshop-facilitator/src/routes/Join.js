@@ -43,7 +43,7 @@ class Join extends React.Component {
               <br />
               <br />
               <br />
-              <Link to="/User" className="userLink" color="secondary">
+              <Link to="/user" className="userLink" color="secondary">
                 <Button width="100%" variant="contained" color="secondary">
                   Join
                 </Button>
