@@ -1,4 +1,4 @@
-.Buttons{
+.Home{
   height: auto;
   text-align: center;
 }
@@ -10,4 +10,21 @@
   left: 50%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+}
+
+.Buttons {
+  margin: 0;
+  left: 50%;
+}
+
+.createLink {
+  margin: 0;
+  padding-right: 3%;
+  width: 50px;
+}
+
+.joinLink {
+  margin: 0;
+  padding-left: 3%;
+  width: 50px;
 }
