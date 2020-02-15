@@ -1,0 +1,31 @@
+body{
+    padding: 0;
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+.qContainer{
+    background-color: #E8E8E8;
+    margin: 15px;
+    padding: 20px 25px;
+    border-radius: 15px;
+}
+
+.qText{
+    font-size: 20px;
+}
+
+.numUpvotes{
+    margin-left: 7px;
+    margin-bottom: 0;
+    font-size: 18px;
+}
+
+.upvoteClick{
+    transition-delay: all 0.3s ease;
+}
+
+.upvoteClick:hover{
+    color: #7BB4EA;
+    cursor: pointer;
+}
