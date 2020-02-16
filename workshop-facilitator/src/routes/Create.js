@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import "./Create.css";
+import "../styles/Create.css";
 
 import {generateRandomCode} from '../utils';
 

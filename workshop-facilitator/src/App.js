@@ -4,7 +4,6 @@ import Host from "./routes/Host";
 import Create from "./routes/Create";
 import Home from "./routes/Home";
 import Join from "./routes/Join";
-import logo from "./logo.svg";
 import "./App.css";
 
 function App() {

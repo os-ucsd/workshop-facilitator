@@ -1,7 +1,7 @@
 import React from "react";
 import Question from './Question';
 
-import './css/Questions.css';
+import '../styles/Questions.css';
 
 class Questions extends React.Component {
     constructor() {
