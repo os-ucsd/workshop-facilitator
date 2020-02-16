@@ -4,11 +4,27 @@ import Paper from "@material-ui/core/Paper";
 import Resources from "../components/Resources";
 import Questions from "../components/Questions";
 import Polls from "../components/Polls";
+import io from "socket.io-client";
+
+let socket;
 
 class Host extends React.Component {
     constructor() {
         super();
-        this.state = {}
+        this.state = {
+            ENDPOINT: "localhost:3000",
+        }
+    }
+
+    componentDidMount(){
+        /*
+        make the connection to the socket (when user visits this component, 
+        connection event will be emitted because of this connection)
+
+        now, there exists a websocket between this client and our server, so
+        we can emit events to our server 
+        */
+        //socket = io(this.state.ENDPOINT);
     }
 
     render() {
