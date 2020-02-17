@@ -9,10 +9,10 @@ class Poll extends React.Component {
     render() {
         return(
             <div>
-                <h2>Yo {this.props.question}</h2>
+                <h2>{this.props.id}. {this.props.question}</h2>
                 {
-                    Object.keys(this.props.options).forEach(option => 
-                        <p>{option} : {this.props.options[option]}</p>
+                    Object.keys(this.props.options).map(option => 
+                        <p>Yo {option} : {this.props.options[option]}</p>
                     )
                 }
             </div>

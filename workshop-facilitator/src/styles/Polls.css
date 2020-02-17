@@ -1,0 +1,20 @@
+.pollQuestion {
+    width: 1000px;
+    text-align: left;
+}
+
+.yeetmymeat{
+    padding: 25px;
+    border: 0;
+    margin: 10px;
+    font-size: 20px;
+    border-radius: 10px;
+    width: 84vw;
+    text-align: left;
+}
+
+.yeetmymeat:hover{
+    cursor: pointer;
+    background-color: red;
+    color: white;
+}

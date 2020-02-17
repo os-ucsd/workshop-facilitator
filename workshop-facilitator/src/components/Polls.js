@@ -1,5 +1,8 @@
 import React from "react";
 import Poll from "./Poll";
+import Button from '@material-ui/core/Button'
+
+import '../styles/Polls.css'
 
 class Polls extends React.Component {
     constructor() {
@@ -41,7 +44,21 @@ class Polls extends React.Component {
         })
     }
 
+    handleBack = (e) => {
+        this.setState({
+            ...this.state,
+            isEmptyState: true,
+            isPollState: false
+        })
+    }
+
     render() {
+        const poll = 
+        <div>
+            <button onClick={this.handleBack}>Back</button>
+            <Poll id = {this.state.poll.id} question={this.state.poll.question} options={this.state.poll.options}/>
+        </div>
+
         return (
             <div>
                 <h2>Polls</h2>
@@ -51,7 +68,7 @@ class Polls extends React.Component {
                     )
                 }
                 {
-                    this.state.isPollState && <Poll question={this.state.poll.question} options={this.state.poll.options}/>
+                    this.state.isPollState && poll
                 }
             </div>
         )
@@ -60,9 +77,10 @@ class Polls extends React.Component {
 
 const PollQuestion = props => {
     return (
-    <div>
-        {props.poll.id}. {props.poll.question}&nbsp;
-        <button onClick={props.handleClick} value={props.poll.id} >Publish</button>
+    <div >
+        <button className="yeetmymeat" onClick={props.handleClick} value={props.poll.id}>
+            {props.poll.id}. {props.poll.question}
+        </button>
     </div>
     )
 }
