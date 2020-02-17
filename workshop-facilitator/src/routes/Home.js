@@ -26,15 +26,15 @@ class Home extends React.Component {
   render() {
     return(
       <div className="Home">
-        <div class="vertical-center">
+        <div className="vertical-center">
           <h1>Are you creating or joining?</h1> <br/>
           <div className="Buttons">
-            <Link to ="/Create" className="createLink">
+            <Link to ="/create" className="createLink">
               <Button width="10%" variant="contained" color="primary">
                 Create
               </Button>
             </Link>
-            <Link to="/Join" className="joinLink">
+            <Link to="/join" className="joinLink">
               <Button width="100%"variant="contained" color="secondary">
                 Join
               </Button>

@@ -57,7 +57,7 @@ class Create extends React.Component{
             <div>
                 <h1> Create page </h1>
                 <NavLink to='/' >Back</NavLink>
-                <form onSubmit={this.submitForm} onChange={this.changeForms} class = "CreateForm"  >
+                <form onSubmit={this.submitForm} onChange={this.changeForms} className = "CreateForm"  >
                     <TextField required id="nameForm" label="Required" defaultValue="" helperText = "Name: John Smith" />
                     <br/>
                     <br/>

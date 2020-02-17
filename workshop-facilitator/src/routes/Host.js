@@ -12,7 +12,8 @@ class Host extends React.Component {
     constructor() {
         super();
         this.state = {
-            ENDPOINT: "localhost:3000",
+            // should be the same as the port you're using for client
+            ENDPOINT: "localhost:5000",
         }
     }
 
@@ -24,7 +25,7 @@ class Host extends React.Component {
         now, there exists a websocket between this client and our server, so
         we can emit events to our server 
         */
-        //socket = io(this.state.ENDPOINT);
+        socket = io(this.state.ENDPOINT);
     }
 
     render() {
