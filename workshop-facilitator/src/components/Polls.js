@@ -78,7 +78,7 @@ class Polls extends React.Component {
 const PollQuestion = props => {
     return (
     <div >
-        <button className="yeetmymeat" onClick={props.handleClick} value={props.poll.id}>
+        <button className="pollQuestion" onClick={props.handleClick} value={props.poll.id}>
             {props.poll.id}. {props.poll.question}
         </button>
     </div>

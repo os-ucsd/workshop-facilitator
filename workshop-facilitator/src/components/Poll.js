@@ -12,7 +12,7 @@ class Poll extends React.Component {
                 <h2>{this.props.id}. {this.props.question}</h2>
                 {
                     Object.keys(this.props.options).map(option => 
-                        <p>Yo {option} : {this.props.options[option]}</p>
+                        <p>{option} : {this.props.options[option]}</p>
                     )
                 }
             </div>
