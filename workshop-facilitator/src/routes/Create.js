@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import "./Create.css";
+import "../styles/Create.css";
 
 import {generateRandomCode} from '../utils';
 
@@ -12,7 +12,8 @@ class Create extends React.Component{
         super();
         this.state = {
             nameForm: "",
-            wsTitleForm: ""
+            wsTitleForm: "",
+            wsDescripForm: ""
         }
 
     }
@@ -27,7 +28,8 @@ class Create extends React.Component{
     submitForm = (evt) => {
         // prevents default action of form submit (which is a page refresh)
         evt.preventDefault();
-        alert("Form Submitted: Name: " + this.state.nameForm + " Title: " + this.state.wsTitleForm);
+        alert("Form Submitted: Name: " + this.state.nameForm + " Title: " + this.state.wsTitleForm
+        + "Description: " + this.state.wsDescripForm);
 
         // generate random 4 digit code
         let joinCode = generateRandomCode();
@@ -57,7 +59,7 @@ class Create extends React.Component{
             <div>
                 <div class = "BackButton">
                     <Button variant="contained" color="primary" href="/">
-                      Back
+                      Home
                     </Button>
                 </div>
                 <h1 class = "Title"> Create your workshop </h1>
@@ -70,7 +72,11 @@ class Create extends React.Component{
                     <br/>
                     <br/>
 
-                    <Button variant="contained" type="submit" >Submit</Button>
+                    <TextField required multiline fullWidth id="wsDescripForm" label="Required" defaultValue="" helperText = "Description: Learn some React!" />
+                    <br/>
+                    <br/>
+
+                    <div class = "SubmitButton" > <Button variant="contained" type="submit" >Submit</Button> </div>
 
                 </form>
             </div>
