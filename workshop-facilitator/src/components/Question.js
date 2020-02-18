@@ -1,15 +1,10 @@
 import React from 'react';
 import ArrowUpwardRoundedIcon from '@material-ui/icons/ArrowUpwardRounded';
-//import FaArrowUp from 'react-icons/lib/fa/arrow-up';
 import Grid from '@material-ui/core/Grid';
 
 import './css/Question.css';
 
 class Question extends React.Component{
-    constructor(){
-        super();
-    }
-
     addUpvote = evt => {
         evt.preventDefault();
         // increase upvote count and save to database
