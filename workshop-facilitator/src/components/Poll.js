@@ -1,5 +1,6 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid'
+
+import '../styles/Polls.css'
 
 class Poll extends React.Component {
     constructor(props) {
@@ -12,7 +13,7 @@ class Poll extends React.Component {
                 <h2>{this.props.id}. {this.props.question}</h2>
                 {
                     Object.keys(this.props.options).map(option => 
-                        <p>{option} : {this.props.options[option]}</p>
+                        <button className="poll" variant="contained">{option} : {this.props.options[option]}</button>
                     )
                 }
             </div>
