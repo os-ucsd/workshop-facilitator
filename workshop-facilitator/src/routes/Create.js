@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import "./Create.css";
+import "../styles/Create.css";
 
 import {generateRandomCode} from '../utils';
 
@@ -12,7 +12,8 @@ class Create extends React.Component{
         super();
         this.state = {
             nameForm: "",
-            wsTitleForm: ""
+            wsTitleForm: "",
+            wsDescripForm: ""
         }
 
     }
@@ -27,7 +28,8 @@ class Create extends React.Component{
     submitForm = (evt) => {
         // prevents default action of form submit (which is a page refresh)
         evt.preventDefault();
-        alert("Form Submitted: Name: " + this.state.nameForm + " Title: " + this.state.wsTitleForm);
+        alert("Form Submitted: Name: " + this.state.nameForm + " Title: " + this.state.wsTitleForm
+        + "Description: " + this.state.wsDescripForm);
 
         // generate random 4 digit code
         let joinCode = generateRandomCode();
@@ -55,18 +57,26 @@ class Create extends React.Component{
 
         return(
             <div>
-                <h1> Create page </h1>
-                <NavLink to='/' >Back</NavLink>
-                <form onSubmit={this.submitForm} onChange={this.changeForms} className = "CreateForm"  >
-                    <TextField required id="nameForm" label="Required" defaultValue="" helperText = "Name: John Smith" />
+                <div class = "BackButton">
+                    <Button variant="contained" color="primary" href="/">
+                      Home
+                    </Button>
+                </div>
+                <h1 class = "Title"> Create your workshop </h1>
+                <form onSubmit={this.submitForm} onChange={this.changeForms} class = "CreateForm"  >
+                    <TextField required multiline fullWidth id="nameForm" label="Name: John Smith" defaultValue="" helperText = "Required" />
                     <br/>
                     <br/>
 
-                    <TextField required id="wsTitleForm" label="Required" defaultValue="" helperText = "Workshop Title: React Workshop" />
+                    <TextField required multiline fullWidth id="wsTitleForm" label="Workshop Title: React Workshop" defaultValue="" helperText = "Required" />
                     <br/>
                     <br/>
 
-                    <Button variant="contained" type="submit" >Submit</Button>
+                    <TextField required multiline fullWidth id="wsDescripForm" label="Description: Learn some React!" defaultValue="" helperText = "Requried" />
+                    <br/>
+                    <br/>
+
+                    <div class = "SubmitButton" > <Button variant="contained" type="submit" >Submit</Button> </div>
 
                 </form>
             </div>
