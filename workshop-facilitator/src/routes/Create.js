@@ -65,6 +65,7 @@ class Create extends React.Component{
                 <h1 class = "Title"> Create your workshop </h1>
                 <form onSubmit={this.submitForm} onChange={this.changeForms} class = "CreateForm"  >
                     <TextField required multiline fullWidth id="nameForm" label="Required" defaultValue="" helperText = "Name: John Smith" />
+
                     <br/>
                     <br/>
 
