@@ -67,7 +67,7 @@ class User extends React.Component {
                             <form style={{width: this.state.collapsed ? "90vw" : "73vw"}} noValidate autoComplete = "off" onSubmit = {this.submitForm} onChange = {this.handleChange}>
                                 <TextField fullWidth placeholder="Ask a Question" id = "questiontxt" label = "Question" variant = "outlined" />
                             </form>
-                            <Button onClick={this.submitForm} variant = "containted" color = "primary">
+                            <Button style={{height: "6vh", width: "6vh"}} onClick={this.submitForm} variant = "containted" color = "primary">
                                 Submit
                             </Button>
                         </Grid>
@@ -75,8 +75,8 @@ class User extends React.Component {
                     
                     <div>
                         <Paper style={{height: "5vh" , width: "1vw"}}></Paper>  
-                        <Grid container>                                                              
-                            <Button style={{height: "95vh", width: "1vh"}} onClick={this.collapse} fullwidth variant="outlined"> {this.state.collapsed ? "<" : ">"} </Button>
+                        <Grid container style={{maxWidth: "28vh"}}>                                                              
+                            <Button style={{height: "95vh", width: "6vh"}} onClick={this.collapse} variant="outlined"> {this.state.collapsed ? "<" : ">"} </Button>
                             <Grid item xs={4}>
                                 <Paper style={{height: this.state.collapsed ? "0vh" : "93vh", width: this.state.collapsed ? "0vh" : "34vh"}}>
                                     {this.state.collapsed ? false : <Resources />}
