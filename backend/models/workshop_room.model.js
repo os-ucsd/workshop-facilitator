@@ -2,17 +2,17 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var roomSchema = new Schema({
-    hostCode: String,
+    hostCode: Number,
     name: String,
     joinCode: Number,
     resources: {
         name: String,
         link: String
     },
-    questions: {
+    questions: [{
         title: String,
         description: String
-    },
+    }],
     attendees: [String],
     wfclickers: [{
         clicker: String,
