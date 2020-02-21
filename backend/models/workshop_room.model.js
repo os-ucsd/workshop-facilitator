@@ -2,8 +2,12 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
 var roomSchema = new Schema({
-    hostCode: String,
+    hostCode: Number,
     name: String,
+    //added to reflect states in Create.js
+    wsTitle: String,
+    wsDescript: String,
+    //
     joinCode: Number,
     resources: {
         name: String,
