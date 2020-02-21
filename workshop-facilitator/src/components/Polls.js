@@ -1,8 +1,11 @@
 import React from "react";
 import Poll from "./Poll";
-import Button from '@material-ui/core/Button'
+import Button from '@material-ui/core/Button';
+import io_client from "socket.io-client";
 
 import '../styles/Polls.css'
+
+let socket;
 
 class Polls extends React.Component {
     constructor() {
@@ -34,6 +37,28 @@ class Polls extends React.Component {
         }
     }
 
+    componentDidMount(){
+        socket = io_client("http://localhost:5000");
+        
+        // listen for a publish event if a poll was published
+        socket.on("publish", pollData => {
+            this.setState({poll: pollData});
+        })
+
+        // should also make the http request to get all polls and store in state
+    }
+
+    publishPoll = evt => {
+        evt.preventDefault();
+        const pollId = evt.target.id;
+
+        // find poll in the array of polls
+        const poll = this.state.polls.filter(poll => poll._id === pollId);
+
+        // emit poll to server to emit to all clients
+        socket.emit("publish", {poll})
+    }
+
     triggerPollState = e => {
         let pollId = e.currentTarget.value - 1
         this.setState({
@@ -53,6 +78,7 @@ class Polls extends React.Component {
     }
 
     render() {
+        // make every poll's id the _id that mongodb creates for each poll when we send poll to db
         const poll = 
         <div>
             <button onClick={this.handleBack}>Back</button>

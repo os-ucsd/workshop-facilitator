@@ -26,7 +26,11 @@ const io = require('socket.io').listen(server);
 io.on("connection", socket => {
     console.log("user connected");
 
-    socket.emit("test");
+    // listen for when a new poll was sent out, show to all clients
+    socket.on("publish", pollData => {
+        // send poll question to all clients
+        io.sockets.emit("publish", pollData);
+    })
 
     // listen for disconnect event (when user leaves)
     socket.on("disconnect", () => {
