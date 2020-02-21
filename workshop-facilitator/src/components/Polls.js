@@ -90,7 +90,8 @@ class Polls extends React.Component {
                 <h2>Polls</h2>
                 {
                     this.state.polls.map(poll => 
-                        this.state.isEmptyState && <PollQuestion handleClick={this.triggerPollState} poll={poll}/>
+                        this.state.isEmptyState && <PollQuestion socket={socket} handleClick={this.triggerPollState} 
+                            poll={poll}/>
                     )
                 }
                 {
