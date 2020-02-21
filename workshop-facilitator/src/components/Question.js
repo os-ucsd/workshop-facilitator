@@ -2,7 +2,7 @@ import React from 'react';
 import ArrowUpwardRoundedIcon from '@material-ui/icons/ArrowUpwardRounded';
 import Grid from '@material-ui/core/Grid';
 
-import './css/Question.css';
+import '../styles/Question.css';
 
 class Question extends React.Component{
     addUpvote = evt => {

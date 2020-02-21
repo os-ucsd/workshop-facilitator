@@ -1,0 +1,29 @@
+.pollQuestion{
+    padding: 15px;
+    border: 0;
+    margin: 8px;
+    font-size: 20px;
+    border-radius: 10px;
+    width: 84vw;
+    text-align: left;
+}
+
+.pollQuestion:hover{
+    cursor: pointer;
+    background-color: gray;
+    color: white;
+}
+
+.poll {
+    padding: 20px;
+    border: 0;
+    margin: 5px;
+    width: 40vw;
+    border-radius: 10px;
+}
+
+.poll:hover{
+    cursor: pointer;
+    background-color: gray; 
+    color: white;
+}
