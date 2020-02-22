@@ -1,4 +1,8 @@
 import React from "react";
+// import FileUpload from "./FileUpload";
+import Upload from "./uploadComponents/Upload";
+import '../styles/Resources.css';
+import { Button } from "@material-ui/core";
 
 class Resources extends React.Component {
     constructor() {
@@ -15,6 +19,10 @@ class Resources extends React.Component {
                     <li>Resource 2</li>
                     <li>Resource 3</li>
                 </ul>
+                <div className="uploadBtn">
+                    <Button color="primary" variant="contained" href="/upload">Upload</Button>
+                </div>
+                
             </div>
         )
     }
