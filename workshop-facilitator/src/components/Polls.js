@@ -15,7 +15,7 @@ class Polls extends React.Component {
             isPollState: false,
             // template poll object
             polls: [{
-                id: 1,
+                _id: 1,
                 question: "hello, what is ree act?",
                 options: {
                     A: "A",
@@ -24,7 +24,7 @@ class Polls extends React.Component {
                     D: "D"
                 }
             }, {
-                id: 2,
+                _id: 2,
                 question: "question 2",
                 options: {
                     A: "1",
@@ -42,10 +42,31 @@ class Polls extends React.Component {
         
         // listen for a publish event if a poll was published
         socket.on("publish", pollData => {
-            this.setState({poll: pollData});
+            console.log("publishing...");
+            // show the newly published poll questions
+            this.setState({
+                //...this.state,
+                isEmptyState: false,
+                isPollState: true,
+                poll : pollData.pollData
+            })
         })
 
         // should also make the http request to get all polls and store in state
+    }
+
+    deletePoll = evt => {
+        evt.preventDefault();
+        const pollId = evt.target.id;
+
+        // find poll in the array of polls and remove it
+        const pollIndx = this.state.polls.findIndex(poll => poll._id === parseInt(pollId));
+        console.log(pollIndx);
+        this.setState(prevState => {
+            prevState.polls.splice(pollIndx, 1);
+            let polls = prevState.polls;
+            return {polls}
+        })
     }
 
     publishPoll = evt => {
@@ -53,10 +74,28 @@ class Polls extends React.Component {
         const pollId = evt.target.id;
 
         // find poll in the array of polls
-        const poll = this.state.polls.filter(poll => poll._id === pollId);
-
+        const poll = this.state.polls.filter(poll =>{
+            return poll._id === parseInt(pollId);
+        })
+        
         // emit poll to server to emit to all clients
-        socket.emit("publish", {poll})
+        socket.emit("publish", {pollData: poll[0]})
+    }
+
+    unpublishPoll = evt => {
+        evt.preventDefault();
+        const pollId = evt.target.id;
+
+        // close question from view
+        this.setState({
+            ...this.state,
+            isEmptyState: true,
+            isPollState: false
+        })
+        
+        console.log("unpublishing poll...");
+        // emit poll to server to emit to all clients
+        socket.emit("unpublish");
     }
 
     triggerPollState = e => {
@@ -78,11 +117,13 @@ class Polls extends React.Component {
     }
 
     render() {
+        console.log(this.state);
         // make every poll's id the _id that mongodb creates for each poll when we send poll to db
         const poll = 
         <div>
             <button onClick={this.handleBack}>Back</button>
-            <Poll id = {this.state.poll.id} question={this.state.poll.question} options={this.state.poll.options}/>
+            <button id={this.state.poll._id} onClick={this.unpublishPoll}>Unpublish</button>
+            <Poll id = {this.state.poll._id} question={this.state.poll.question} options={this.state.poll.options}/>
         </div>
 
         return (
@@ -90,8 +131,13 @@ class Polls extends React.Component {
                 <h2>Polls</h2>
                 {
                     this.state.polls.map(poll => 
-                        this.state.isEmptyState && <PollQuestion socket={socket} handleClick={this.triggerPollState} 
-                            poll={poll}/>
+                        this.state.isEmptyState && this.state.polls && this.state.polls.length > 0 && 
+                            <div>
+                                <PollQuestion socket={socket} handleClick={this.triggerPollState} 
+                                    poll={poll}/>
+                                <button id={poll._id} onClick={this.publishPoll}>Publish</button>
+                                <button id={poll._id} onClick={this.deletePoll}>Delete</button>
+                            </div>
                     )
                 }
                 {

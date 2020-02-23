@@ -27,14 +27,36 @@ let answerB = 0;
 let answerC = 0;
 let answerD = 0;
 
+let currPollQuestion = {};
+
 // io object will listen for connection event
 io.on("connection", socket => {
     console.log("user connected");
 
     // listen for when a new poll was sent out, show to all clients
     socket.on("publish", pollData => {
+        console.log("published", pollData);
+        // make sure only 1 question published at a time
+        if (currPollQuestion._id && currPollQuestion._id !== pollData.pollData._id){
+            socket.emit("error", {text: "there's an active question already"});
+            return;
+        }
+
+        // to keep track of what the current question is
+        currPollQuestion = pollData;
+
+        /*
+        TODO: add socket.on("publish") event to user view page, so the user can view the poll
+        */
         // send poll question to all clients
         io.sockets.emit("publish", pollData);
+    })
+
+    socket.on("unpublish", () => {
+        // reset to empty
+        currPollQuestion = {};
+        console.log("poll unpublished");
+        socket.emit("unpublish", {text: "unpublish complete"});
     })
 
     // listen for when an answer was submitted
@@ -44,7 +66,7 @@ io.on("connection", socket => {
             case "B": answerB++; break;
             case "C": answerC++; break;
             case "D": answerD++; break;
-            default: continue
+            default: break;
         }
     })
 

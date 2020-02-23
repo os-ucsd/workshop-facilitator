@@ -22,6 +22,7 @@ class Poll extends React.Component {
     }
 
     render() {
+        console.log(this.props);
         return(
             <div>
                 <h2>{this.props.id}. {this.props.question}</h2>
