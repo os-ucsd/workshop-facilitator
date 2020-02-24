@@ -9,17 +9,37 @@ import Typography from "@material-ui/core/Typography";
 import Resources from "../components/Resources";
 import Questions from "../components/Questions";
 import Polls from "../components/Polls";
+import io_client from "socket.io-client"
 
+
+let socket;
 
 class User extends React.Component {
     constructor() {
         super();
         this.state = {
-            questiontxt: "",
+            question: "",
             collapsed: false,
             // should be the same as the port you're using for server
-            //ENDPOINT: "localhost:5000",
+            ENDPOINT: "localhost:5000",
         }
+    }
+
+    componentDidMount(){
+        // make connection between this client and the server (which is active on port 5000)
+        socket = io_client(this.state.ENDPOINT);
+
+    }
+
+    postQuestion = (e) => {
+        e.preventDefault();
+        const newQst = this.state.question;
+        console.log(newQst);
+        // emit question for all users to see 
+        if (newQst) socket.emit("question", {question: newQst});
+
+        // clear chatbox
+        this.setState({question: ""})
     }
 
     collapse = () => {
@@ -32,11 +52,6 @@ class User extends React.Component {
         this.setState({
             [e.target.id]: e.target.value
         })
-    }
-
-    submitForm = (e) => {
-        e.preventDefault();
-        alert(this.state.questiontxt);
     }
 
     render() {
@@ -64,10 +79,10 @@ class User extends React.Component {
                         </Paper>
                         </Grid>
                         <Grid container>
-                            <form style={{width: this.state.collapsed ? "90vw" : "73vw"}} noValidate autoComplete = "off" onSubmit = {this.submitForm} onChange = {this.handleChange}>
-                                <TextField fullWidth placeholder="Ask a Question" id = "questiontxt" label = "Question" variant = "outlined" />
+                            <form style={{width: this.state.collapsed ? "90vw" : "73vw"}} noValidate autoComplete = "off" onSubmit = {this.postQuestion} onChange = {this.handleChange}>
+                                <TextField fullWidth placeholder="Ask a Question" id = "question" label = "Question" variant = "outlined" />
                             </form>
-                            <Button style={{height: "6vh", width: "6vh"}} onClick={this.submitForm} variant = "containted" color = "primary">
+                            <Button style={{height: "6vh", width: "6vh"}} onClick={this.postQuestion} variant = "containted" color = "primary">
                                 Submit
                             </Button>
                         </Grid>
@@ -85,7 +100,7 @@ class User extends React.Component {
                         </Grid>
                     </div>          
                     
-                </Grid>                
+                </Grid>         
             </div>
         )
     }
