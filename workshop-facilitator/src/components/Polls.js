@@ -33,7 +33,8 @@ class Polls extends React.Component {
                     D: "4"
                 }
             }],
-            poll: {}
+            poll: {},
+            answers: {}
         }
     }
 
@@ -49,6 +50,14 @@ class Polls extends React.Component {
                 isEmptyState: false,
                 isPollState: true,
                 poll : pollData.pollData
+            })
+        })
+
+        // listen for a getAnswers event to populate the state variable with user answers
+        socket.on("getAnswers", answers => {
+            console.log("getting answers...");
+            this.setState({
+                answers
             })
         })
 
@@ -108,6 +117,13 @@ class Polls extends React.Component {
         })
     }
 
+    getAnswers = evt => {
+        evt.preventDefault();
+
+        // emit socket event to get the answers and put it in the state
+        socket.emit("getAnswers");
+    }
+
     handleBack = (e) => {
         this.setState({
             ...this.state,
@@ -123,7 +139,7 @@ class Polls extends React.Component {
         <div>
             <button onClick={this.handleBack}>Back</button>
             <button id={this.state.poll._id} onClick={this.unpublishPoll}>Unpublish</button>
-            <Poll id = {this.state.poll._id} question={this.state.poll.question} options={this.state.poll.options}/>
+            <Poll socket={socket} id = {this.state.poll._id} question={this.state.poll.question} options={this.state.poll.options}/>
         </div>
 
         return (
@@ -133,10 +149,11 @@ class Polls extends React.Component {
                     this.state.polls.map(poll => 
                         this.state.isEmptyState && this.state.polls && this.state.polls.length > 0 && 
                             <div>
-                                <PollQuestion socket={socket} handleClick={this.triggerPollState} 
+                                <PollQuestion handleClick={this.triggerPollState} 
                                     poll={poll}/>
                                 <button id={poll._id} onClick={this.publishPoll}>Publish</button>
                                 <button id={poll._id} onClick={this.deletePoll}>Delete</button>
+                                <button id={poll._id} onClick={this.getAnswers}>Get Answers</button>
                             </div>
                     )
                 }

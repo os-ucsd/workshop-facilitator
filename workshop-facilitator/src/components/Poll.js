@@ -17,6 +17,8 @@ class Poll extends React.Component {
         const {socket} = this.props;
         const answer = evt.target.id;
 
+        console.log(this.props);
+
         // send the answer to the server
         socket.emit("answer", {answer});
     }
@@ -29,7 +31,8 @@ class Poll extends React.Component {
                 {
                     // key, id of each answer = the letter
                     Object.keys(this.props.options).map(option => 
-                        <button key={option} id={option} className="poll" variant="contained">
+                        <button key={option} id={option} className="poll" variant="contained" 
+                            onClick={this.sendAnswer}>
                             {option} : {this.props.options[option]}
                         </button>
                     )

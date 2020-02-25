@@ -38,7 +38,8 @@ io.on("connection", socket => {
         console.log("published", pollData);
         // make sure only 1 question published at a time
         if (currPollQuestion._id && currPollQuestion._id !== pollData.pollData._id){
-            socket.emit("error", {text: "there's an active question already"});
+            console.log("already published question, cannot publish");
+            socket.emit("error", {text: "there's an active question already", currPollQuestion: currPollQuestion});
             return;
         }
 
@@ -53,14 +54,24 @@ io.on("connection", socket => {
     })
 
     socket.on("unpublish", () => {
+        // store question and answers in db
+
         // reset to empty
         currPollQuestion = {};
+
+        // reset all answers
+        answerA = 0;
+        answerB = 0;
+        answerC = 0;
+        answerD = 0;
+
         console.log("poll unpublished");
         socket.emit("unpublish", {text: "unpublish complete"});
     })
 
     // listen for when an answer was submitted
     socket.on("answer", answerData => {
+        console.log(`answered ${answerData.answer}`);
         switch(answerData.answer){
             case "A": answerA++; break;
             case "B": answerB++; break;
