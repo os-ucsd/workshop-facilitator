@@ -5,6 +5,10 @@ import '../styles/Polls.css'
 class Poll extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            socket: null,
+        }
     }
 
     /*
@@ -24,10 +28,15 @@ class Poll extends React.Component {
     }
 
     render() {
-        console.log(this.props);
+        const {isPublished} = this.props;
+
         return(
             <div>
                 <h2>{this.props.id}. {this.props.question}</h2>
+                {
+                    // if this is the currently published question, show the host that it is published
+                    isPublished ? <p>Published</p> : null
+                }
                 {
                     // key, id of each answer = the letter
                     Object.keys(this.props.options).map(option => 

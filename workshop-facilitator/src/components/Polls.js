@@ -34,22 +34,28 @@ class Polls extends React.Component {
                 }
             }],
             poll: {},
-            answers: {}
+            answers: {},
+            publishedPoll: {},
         }
     }
 
     componentDidMount(){
         socket = io_client("http://localhost:5000");
-        
+
+        socket.on("err", errorData => {
+            alert(errorData.error);
+        })
+    
         // listen for a publish event if a poll was published
         socket.on("publish", pollData => {
-            console.log("publishing...");
+            console.log("publishing...", pollData);
             // show the newly published poll questions
             this.setState({
                 //...this.state,
                 isEmptyState: false,
                 isPollState: true,
-                poll : pollData.pollData
+                poll : pollData,
+                publishedPoll: pollData
             })
         })
 
@@ -99,7 +105,8 @@ class Polls extends React.Component {
         this.setState({
             ...this.state,
             isEmptyState: true,
-            isPollState: false
+            isPollState: false,
+            publishedPoll: {}
         })
         
         console.log("unpublishing poll...");
@@ -139,7 +146,8 @@ class Polls extends React.Component {
         <div>
             <button onClick={this.handleBack}>Back</button>
             <button id={this.state.poll._id} onClick={this.unpublishPoll}>Unpublish</button>
-            <Poll id={this.state.poll._id} question={this.state.poll.question} options={this.state.poll.options}/>
+            <Poll socket={socket} id={this.state.poll._id} question={this.state.poll.question} 
+                options={this.state.poll.options} isPublished={this.state.poll._id === this.state.publishedPoll._id}/>
         </div>
 
         return (
@@ -151,6 +159,9 @@ class Polls extends React.Component {
                             <div>
                                 <PollQuestion handleClick={this.triggerPollState} 
                                     poll={poll}/>
+                                {
+                                    poll._id === this.state.publishedPoll._id ? <p>Published</p> : null
+                                }
                                 <button id={poll._id} onClick={this.publishPoll}>Publish</button>
                                 <button id={poll._id} onClick={this.deletePoll}>Delete</button>
                                 <button id={poll._id} onClick={this.getAnswers}>Get Answers</button>

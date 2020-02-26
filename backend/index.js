@@ -35,22 +35,32 @@ io.on("connection", socket => {
 
     // listen for when a new poll was sent out, show to all clients
     socket.on("publish", pollData => {
-        console.log("published", pollData);
+        console.log(currPollQuestion);
         // make sure only 1 question published at a time
         if (currPollQuestion._id && currPollQuestion._id !== pollData.pollData._id){
             console.log("already published question, cannot publish");
-            socket.emit("error", {text: "there's an active question already", currPollQuestion: currPollQuestion});
-            return;
+            socket.emit("err", {error: "there's an active question already", currPollQuestion: currPollQuestion});
         }
+        else if (currPollQuestion && currPollQuestion._id === pollData.pollData._id){
+            // if trying to publish the same question
+            console.log("this question is already published");
+            const err = {
+                error: "this question already published"
+            }
+            socket.emit("err", err)
+        }
+        else{
+            console.log("published", pollData);
+            // to keep track of what the current question is
+            console.log(pollData.pollData);
+            currPollQuestion = pollData.pollData;
 
-        // to keep track of what the current question is
-        currPollQuestion = pollData;
-
-        /*
-        TODO: add socket.on("publish") event to user view page, so the user can view the poll
-        */
-        // send poll question to all clients
-        io.sockets.emit("publish", pollData);
+            /*
+            TODO: add socket.on("publish") event to user view page, so the user can view the poll
+            */
+            // send poll question to all clients and allow host to know which question is published
+            io.sockets.emit("publish", currPollQuestion);
+        }
     })
 
     socket.on("unpublish", () => {
