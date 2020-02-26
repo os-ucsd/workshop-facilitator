@@ -139,7 +139,7 @@ class Polls extends React.Component {
         <div>
             <button onClick={this.handleBack}>Back</button>
             <button id={this.state.poll._id} onClick={this.unpublishPoll}>Unpublish</button>
-            <Poll socket={socket} id = {this.state.poll._id} question={this.state.poll.question} options={this.state.poll.options}/>
+            <Poll id={this.state.poll._id} question={this.state.poll.question} options={this.state.poll.options}/>
         </div>
 
         return (
@@ -168,8 +168,8 @@ class Polls extends React.Component {
 const PollQuestion = props => {
     return (
     <div >
-        <button className="pollQuestion" onClick={props.handleClick} value={props.poll.id}>
-            {props.poll.id}. {props.poll.question}
+        <button className="pollQuestion" onClick={props.handleClick} value={props.poll._id}>
+            {props.poll._id}. {props.poll.question}
         </button>
     </div>
     )
