@@ -66,6 +66,13 @@ io.on("connection", socket => {
     socket.on("unpublish", () => {
         // store question and answers in db
 
+        // check if there was a poll actually published before this
+        if (! currPollQuestion._id){
+            console.log("no poll published, so can't unpublish");
+            socket.emit("err", {error: "no question is currently published"});
+            return;
+        }
+
         // reset to empty
         currPollQuestion = {};
 
@@ -89,6 +96,11 @@ io.on("connection", socket => {
             case "D": answerD++; break;
             default: break;
         }
+    })
+
+    // listen for when answer should be shown, then send to all sockets
+    socket.on("showAnswer", answer => {
+        io.sockets.emit("showAnswer", answer);
     })
 
     // listen for when the host wants to see the answers

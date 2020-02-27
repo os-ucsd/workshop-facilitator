@@ -11,6 +11,7 @@ class Polls extends React.Component {
     constructor() {
         super();
         this.state = {
+            showAnswer: false,
             isEmptyState: true,
             isPollState: false,
             // template poll object
@@ -22,7 +23,8 @@ class Polls extends React.Component {
                     B: "B",
                     C: "C",
                     D: "D"
-                }
+                },
+                answer: "C"
             }, {
                 _id: 2,
                 question: "question 2",
@@ -31,7 +33,8 @@ class Polls extends React.Component {
                     B: "2",
                     C: "3",
                     D: "4"
-                }
+                },
+                answer: "B"
             }],
             poll: {},
             answers: {},
@@ -67,6 +70,14 @@ class Polls extends React.Component {
             })
         })
 
+        // listen for showanswer event and set the showanswer state to previous
+        socket.on("showAnswer", answer => {
+            console.log("showing answer...");
+            this.setState(prevState => {
+                return {showAnswer: !prevState.showAnswer};
+            })
+        })
+        
         // should also make the http request to get all polls and store in state
     }
 
@@ -131,6 +142,13 @@ class Polls extends React.Component {
         socket.emit("getAnswers");
     }
 
+    showAnswer = evt => {
+        evt.preventDefault();
+
+        // emit show answer event so users can see the answer on their screen too
+        socket.emit("showAnswer", {answer: this.state.poll.answer});
+    }
+
     handleBack = (e) => {
         this.setState({
             ...this.state,
@@ -141,13 +159,22 @@ class Polls extends React.Component {
 
     render() {
         console.log(this.state);
+        // prop sent from host or user page determining if the current user is a host or user
+        const {isHost} = this.props;
+
         // make every poll's id the _id that mongodb creates for each poll when we send poll to db
         const poll = 
         <div>
             <button onClick={this.handleBack}>Back</button>
             <button id={this.state.poll._id} onClick={this.unpublishPoll}>Unpublish</button>
+            <button id={this.state.poll._id} onClick={this.showAnswer}>Answer</button>
+            {/*
             <Poll socket={socket} id={this.state.poll._id} question={this.state.poll.question} 
-                options={this.state.poll.options} isPublished={this.state.poll._id === this.state.publishedPoll._id}/>
+                options={this.state.poll.options} showAnswer={this.state.showAnswer} isPublished={this.state.poll._id === this.state.publishedPoll._id}
+                isHost={isHost}/>
+            */}
+            <Poll socket={socket} id={this.state.poll._id} poll={this.state.poll} showAnswer={this.state.showAnswer} 
+                isPublished={this.state.poll._id === this.state.publishedPoll._id} isHost={isHost}/>
         </div>
 
         return (

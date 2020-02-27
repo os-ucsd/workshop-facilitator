@@ -5,10 +5,6 @@ import '../styles/Polls.css'
 class Poll extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            socket: null,
-        }
     }
 
     /*
@@ -28,21 +24,37 @@ class Poll extends React.Component {
     }
 
     render() {
-        const {isPublished} = this.props;
+        const {isPublished, isHost, showAnswer, poll} = this.props;
 
         return(
             <div>
-                <h2>{this.props.id}. {this.props.question}</h2>
+                <h2>{poll._id}. {poll.question}</h2>
                 {
                     // if this is the currently published question, show the host that it is published
                     isPublished ? <p>Published</p> : null
                 }
+
+                {
+                    // show the answer if set to true
+                    showAnswer ? <p>{poll.answer}</p> : null
+                }
+                   
                 {
                     // key, id of each answer = the letter
-                    Object.keys(this.props.options).map(option => 
+                    Object.keys(poll.options).map(option => 
+                        // if a host, don't let them submit an answer
+                        isHost ? 
+                        <button key={option} id={option} className="poll" variant="contained" onClick={this.sendAnswer} 
+                            style={{
+                                backgroundColor: showAnswer && option === poll.answer ? "black" : "#E3E3E3",
+                                color: showAnswer && option === poll.answer ? "white" : "black"}} 
+                            disabled>
+                            {option} : {poll.options[option]}
+                        </button> :
+                        // if not a host, allow answering
                         <button key={option} id={option} className="poll" variant="contained" 
                             onClick={this.sendAnswer}>
-                            {option} : {this.props.options[option]}
+                            {option} : {poll.options[option]}
                         </button>
                     )
                 }
