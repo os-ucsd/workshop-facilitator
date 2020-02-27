@@ -10,7 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Upload from "../components/uploadComponents/Upload";
 
-import "../styles/Home.css";
+import "../styles/UploadFiles.css";
 
 const useStyles = makeStyles(theme => ({
     root: {
