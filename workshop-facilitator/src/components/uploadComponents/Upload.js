@@ -36,7 +36,7 @@ class Upload extends Component {
           <img
             className="CheckIcon"
             alt="done"
-            src="../../../public/check_circle_outline-24px.svg"
+            src="check_circle_outline-24px.svg"
             style={{
               opacity:
                 uploadProgress && uploadProgress.state === "done" ? 0.5 : 0
@@ -64,7 +64,7 @@ class Upload extends Component {
       return (
         <Button
           variant="contained"
-          disabled={this.state.files.length < 0 || this.state.uploading}
+          disabled={this.state.files.length == 0 || this.state.uploading}
           onClick={this.uploadFiles}
         >
           Upload

@@ -9,7 +9,7 @@
     font-size: calc(10px + 2vmin);
 }
   
-.Card {
+.UploadCard {
     background-color: white;
     padding: 32px;
     width: 50%;

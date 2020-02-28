@@ -18,3 +18,6 @@
 .Highlight {
     background-color: rgb(188, 185, 236);
 }
+.FileInput {
+    display: none;
+  }

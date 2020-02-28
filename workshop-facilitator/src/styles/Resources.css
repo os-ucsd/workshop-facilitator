@@ -1,6 +1,12 @@
+.ResourceFiles{
+    text-align: left;
+    padding-left: 2%;
+    background-color: aqua;
+}
 .uploadBtn{
-    bottom: 0px;
+    bottom: 2%;
     position: absolute;
     display: inline-block;
     justify-content: center;
+    width: inherit;
 }

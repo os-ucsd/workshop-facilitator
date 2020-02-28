@@ -2,7 +2,8 @@
     width: 100%;
     height: 8px;
     background-color: rgb(183, 155, 229);
-    border-radius: 5px;
+    border-radius: 20px;
+    margin-bottom: 3px;
 }
   
 .Progress {

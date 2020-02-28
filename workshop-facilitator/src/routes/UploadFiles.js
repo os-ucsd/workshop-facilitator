@@ -24,7 +24,7 @@ class UploadFiles extends React.Component {
     render() {
         return (
             <div className="Container">
-                <div className="Card">
+                <div className="UploadCard">
                     <Upload />
                 </div>
             </div>

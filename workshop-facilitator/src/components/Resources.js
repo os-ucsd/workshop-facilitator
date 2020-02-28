@@ -13,12 +13,14 @@ class Resources extends React.Component {
     render() {
         return (
             <div>
-                <h2>Resources</h2>
-                <ul>
-                    <li>Resource 1</li>
-                    <li>Resource 2</li>
-                    <li>Resource 3</li>
-                </ul>
+                <div className="ResourceFiles">
+                    <h2>Resources</h2>
+                    <ul>
+                        <li>Resource 1</li>
+                        <li>Resource 2</li>
+                        <li>Resource 3</li>
+                    </ul>
+                </div>
                 <div className="uploadBtn">
                     <Button color="primary" variant="contained" href="/upload">Upload</Button>
                 </div>

@@ -30,6 +30,8 @@
     align-items: flex-end;
     flex-direction: column;
     margin-top: 32px;
+    padding-bottom: 5px;
+    padding-right: 5px;
 }
   
 .Title {

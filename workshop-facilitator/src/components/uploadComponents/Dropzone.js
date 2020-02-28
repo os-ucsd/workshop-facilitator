@@ -73,7 +73,7 @@ class Dropzone extends Component {
                 <img
                     alt="upload"
                     className="Icon"
-                    src="../../../public/cloud_upload-24px.svg"
+                    src="cloud_upload-24px.svg"
                 />
                 <input
                     ref={this.fileInputRef}
