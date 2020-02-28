@@ -24,7 +24,18 @@ class Poll extends React.Component {
     }
 
     render() {
-        const {isPublished, isHost, showAnswer, poll} = this.props;
+        const {isPublished, isHost, showAnswer, poll, userAnswers} = this.props;
+        console.log(userAnswers);
+
+        // calculate what % of users voted for which answer if there exists any answers
+        const totAnswers = userAnswers.answerA ? 
+            userAnswers.answerA + userAnswers.answerB + userAnswers.answerC + userAnswers.answerD : 0;
+        console.log(totAnswers);
+        const percentA = userAnswers.answerA ? Math.floor((userAnswers.answerA / totAnswers) * 100) : 0;
+        const percentB = userAnswers.answerB ? Math.floor((userAnswers.answerB / totAnswers) * 100) : 0;
+        const percentC = userAnswers.answerC ? Math.floor((userAnswers.answerC / totAnswers) * 100) : 0;
+        const percentD = userAnswers.answerD ? Math.floor((userAnswers.answerD / totAnswers) * 100) : 0;
+        console.log(percentA, percentB, percentC, percentD);
 
         return(
             <div>
@@ -47,9 +58,24 @@ class Poll extends React.Component {
                         <button key={option} id={option} className="poll" variant="contained" onClick={this.sendAnswer} 
                             style={{
                                 backgroundColor: showAnswer && option === poll.answer ? "black" : "#E3E3E3",
-                                color: showAnswer && option === poll.answer ? "white" : "black"}} 
+                                color: showAnswer && option === poll.answer ? "white" : "black",
+                            }} 
                             disabled>
-                            {option} : {poll.options[option]}
+                            {
+                                // if published, able to show answers. if not, then don't show any answers
+                                isPublished ? 
+                                    <div style={{
+                                        float: "left", backgroundColor: "#B2CEDE", 
+                                        width: `${option === "A" ? percentA : 
+                                            option === "B" ? percentB : option === "C" ? percentC :
+                                            option === "D" ? percentD : 0}%`, 
+                                        height: "80%", borderRadius: "10px",
+                                        margin: "5px"}}>
+                                    </div> : null
+                            }
+                            <p>
+                                {option} : {poll.options[option]}
+                            </p>
                         </button> :
                         // if not a host, allow answering
                         <button key={option} id={option} className="poll" variant="contained" 
