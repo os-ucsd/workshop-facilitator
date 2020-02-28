@@ -1,35 +1,34 @@
 import React from "react";
 import Question from './Question';
-
+import io_client from "socket.io-client";
 import '../styles/Questions.css';
+
+let socket;
 
 class Questions extends React.Component {
     constructor() {
         super();
         this.state = {
-            // template question object
-            questions: [{
-                id: 1,
-                question: "hello, what is ree act?",
-                upvotes: 0
-            }, {
-                id: 2,
-                question: "fuck u",
-                upvotes: 5
-            }, {
-                id: 3,
-                question: "fuck u",
-                upvotes: 5
-            }, {
-                id: 4,
-                question: "fuck u",
-                upvotes: 5
-            }]
+            questions: [],
+            curID: 1,
+            ENDPOINT: "localhost:5000",
         }
     }
 
     componentDidMount(){
-        // make axios request to get list of questions
+        socket = io_client(this.state.ENDPOINT);
+
+        // listen for when the server sends a new question that some client sent
+        socket.on("question", data => {
+          // update the questions to include the new question 
+          this.setState(prevState => {
+            const questions = prevState.questions.push({id:this.state.curID, question:data.question, upvotes:0});
+            return questions;
+          })
+        })    
+        this.setState({
+            curID: this.state.curID + 1
+        })
     }
 
     render() {

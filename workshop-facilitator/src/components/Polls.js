@@ -79,6 +79,16 @@ class Polls extends React.Component {
             })
         })
 
+        socket.on("unpublish", () => {
+            // close question from view when successfully unpublished
+            this.setState({
+                ...this.state,
+                isEmptyState: true,
+                isPollState: false,
+                publishedPoll: {}
+            })
+        })
+
         // listen for a getAnswers event to populate the state variable with user answers
         socket.on("getAnswers", answers => {
             console.log("getting answers...");
@@ -166,18 +176,11 @@ class Polls extends React.Component {
     unpublishPoll = evt => {
         evt.preventDefault();
         const pollId = evt.target.id;
-
-        // close question from view
-        this.setState({
-            ...this.state,
-            isEmptyState: true,
-            isPollState: false,
-            publishedPoll: {}
-        })
         
         console.log("unpublishing poll...");
-        // emit poll to server to emit to all clients
-        socket.emit("unpublish");
+        // emit poll to server to emit to all clients and send poll that you
+        // are trying to unpublish to make sure its the same as the current poll
+        socket.emit("unpublish", pollId);
     }
 
     triggerPollState = e => {
@@ -216,13 +219,19 @@ class Polls extends React.Component {
         console.log(this.state);
         // prop sent from host or user page determining if the current user is a host or user
         const {isHost} = this.props;
+        const {publishedPoll} = this.state;
 
         // make every poll's id the _id that mongodb creates for each poll when we send poll to db
         const poll = 
         <div>
             <button onClick={this.handleBack}>Back</button>
             <button id={this.state.poll._id} onClick={this.unpublishPoll}>Unpublish</button>
-            <button id={this.state.poll._id} onClick={this.showAnswer}>Answer</button>
+            <button id={this.state.poll._id} onClick={this.showAnswer}>
+                {
+                    // change the text of the button depending on if the user has the answer shown or hidden
+                    this.state.showAnswer ? "Hide Answer" : "Show Answer"
+                }
+            </button>
             {/*
             <Poll socket={socket} id={this.state.poll._id} question={this.state.poll.question} 
                 options={this.state.poll.options} showAnswer={this.state.showAnswer} isPublished={this.state.poll._id === this.state.publishedPoll._id}
@@ -236,22 +245,28 @@ class Polls extends React.Component {
             <div>
                 <h2>Polls</h2>
                 {
-                    this.state.polls.map(poll => 
-                        this.state.isEmptyState && this.state.polls && this.state.polls.length > 0 && 
-                            <div>
-                                <PollQuestion handleClick={this.triggerPollState} 
-                                    poll={poll}/>
-                                {
-                                    poll._id === this.state.publishedPoll._id ? <p>Published</p> : null
-                                }
-                                <button id={poll._id} onClick={this.publishPoll}>Publish</button>
-                                <button id={poll._id} onClick={this.deletePoll}>Delete</button>
-                                <button id={poll._id} onClick={this.getAnswers}>Get Answers</button>
-                            </div>
-                    )
+                    // show list of questions if host and nothing if user -- user only sees published posts
+                    isHost ? 
+                        this.state.polls.map(poll => 
+                            this.state.isEmptyState && this.state.polls && this.state.polls.length > 0 && 
+                                <div>
+                                    <PollQuestion handleClick={this.triggerPollState} 
+                                        poll={poll}/>
+                                    {
+                                        poll._id === publishedPoll._id ? <p>Published</p> : null
+                                    }
+                                    <button id={poll._id} onClick={this.publishPoll}>Publish</button>
+                                    <button id={poll._id} onClick={this.deletePoll}>Delete</button>
+                                    <button id={poll._id} onClick={this.getAnswers}>Get User Answers</button>
+                                </div>
+                        ) : 
+                        // if there's a published poll, show it for the user and if not, show nothing
+                        publishedPoll._id ? 
+                            <Poll socket={socket} id={publishedPoll._id} poll={publishedPoll} showAnswer={this.state.showAnswer} 
+                                isPublished={true} isHost={isHost}/> : null
                 }
                 {
-                    this.state.isPollState && poll
+                    isHost ? this.state.isPollState && poll : null
                 }
                 <br></br>
                 <Button variant="contained" color="primary" onClick={this.handleOpen}>Add Poll</Button>
