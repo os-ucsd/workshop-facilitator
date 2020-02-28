@@ -63,7 +63,7 @@ class Create extends React.Component{
         //using .text() instead of .json to avoid errors
         .then((resp) => resp.text())
         // if success and data was sent back, log the data
-        .then((data) => console.log("Success", data))
+        .then((data) => console.log("Success. here is the resp.() dump: ", data))
         // if failure, log the error
         .catch((err) => console.log("Error", err));
 
@@ -91,7 +91,7 @@ class Create extends React.Component{
         return(
             <div>
                 <div className = "BackButton">
-                    <Button variant="contained" color="primary" href="/">
+                    <Button variant="contained" color="primary" href="/" className = "BackButton">
                       Home
                     </Button>
                 </div>
