@@ -2,6 +2,12 @@ import React from "react";
 import Poll from "./Poll";
 import Button from '@material-ui/core/Button';
 import io_client from "socket.io-client";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import TextField from "@material-ui/core/TextField";
+
 
 import '../styles/Polls.css'
 
@@ -39,6 +45,14 @@ class Polls extends React.Component {
             poll: {},
             answers: {},
             publishedPoll: {},
+            addModal: false,
+            
+            //new poll
+            question: '',
+            optionA: '',
+            optionB: '',
+            optionC: '',
+            optionD: ''
         }
     }
 
@@ -79,6 +93,44 @@ class Polls extends React.Component {
         })
         
         // should also make the http request to get all polls and store in state
+    }
+
+    handleOpen = () => {
+        this.setState({
+            addPoll: true
+        })
+
+    }
+
+    handleClose = () => {
+        this.setState({
+            addPoll: false
+        })
+    }
+
+    handleChange = evt => {
+        this.setState({
+            [evt.target.id] : evt.target.value
+        })
+    }
+    
+    handleAdd = () => {
+        let polls = this.state.polls;
+        let newPoll = {
+            _id: this.state.polls.length+1,
+            question: this.state.question,
+            options : {
+                A: this.state.optionA,
+                B: this.state.optionB,
+                C: this.state.optionC,
+                D: this.state.optionD
+            }
+        }
+        polls.push(newPoll)
+        this.setState({
+            polls: polls
+        })
+        this.handleClose();
     }
 
     deletePoll = evt => {
@@ -198,6 +250,63 @@ class Polls extends React.Component {
                 {
                     this.state.isPollState && poll
                 }
+                <br></br>
+                <Button variant="contained" color="primary" onClick={this.handleOpen}>Add Poll</Button>
+                <Dialog open={this.state.addPoll} onClose={this.handleClose} aria-labelledby="form-dialog-title" fullWidth="md">
+                    <DialogTitle id="form-dialog-title">New Poll</DialogTitle>
+                    <DialogContent>
+                    <form onChange={this.handleChange}>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="question"
+                            label="Question"
+                            type="text"
+                            fullWidth
+                        />
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="optionA"
+                            label="Option A"
+                            type="text"
+                            fullWidth
+                        />
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="optionB"
+                            label="Option B"
+                            type="text"
+                            fullWidth
+                        />
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="optionC"
+                            label="Option C"
+                            type="text"
+                            fullWidth
+                        />
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="optionD"
+                            label="Option D"
+                            type="text"
+                            fullWidth
+                        />
+                    </form>
+                    </DialogContent>
+                    <DialogActions>
+                    <Button onClick={this.handleClose} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={this.handleAdd} color="primary">
+                        Confirm
+                    </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         )
     }
