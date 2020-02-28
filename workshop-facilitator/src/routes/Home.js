@@ -8,7 +8,6 @@ import {
 
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-import { sizing } from '@material-ui/system';
 import Create from "./Create";
 import Join from "./Join";
 
@@ -29,16 +28,16 @@ class Home extends React.Component {
         <div className="vertical-center">
           <h1>Are you creating or joining?</h1> <br/>
           <div className="Buttons">
-            <Link to ="/create" className="createLink">
-              <Button width="10%" variant="contained" color="primary">
+            <div className="createBtnContainer">
+              <Button fullWidth={true} variant="contained" color="primary" href="/create">
                 Create
               </Button>
-            </Link>
-            <Link to="/join" className="joinLink">
-              <Button width="100%"variant="contained" color="secondary">
+            </div>
+            <div className="joinBtnContainer">
+              <Button fullWidth={true} variant="contained" color="secondary" href="/join">
                 Join
               </Button>
-            </Link>
+            </div>
           </div>
         </div>
       </div>
