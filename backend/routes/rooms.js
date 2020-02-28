@@ -49,7 +49,7 @@ router.route('/create').post((req, res) => {
         name: req.body.nameForm,
         wsTitle: req.body.wsTitleForm,
         wsDescript: req.body.wsDescriptForm,
-        joinCode: req.body.joinCodeHost,
+        joinCode: req.body.joinCodeUser,
         resources: {
             name: "",
             link: ""
