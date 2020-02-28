@@ -11,6 +11,7 @@ class Polls extends React.Component {
     constructor() {
         super();
         this.state = {
+            showAnswer: false,
             isEmptyState: true,
             isPollState: false,
             // template poll object
@@ -22,7 +23,8 @@ class Polls extends React.Component {
                     B: "B",
                     C: "C",
                     D: "D"
-                }
+                },
+                answer: "C"
             }, {
                 _id: 2,
                 question: "question 2",
@@ -31,27 +33,51 @@ class Polls extends React.Component {
                     B: "2",
                     C: "3",
                     D: "4"
-                }
+                },
+                answer: "B"
             }],
-            poll: {}
+            poll: {},
+            answers: {},
+            publishedPoll: {},
         }
     }
 
     componentDidMount(){
         socket = io_client("http://localhost:5000");
-        
+
+        socket.on("err", errorData => {
+            alert(errorData.error);
+        })
+    
         // listen for a publish event if a poll was published
         socket.on("publish", pollData => {
-            console.log("publishing...");
+            console.log("publishing...", pollData);
             // show the newly published poll questions
             this.setState({
                 //...this.state,
                 isEmptyState: false,
                 isPollState: true,
-                poll : pollData.pollData
+                poll : pollData,
+                publishedPoll: pollData
             })
         })
 
+        // listen for a getAnswers event to populate the state variable with user answers
+        socket.on("getAnswers", answers => {
+            console.log("getting answers...");
+            this.setState({
+                answers
+            })
+        })
+
+        // listen for showanswer event and set the showanswer state to previous
+        socket.on("showAnswer", answer => {
+            console.log("showing answer...");
+            this.setState(prevState => {
+                return {showAnswer: !prevState.showAnswer};
+            })
+        })
+        
         // should also make the http request to get all polls and store in state
     }
 
@@ -90,7 +116,8 @@ class Polls extends React.Component {
         this.setState({
             ...this.state,
             isEmptyState: true,
-            isPollState: false
+            isPollState: false,
+            publishedPoll: {}
         })
         
         console.log("unpublishing poll...");
@@ -108,6 +135,20 @@ class Polls extends React.Component {
         })
     }
 
+    getAnswers = evt => {
+        evt.preventDefault();
+
+        // emit socket event to get the answers and put it in the state
+        socket.emit("getAnswers");
+    }
+
+    showAnswer = evt => {
+        evt.preventDefault();
+
+        // emit show answer event so users can see the answer on their screen too
+        socket.emit("showAnswer", {answer: this.state.poll.answer});
+    }
+
     handleBack = (e) => {
         this.setState({
             ...this.state,
@@ -118,12 +159,22 @@ class Polls extends React.Component {
 
     render() {
         console.log(this.state);
+        // prop sent from host or user page determining if the current user is a host or user
+        const {isHost} = this.props;
+
         // make every poll's id the _id that mongodb creates for each poll when we send poll to db
         const poll = 
         <div>
             <button onClick={this.handleBack}>Back</button>
-            {/* <button id={this.state.poll._id} onClick={this.unpublishPoll}>Unpublish</button> */}
-            <Poll id={this.state.poll._id} question={this.state.poll.question} options={this.state.poll.options}/>
+            <button id={this.state.poll._id} onClick={this.unpublishPoll}>Unpublish</button>
+            <button id={this.state.poll._id} onClick={this.showAnswer}>Answer</button>
+            {/*
+            <Poll socket={socket} id={this.state.poll._id} question={this.state.poll.question} 
+                options={this.state.poll.options} showAnswer={this.state.showAnswer} isPublished={this.state.poll._id === this.state.publishedPoll._id}
+                isHost={isHost}/>
+            */}
+            <Poll socket={socket} id={this.state.poll._id} poll={this.state.poll} showAnswer={this.state.showAnswer} 
+                isPublished={this.state.poll._id === this.state.publishedPoll._id} isHost={isHost}/>
         </div>
 
         return (
@@ -133,10 +184,14 @@ class Polls extends React.Component {
                     this.state.polls.map(poll => 
                         this.state.isEmptyState && this.state.polls && this.state.polls.length > 0 && 
                             <div>
-                                <PollQuestion socket={socket} handleClick={this.triggerPollState} 
+                                <PollQuestion handleClick={this.triggerPollState} 
                                     poll={poll}/>
+                                {
+                                    poll._id === this.state.publishedPoll._id ? <p>Published</p> : null
+                                }
                                 <button id={poll._id} onClick={this.publishPoll}>Publish</button>
                                 <button id={poll._id} onClick={this.deletePoll}>Delete</button>
+                                <button id={poll._id} onClick={this.getAnswers}>Get Answers</button>
                             </div>
                     )
                 }
