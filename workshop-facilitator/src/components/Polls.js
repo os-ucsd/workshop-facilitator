@@ -141,7 +141,7 @@ class Polls extends React.Component {
         }
         polls.push(newPoll)
         this.setState({
-            polls: polls
+            polls
         })
         this.handleClose();
     }
@@ -269,7 +269,8 @@ class Polls extends React.Component {
                     isHost ? this.state.isPollState && poll : null
                 }
                 <br></br>
-                <Button variant="contained" color="primary" onClick={this.handleOpen}>Add Poll</Button>
+                {isHost? this.state.isEmptyState && 
+                <Button variant="contained" color="primary" onClick={this.handleOpen}>Add Poll</Button> : null }
                 <Dialog open={this.state.addPoll} onClose={this.handleClose} aria-labelledby="form-dialog-title" fullWidth="md">
                     <DialogTitle id="form-dialog-title">New Poll</DialogTitle>
                     <DialogContent>
@@ -342,6 +343,7 @@ class Polls extends React.Component {
                     </Button>
                     </DialogActions>
                 </Dialog>
+            
             </div>
         )
     }
