@@ -48,7 +48,7 @@ router.route('/create').post((req, res) => {
         hostCode: req.body.joinCodeHost,
         name: req.body.nameForm,
         wsTitle: req.body.wsTitleForm,
-        wsDescript: req.body.wsDescripForm,
+        wsDescript: req.body.wsDescriptForm,
         joinCode: req.body.joinCodeHost,
         resources: {
             name: "",
@@ -66,6 +66,9 @@ router.route('/create').post((req, res) => {
         }],
         feedback: ""
     });
+
+    console.log("Here is the room that just got created:");
+    console.log(newRoom);
 
     newRoom.save()
         .then(() => res.redirect('/host')) //not redirecting properly
