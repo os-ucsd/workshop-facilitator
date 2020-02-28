@@ -5,11 +5,12 @@ import Create from "./routes/Create";
 import Home from "./routes/Home";
 import Join from "./routes/Join";
 import User from "./routes/User";
+import UploadFiles from "./routes/UploadFiles";
 import "./App.css";
 
 function App() {
   return (
-    <div>
+    <div className="App">
       <Router>
         <Route exact path="/" component={Home} />
         <Route exact path="/home" component={Home} />
@@ -17,6 +18,7 @@ function App() {
         <Route exact path="/create" component={Create} />
         <Route exact path="/join" component={Join} />
         <Route exact path="/user" component={User} />
+        <Route exact path="/upload" component={UploadFiles} />
       </Router>
     </div>
   );

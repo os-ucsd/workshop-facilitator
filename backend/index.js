@@ -22,11 +22,98 @@ connection.once('open', () => {
 // initialize socket.io with the server
 const io = require('socket.io').listen(server);
 
+let answerA = 0;
+let answerB = 0;
+let answerC = 0;
+let answerD = 0;
+
+let currPollQuestion = {};
+
 // io object will listen for connection event
 io.on("connection", socket => {
     console.log("user connected");
 
-    socket.emit("test");
+    // listen for when a new poll was sent out, show to all clients
+    socket.on("publish", pollData => {
+        console.log(currPollQuestion);
+        // make sure only 1 question published at a time
+        if (currPollQuestion._id && currPollQuestion._id !== pollData.pollData._id){
+            console.log("already published question, cannot publish");
+            socket.emit("err", {error: "there's an active question already", currPollQuestion: currPollQuestion});
+        }
+        else if (currPollQuestion && currPollQuestion._id === pollData.pollData._id){
+            // if trying to publish the same question
+            console.log("this question is already published");
+            const err = {
+                error: "this question already published"
+            }
+            socket.emit("err", err)
+        }
+        else{
+            console.log("published", pollData);
+            // to keep track of what the current question is
+            console.log(pollData.pollData);
+            currPollQuestion = pollData.pollData;
+
+            /*
+            TODO: add socket.on("publish") event to user view page, so the user can view the poll
+            */
+            // send poll question to all clients and allow host to know which question is published
+            io.sockets.emit("publish", currPollQuestion);
+        }
+    })
+
+    socket.on("unpublish", pollId => {
+        // store question and answers in db
+
+        // check if there was a poll actually published before this
+        if (! currPollQuestion._id){
+            console.log("no poll published, so can't unpublish");
+            socket.emit("err", {error: "no question is currently published"});
+            return;
+        }
+        console.log(currPollQuestion._id, pollId);
+        // check to make poll the host is trying to unpublish is the current poll
+        if (currPollQuestion._id.toString() !== pollId){
+            console.log("a different poll is published, so cannot unpublish this poll");
+            socket.emit("err", {error: "a different poll is published, so cannot unpublish this poll"});
+            return;
+        }
+
+        // reset to empty
+        currPollQuestion = {};
+
+        // reset all answers
+        answerA = 0;
+        answerB = 0;
+        answerC = 0;
+        answerD = 0;
+
+        console.log("poll unpublished");
+        socket.emit("unpublish", {text: "unpublish complete"});
+    })
+
+    // listen for when an answer was submitted
+    socket.on("answer", answerData => {
+        console.log(`answered ${answerData.answer}`);
+        switch(answerData.answer){
+            case "A": answerA++; break;
+            case "B": answerB++; break;
+            case "C": answerC++; break;
+            case "D": answerD++; break;
+            default: break;
+        }
+    })
+
+    // listen for when answer should be shown, then send to all sockets
+    socket.on("showAnswer", answer => {
+        io.sockets.emit("showAnswer", answer);
+    })
+
+    // listen for when the host wants to see the answers
+    socket.on("getAnswers", () => {
+        socket.emit("getAnswers", {answerA, answerB, answerC, answerD});
+    })
 
     socket.on("question", data => {
         // emit to all sockets connected to the server that there was a new question
