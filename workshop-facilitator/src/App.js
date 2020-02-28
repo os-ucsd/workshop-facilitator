@@ -4,6 +4,7 @@ import Host from "./routes/Host";
 import Create from "./routes/Create";
 import Home from "./routes/Home";
 import Join from "./routes/Join";
+import UploadFiles from "./routes/UploadFiles";
 import "./App.css";
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
         <Route exact path="/host" component={Host} />
         <Route exact path="/create" component={Create} />
         <Route exact path="/join" component={Join} />
+        <Route exact path="/upload" component={UploadFiles} />
       </Router>
     </div>
   );

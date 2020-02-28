@@ -13,18 +13,22 @@
 }
 
 .Buttons {
-  margin: 0;
-  left: 50%;
+  display: inline-block;
+  width: 320px;
+  text-align: center;
 }
 
-.createLink {
-  margin: 0;
-  padding-right: 3%;
-  width: 50px;
+.createBtnContainer {
+  display: inline-block;
+  margin-right: 3%;
+  width: 150px;
+  text-decoration: none;
 }
 
-.joinLink {
-  margin: 0;
-  padding-left: 3%;
-  width: 50px;
+.joinBtnContainer {
+  display: inline-block;
+  margin-left: 3%;
+  width: 150px;
+  text-decoration: none;
+
 }
