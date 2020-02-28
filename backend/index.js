@@ -115,6 +115,12 @@ io.on("connection", socket => {
         socket.emit("getAnswers", {answerA, answerB, answerC, answerD});
     })
 
+    socket.on("question", data => {
+        // emit to all sockets connected to the server that there was a new question
+        console.log(data);
+        io.sockets.emit("question", data);
+    })
+
     // listen for disconnect event (when user leaves)
     socket.on("disconnect", () => {
         console.log("a user disconnected");
