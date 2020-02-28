@@ -7,6 +7,9 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import TextField from "@material-ui/core/TextField";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import InputLabel from "@material-ui/core/InputLabel";
 
 
 import '../styles/Polls.css'
@@ -296,6 +299,23 @@ class Polls extends React.Component {
                             type="text"
                             fullWidth
                         />
+                        <FormControl style={{minWidth: 150}}>
+                            <InputLabel htmlFor="age-native-required" autoWidth>Correct Answer</InputLabel>
+                            <Select
+                                value={this.state.answer}
+                                onChange={this.handleChange}
+                                id="answer"
+                                inputProps={{
+                                    id: 'age-native-required',
+                                }}
+                                >
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="none">None</option>
+                            </Select>
+                        </FormControl>
                     </form>
                     </DialogContent>
                     <DialogActions>
