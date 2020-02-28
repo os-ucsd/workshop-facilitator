@@ -1,6 +1,6 @@
 import React from "react";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
+import SplitPane from 'react-split-pane';
+import '../styles/Host.css';
 import Resources from "../components/Resources";
 import Questions from "../components/Questions";
 import Polls from "../components/Polls";
@@ -34,31 +34,31 @@ class Host extends React.Component {
 
     render() {
         return (
-            <div style={{display: "flex", flex:"1"}}>
-                <Grid container >
+            <SplitPane
+                split="vertical"
+                minSize={1000}
+                maxSize={-200}
+                defaultSize={1300}
+                className="primary"
+            >
+                <SplitPane
+                    split="horizontal"
+                    minSize={200}
+                    maxSize={-300}
+                    defaultSize={400}
+                >
                     <div>
-                        <Grid item xs={8}>
-                        <Paper style={{height: "50vh" , width: "78vw"}}>
-                            <Polls/>
-                        </Paper>
-                        </Grid>
-                        <Grid item xs={8} >
-                        <Paper style={{height: "50vh" , width: "78vw"}}>
-                            <Questions/>
-                        </Paper>
-                        </Grid>
+                        <Polls isHost={true}/>
                     </div>
-                    
                     <div>
-                        <Grid item xs={4}>
-                        <Paper style={{height: "100vh", width: "20vw"}}>
-                            <Resources />
-                        </Paper>
-                        </Grid>
+                        <Questions />
                     </div>
-                </Grid>
+                </SplitPane>
+                <div>
+                    <Resources />
+                </div>
+            </SplitPane>
 
-            </div>
         )
     }
 }
