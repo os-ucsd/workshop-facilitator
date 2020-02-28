@@ -63,13 +63,20 @@ io.on("connection", socket => {
         }
     })
 
-    socket.on("unpublish", () => {
+    socket.on("unpublish", pollId => {
         // store question and answers in db
 
         // check if there was a poll actually published before this
         if (! currPollQuestion._id){
             console.log("no poll published, so can't unpublish");
             socket.emit("err", {error: "no question is currently published"});
+            return;
+        }
+        console.log(currPollQuestion._id, pollId);
+        // check to make poll the host is trying to unpublish is the current poll
+        if (currPollQuestion._id.toString() !== pollId){
+            console.log("a different poll is published, so cannot unpublish this poll");
+            socket.emit("err", {error: "a different poll is published, so cannot unpublish this poll"});
             return;
         }
 
