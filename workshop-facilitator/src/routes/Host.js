@@ -48,7 +48,7 @@ class Host extends React.Component {
                     defaultSize={400}
                 >
                     <div>
-                        <Polls />
+                        <Polls isHost={true}/>
                     </div>
                     <div>
                         <Questions />
