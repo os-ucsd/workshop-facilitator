@@ -10,6 +10,7 @@ import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
 
 
 import '../styles/Polls.css'
@@ -48,14 +49,15 @@ class Polls extends React.Component {
             poll: {},
             answers: {},
             publishedPoll: {},
-            addModal: false,
-            
+            addPoll: false,
+            editPoll: false,
             //new poll
             question: '',
             optionA: '',
             optionB: '',
             optionC: '',
-            optionD: ''
+            optionD: '',
+            answer: ''
         }
     }
 
@@ -117,14 +119,24 @@ class Polls extends React.Component {
 
     handleClose = () => {
         this.setState({
-            addPoll: false
+            addPoll: false,
+            editPoll: false
         })
     }
 
     handleChange = evt => {
-        this.setState({
-            [evt.target.id] : evt.target.value
-        })
+        console.log(evt.target)
+        console.log(evt.target.value)
+        if(evt.target.id === undefined) {
+            this.setState({
+                [evt.target.name] : evt.target.value,
+            })
+        }
+        else {
+            this.setState({
+                [evt.target.id] : evt.target.value,
+            })
+        }
     }
     
     handleAdd = () => {
@@ -144,6 +156,13 @@ class Polls extends React.Component {
             polls
         })
         this.handleClose();
+    }
+
+    editPoll = () => {
+        console.log(this.state.poll)
+        this.setState({
+            editPoll: true
+        })
     }
 
     deletePoll = evt => {
@@ -232,6 +251,9 @@ class Polls extends React.Component {
                     this.state.showAnswer ? "Hide Answer" : "Show Answer"
                 }
             </button>
+            <button onClick={this.editPoll}>
+                Edit
+            </button>
             {/*
             <Poll socket={socket} id={this.state.poll._id} question={this.state.poll.question} 
                 options={this.state.poll.options} showAnswer={this.state.showAnswer} isPublished={this.state.poll._id === this.state.publishedPoll._id}
@@ -316,22 +338,19 @@ class Polls extends React.Component {
                             fullWidth
                         />
                         <FormControl style={{minWidth: 150}}>
-                            <InputLabel htmlFor="age-native-required" autoWidth>Correct Answer</InputLabel>
+                            <InputLabel htmlFor="age-native-required" >Correct Answer</InputLabel>
                             <Select
                                 value={this.state.answer}
                                 onChange={this.handleChange}
-                                id="answer"
-                                inputProps={{
-                                    id: 'age-native-required',
-                                }}
+                                name="answer"
                                 >
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
-                                <option value="none">None</option>
+                                <MenuItem value="A">A</MenuItem>
+                                <MenuItem value="B">B</MenuItem>
+                                <MenuItem value="C">C</MenuItem>
+                                <MenuItem value="D">D</MenuItem>
+                                <MenuItem value="none">None</MenuItem>
                             </Select>
-                        </FormControl>
+                        </FormControl> 
                     </form>
                     </DialogContent>
                     <DialogActions>
@@ -343,7 +362,77 @@ class Polls extends React.Component {
                     </Button>
                     </DialogActions>
                 </Dialog>
-            
+
+                <Dialog open={this.state.editPoll} onClose={this.handleClose} aria-labelledby="form-dialog-title" fullWidth="md">
+                    <DialogTitle id="form-dialog-title">Edit Poll</DialogTitle>
+                    <DialogContent>
+                    <form>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="question"
+                            label="Question"
+                            type="text"
+                            value={this.state.poll.question}
+                            fullWidth
+                        />
+                        <TextField
+                            margin="dense"
+                            id="optionA"
+                            label="Option A"
+                            type="text"
+                            defaultValue={"I can't parse the damn object..."}
+                            fullWidth
+                        />
+                        <TextField
+                            margin="dense"
+                            id="optionB"
+                            label="Option B"
+                            type="text"
+                            defaultValue={"I can't parse the damn object..."}
+                            fullWidth
+                        />
+                        <TextField
+                            margin="dense"
+                            id="optionC"
+                            label="Option C"
+                            type="text"
+                            defaultValue={"I can't parse the damn object..."}
+                            fullWidth
+                        />
+                        <TextField
+                            margin="dense"
+                            id="optionD"
+                            label="Option D"
+                            type="text"
+                            defaultValue={"I can't parse the damn object..."}
+                            fullWidth
+                        />
+                        <FormControl style={{minWidth: 150}}>
+                            <InputLabel>{this.state.poll.answer}</InputLabel>
+                            <Select
+                                value={this.state.answer}
+                                onChange={this.handleChange}
+                                name="answer"
+                                >
+                                <MenuItem value="A">A</MenuItem>
+                                <MenuItem value="B">B</MenuItem>
+                                <MenuItem value="C">C</MenuItem>
+                                <MenuItem value="D">D</MenuItem>
+                                <MenuItem value="none">None</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </form>
+                    </DialogContent>
+                    <DialogActions>
+                    <Button onClick={this.handleClose} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={this.handleAdd} color="primary" type="submit">
+                        Confirm
+                    </Button>
+                    </DialogActions>
+                </Dialog>
             </div>
         )
     }

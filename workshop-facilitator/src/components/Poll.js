@@ -3,10 +3,6 @@ import React from 'react';
 import '../styles/Polls.css'
 
 class Poll extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     /*
         When a user chooses their answer, send that answer to the server to
         keep a counter, like Clickers
