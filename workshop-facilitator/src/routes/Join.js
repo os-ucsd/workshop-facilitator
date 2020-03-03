@@ -17,15 +17,16 @@ class Join extends React.Component {
   submitForm = e => {
     e.preventDefault();
     console.log(e.target);
+    this.setState({roomCode: e.target.value})
+    console.log("State of roomCode: " + this.state.roomCode);
     this.setState({
-      valid: true //Handle code validation here
+        valid: true //Handle code validation here
 
     });
     // make axios call to a route that checks if there's a room with the given 4 digit code
     // if so, send the room's info (could just send the id) to the user view page
 
-    /* work in progress
-    fetch('http://localhost:5000/rooms/create', {
+    fetch('http://localhost:5000/rooms/', {
         method: 'get',
     })
     .then((resp) => resp.json())
@@ -33,7 +34,6 @@ class Join extends React.Component {
     .then((data) => console.log("Success", data))
     // if failure, log the error
     .catch((err) => console.log("Error", err));
-    */
 
 
     /* send props to user view page (change to /user when component created)
@@ -67,11 +67,11 @@ class Join extends React.Component {
               <br />
               <br />
               <br />
-              <Link to="/user" className="userLink" color="secondary">
-                <Button width="100%" variant="contained" color="secondary">
+        //    <Link to="/user" className="userLink" color="secondary"> , Need to verify first
+                <Button width="100%" variant="contained" color="secondary" type = "submit">
                   Join
                 </Button>
-              </Link>
+         //     </Link>
             </form>
         </div>
       </div>
