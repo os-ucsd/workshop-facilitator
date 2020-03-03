@@ -37,3 +37,9 @@
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 }
+
+.backButton{
+    text-align: left;
+    margin-left: 10px;
+    margin-top: 10px;
+}

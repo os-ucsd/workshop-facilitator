@@ -56,9 +56,6 @@ class Join extends React.Component {
 
 
 
-    this.setState({
-        valid: true //Handle code validation here
-    });
 
 
     /* send props to user view page (change to /user when component created)
@@ -71,15 +68,25 @@ class Join extends React.Component {
     */
   };
 
-
-  render() {
-    return (
-      <div className="Join">
+  /* old style for button
         <Link to="/" className="back">
           <Button width="100%" variant="contained" color="primary">
             Home
           </Button>
         </Link>
+
+
+  */
+
+
+  render() {
+    return (
+      <div className="Join">
+        <div className="backButton">
+          <Button width="100%" variant="contained" color="primary" href="/">
+            Home
+          </Button>
+        </div>
         <div className="vertical-center">
             <h1>Enter the workshop code!</h1>
             <form noValidate autoComplete="off" onSubmit={this.submitForm} onChange={this.changeForms}>
@@ -109,6 +116,10 @@ class Join extends React.Component {
           console.log("Here is the room:" , room);
           console.log("Here is a roomCode: " + room.hostCode);
       }
+
+    this.setState({
+        valid: true //Handle code validation here
+    });
 
 
 
