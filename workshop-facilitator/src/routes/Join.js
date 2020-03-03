@@ -43,7 +43,7 @@ class Join extends React.Component {
         })
         .then((resp) => resp.json())
         // if success and data was sent back, log the data
-        .then((data) => console.log("Success", data))
+        .then((data) => checkRooms(data))
         // if failure, log the error
         .catch((err) => console.log("Error", err));
 
@@ -70,6 +70,7 @@ class Join extends React.Component {
     })
     */
   };
+
 
   render() {
     return (
@@ -101,5 +102,18 @@ class Join extends React.Component {
     );
   }
 }
+
+  function checkRooms(rooms){
+      console.log("Here are all the rooms", rooms);
+      for(const room of rooms){
+          console.log("Here is the room:" , room);
+          console.log("Here is a roomCode: " + room.hostCode);
+      }
+
+
+
+  }
+
+
 
 export default Join;
