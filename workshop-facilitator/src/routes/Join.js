@@ -14,26 +14,51 @@ class Join extends React.Component {
     };
   }
 
+
+    changeForms = (evt) => {
+        this.setState({
+            [evt.target.id]: evt.target.value
+        })
+    }
+
   submitForm = e => {
     e.preventDefault();
     console.log(e.target);
-    this.setState({roomCode: e.target.value})
+
     console.log("State of roomCode: " + this.state.roomCode);
+
+    //need to check to see if they even entered all integers, could be text as well.
+    let code  = this.state.roomCode;
+
+    let isnum = /^\d+$/.test(code);
+
+    if(isnum){
+        console.log("Code is a number");
+
+        // make axios call to a route that checks if there's a room with the given 4 digit code
+        // if so, send the room's info (could just send the id) to the user view page
+
+        fetch('http://localhost:5000/rooms/', {
+            method: 'get',
+        })
+        .then((resp) => resp.json())
+        // if success and data was sent back, log the data
+        .then((data) => console.log("Success", data))
+        // if failure, log the error
+        .catch((err) => console.log("Error", err));
+
+
+
+    }else{
+        alert("code is not a number");
+        //have some conditional rendering here later
+    }
+
+
+
     this.setState({
         valid: true //Handle code validation here
-
     });
-    // make axios call to a route that checks if there's a room with the given 4 digit code
-    // if so, send the room's info (could just send the id) to the user view page
-
-    fetch('http://localhost:5000/rooms/', {
-        method: 'get',
-    })
-    .then((resp) => resp.json())
-    // if success and data was sent back, log the data
-    .then((data) => console.log("Success", data))
-    // if failure, log the error
-    .catch((err) => console.log("Error", err));
 
 
     /* send props to user view page (change to /user when component created)
@@ -56,7 +81,7 @@ class Join extends React.Component {
         </Link>
         <div className="vertical-center">
             <h1>Enter the workshop code!</h1>
-            <form noValidate autoComplete="off" onSubmit={this.submitForm}>
+            <form noValidate autoComplete="off" onSubmit={this.submitForm} onChange={this.changeForms}>
               <TextField
                 required
                 id="roomCode"
@@ -67,11 +92,9 @@ class Join extends React.Component {
               <br />
               <br />
               <br />
-        //    <Link to="/user" className="userLink" color="secondary"> , Need to verify first
                 <Button width="100%" variant="contained" color="secondary" type = "submit">
                   Join
                 </Button>
-         //     </Link>
             </form>
         </div>
       </div>
