@@ -1,6 +1,13 @@
 const mongoose = require('mongoose');
 const express = require('express');
+const cors = require('cors');
 const app = express();
+
+app.use(cors());
+
+const bodyParser = require('body-parser');//attemp to make req.body not null
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
 
 // Server listening on a port
 const port = process.env.port || 5000;
