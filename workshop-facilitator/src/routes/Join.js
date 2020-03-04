@@ -141,11 +141,13 @@ class Join extends React.Component {
                 console.log("This is a host code!");
                 //resolve host code
                 flagValid = true;
+                window.location.replace('http://localhost:3000/host');
                 break;
             }else if(code == room.joinCode){
                 console.log("This ia a join code!");
                 //resolve join code
                 flagValid = true;
+                window.location.replace('http://localhost:3000/user');
                 break;
             }
       }
