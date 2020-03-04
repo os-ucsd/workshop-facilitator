@@ -10,7 +10,9 @@ class Join extends React.Component {
     super();
     this.state = {
       roomCode: "",
-      valid: false
+      valid: true,
+      onlyNums: true,
+      fourNums: true
     };
   }
 
@@ -27,12 +29,16 @@ class Join extends React.Component {
 
     console.log("State of roomCode: " + this.state.roomCode);
 
+    //reset for evaluation
+    this.setState({onlyNums: true});
+    this.setState({fourNums: true});
+
     //need to check to see if they even entered all integers, could be text as well.
     let code  = this.state.roomCode;
 
-    let isnum = /^\d+$/.test(code);
+    let isnum = /^\d+$/.test(code); //is it all numbers?
 
-    if(isnum){
+    if(isnum && code.length == 4){
         console.log("Code is a number");
 
         // make axios call to a route that checks if there's a room with the given 4 digit code
@@ -50,9 +56,18 @@ class Join extends React.Component {
 
 
     }else{
-        alert("code is not a number");
-        //have some conditional rendering here later
+        if(!isnum){
+            alert("code is not a number");
+            this.setState({onlyNums: false});
+            this.setState({valid: false});
+        }else if(code.length != 4){
+            alert("code is 4 digits!");
+            this.setState({fourNums: false});
+            this.setState({valid: false});
+
+        }
     }
+
 
 
 
@@ -104,15 +119,27 @@ class Join extends React.Component {
                   Join
                 </Button>
             </form>
+            {incorrectCode(this.state.onlyNums, this.state.fourNums)}
         </div>
       </div>
     );
   }
 }
 
-  function checkRooms(rooms){
-      console.log("Here are all the rooms", rooms);
-      for(const room of rooms){
+
+
+    function incorrectCode( onlyNums, fourNums){
+        if(!onlyNums){
+            return (<h3> The code only has numbers! </h3>);
+        }else if (!fourNums){
+            return (<h3> The code is 4 numbers long! </h3>);
+        }
+
+    }
+
+    function checkRooms(rooms){
+        console.log("Here are all the rooms", rooms);
+        for(const room of rooms){
           console.log("Here is the room:" , room);
           console.log("Here is a roomCode: " + room.hostCode);
       }
