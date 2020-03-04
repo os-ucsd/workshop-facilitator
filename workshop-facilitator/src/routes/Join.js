@@ -25,10 +25,6 @@ class Join extends React.Component {
 
   submitForm = e => {
     e.preventDefault();
-    console.log(e.target);
-
-    console.log("State of roomCode: " + this.state.roomCode);
-
     //reset for evaluation
     this.setState({onlyNums: true});
     this.setState({fourNums: true});
@@ -39,8 +35,6 @@ class Join extends React.Component {
     let isnum = /^\d+$/.test(code); //is it all numbers?
 
     if(isnum && code.length == 4){
-        console.log("Code is a number");
-
         // make axios call to a route that checks if there's a room with the given 4 digit code
         // if so, send the room's info (could just send the id) to the user view page
 
@@ -49,7 +43,7 @@ class Join extends React.Component {
         })
         .then((resp) => resp.json())
         // if success and data was sent back, log the data
-        .then((data) => checkRooms(data))
+        .then((data) => checkRooms(data, this.state.roomCode))
         // if failure, log the error
         .catch((err) => console.log("Error", err));
 
@@ -132,23 +126,32 @@ class Join extends React.Component {
         if(!onlyNums){
             return (<h3> The code only has numbers! </h3>);
         }else if (!fourNums){
-            return (<h3> The code is 4 numbers long! </h3>);
+            return (<h3> The code is 4 digits long! </h3>);
         }
 
     }
 
-    function checkRooms(rooms){
+    function checkRooms(rooms, code){
+        //host code 9485 works
+        //join code 7317 works
+        let flagValid = false;
         console.log("Here are all the rooms", rooms);
         for(const room of rooms){
-          console.log("Here is the room:" , room);
-          console.log("Here is a roomCode: " + room.hostCode);
+            if(code == room.hostCode){ //don't type check as well, cuz code is a string
+                console.log("This is a host code!");
+                //resolve host code
+                flagValid = true;
+                break;
+            }else if(code == room.joinCode){
+                console.log("This ia a join code!");
+                //resolve join code
+                flagValid = true;
+                break;
+            }
       }
-
-    this.setState({
-        valid: true //Handle code validation here
-    });
-
-
+      if(!flagValid){
+          alert("code is not valid");
+      }
 
   }
 
