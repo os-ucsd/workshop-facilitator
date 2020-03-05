@@ -19,16 +19,28 @@ class Join extends React.Component {
     console.log(e.target);
     this.setState({
       valid: true //Handle code validation here
-    });
 
+    });
     // make axios call to a route that checks if there's a room with the given 4 digit code
     // if so, send the room's info (could just send the id) to the user view page
+
+    /* work in progress
+    fetch('http://localhost:5000/rooms/create', {
+        method: 'get',
+    })
+    .then((resp) => resp.json())
+    // if success and data was sent back, log the data
+    .then((data) => console.log("Success", data))
+    // if failure, log the error
+    .catch((err) => console.log("Error", err));
+    */
+
 
     /* send props to user view page (change to /user when component created)
     this.props.history.push({
       pathname: "/host",
       state: {
-        
+
       }
     })
     */

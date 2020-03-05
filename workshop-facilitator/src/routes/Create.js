@@ -7,6 +7,7 @@ import "../styles/Create.css";
 
 import {generateRandomCode} from '../utils';
 
+
 class Create extends React.Component{
     constructor(){
         super();
@@ -32,8 +33,40 @@ class Create extends React.Component{
         + "Description: " + this.state.wsDescripForm);
 
         // generate random 4 digit code
-        let joinCode = generateRandomCode();
-        console.log(joinCode);
+        let joinCodeHost = generateRandomCode();
+        console.log("joinCodeHost: " + joinCodeHost);
+        let joinCodeUser = generateRandomCode();
+        console.log("joinCodeUser: " + joinCodeUser);
+
+        //Make sure they aren't equal, keep generating untill not equal
+        while(joinCodeHost === joinCodeUser){
+            joinCodeUser = new generateRandomCode();
+        }
+
+        let userData = { "nameForm" : this.state.nameForm,
+                "wsTitleForm": this.state.wsTitleForm,
+                "wsDescriptForm": this.state.wsDescripForm,
+                "joinCodeHost": joinCodeHost,
+                "joinCodeUser": joinCodeUser
+            };
+
+        console.log(userData);
+
+        fetch('http://localhost:5000/rooms/create', {
+            // send as a POST request with new room information in body,
+            //POST fetch("the API route that creates the room, like /rooms/create", {method: "POST", body:
+            //{data to pass in, such as room name, description, etc.}})
+            method: 'post',
+            headers: {"Content-Type" : "application/json"}, //have to specify content type as json, or else server thinks its something else;
+            body: JSON.stringify(userData)
+        })
+        //using .text() instead of .json to avoid errors
+        .then((resp) => resp.text())
+        // if success and data was sent back, log the data
+        .then((data) => console.log("Success. here is the resp.() dump: ", data))
+        // if failure, log the error
+        .catch((err) => console.log("Error", err));
+
         /*
         to check for uniqueness: will need to do a database query to get all rooms
         then loop through them and see if any of them contain joinCode
@@ -57,13 +90,13 @@ class Create extends React.Component{
 
         return(
             <div>
-                <div class = "BackButton">
-                    <Button variant="contained" color="primary" href="/">
+                <div className = "BackButton">
+                    <Button variant="contained" color="primary" href="/" className = "BackButton">
                       Home
                     </Button>
                 </div>
-                <h1 class = "Title"> Create your workshop </h1>
-                <form onSubmit={this.submitForm} onChange={this.changeForms} class = "CreateForm"  >
+                <h1 className = "Title"> Create your workshop </h1>
+                <form onSubmit={this.submitForm} onChange={this.changeForms} className = "CreateForm"  >
                     <TextField required multiline fullWidth id="nameForm" label="Name: John Smith" defaultValue="" helperText = "Required" />
                     <br/>
                     <br/>
@@ -76,7 +109,7 @@ class Create extends React.Component{
                     <br/>
                     <br/>
 
-                    <div class = "SubmitButton" > <Button variant="contained" type="submit" >Submit</Button> </div>
+                    <div className = "SubmitButton" > <Button variant="contained" type="submit" >Submit</Button> </div>
 
                 </form>
             </div>
