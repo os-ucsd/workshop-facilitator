@@ -125,8 +125,6 @@ class Polls extends React.Component {
     }
 
     handleChange = evt => {
-        console.log(evt.target)
-        console.log(evt.target.value)
         if(evt.target.id === undefined) {
             this.setState({
                 [evt.target.name] : evt.target.value,
@@ -149,7 +147,8 @@ class Polls extends React.Component {
                 B: this.state.optionB,
                 C: this.state.optionC,
                 D: this.state.optionD
-            }
+            },
+            answer: this.state.answer
         }
         polls.push(newPoll)
         this.setState({
@@ -159,10 +158,38 @@ class Polls extends React.Component {
     }
 
     editPoll = () => {
-        console.log(this.state.poll)
         this.setState({
             editPoll: true
         })
+    }
+
+    handleEdit = evt => {
+        evt.preventDefault();
+        let updatedPoll = {
+            _id: this.state.poll._id,
+            question: evt.target[0].value,
+            options : {
+                A: evt.target[1].value,
+                B: evt.target[2].value,
+                C: evt.target[3].value,
+                D: evt.target[4].value
+            },
+            answer: evt.target[5].value
+        }
+
+        // Update the Polls array
+        const pollId = this.state.poll._id;
+        // find poll in the array of polls
+        const pollIndx = this.state.polls.findIndex(poll => poll._id === parseInt(pollId));
+        let polls = this.state.polls;
+        polls[pollIndx] = updatedPoll;
+        
+        this.setState({
+            poll: updatedPoll,
+            polls
+        })
+
+        this.handleClose();
     }
 
     deletePoll = evt => {
@@ -171,7 +198,6 @@ class Polls extends React.Component {
 
         // find poll in the array of polls and remove it
         const pollIndx = this.state.polls.findIndex(poll => poll._id === parseInt(pollId));
-        console.log(pollIndx);
         this.setState(prevState => {
             prevState.polls.splice(pollIndx, 1);
             let polls = prevState.polls;
@@ -236,7 +262,6 @@ class Polls extends React.Component {
     }
 
     render() {
-        console.log(this.state);
         // prop sent from host or user page determining if the current user is a host or user
         const {isHost} = this.props;
         const {publishedPoll} = this.state;
@@ -371,7 +396,7 @@ class Polls extends React.Component {
                 <Dialog open={this.state.editPoll} onClose={this.handleClose} aria-labelledby="form-dialog-title" fullWidth="md">
                     <DialogTitle id="form-dialog-title">Edit Poll</DialogTitle>
                     <DialogContent>
-                    <form>
+                    <form id="editForm" onSubmit={this.handleEdit}>
                         <TextField
                             autoFocus
                             margin="dense"
@@ -433,7 +458,7 @@ class Polls extends React.Component {
                     <Button onClick={this.handleClose} color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={this.handleAdd} color="primary" type="submit">
+                    <Button color="primary" type="submit" form="editForm">
                         Confirm
                     </Button>
                     </DialogActions>
