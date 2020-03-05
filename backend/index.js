@@ -1,6 +1,13 @@
 const mongoose = require('mongoose');
 const express = require('express');
+const cors = require('cors');
 const app = express();
+
+app.use(cors());
+
+const bodyParser = require('body-parser');//attemp to make req.body not null
+app.use(bodyParser.urlencoded({extended:true}));
+app.use(bodyParser.json());
 
 // Server listening on a port
 const port = process.env.port || 5000;
@@ -63,13 +70,20 @@ io.on("connection", socket => {
         }
     })
 
-    socket.on("unpublish", () => {
+    socket.on("unpublish", pollId => {
         // store question and answers in db
 
         // check if there was a poll actually published before this
         if (! currPollQuestion._id){
             console.log("no poll published, so can't unpublish");
             socket.emit("err", {error: "no question is currently published"});
+            return;
+        }
+        console.log(currPollQuestion._id, pollId);
+        // check to make poll the host is trying to unpublish is the current poll
+        if (currPollQuestion._id.toString() !== pollId){
+            console.log("a different poll is published, so cannot unpublish this poll");
+            socket.emit("err", {error: "a different poll is published, so cannot unpublish this poll"});
             return;
         }
 
@@ -106,6 +120,12 @@ io.on("connection", socket => {
     // listen for when the host wants to see the answers
     socket.on("getAnswers", () => {
         socket.emit("getAnswers", {answerA, answerB, answerC, answerD});
+    })
+
+    socket.on("question", data => {
+        // emit to all sockets connected to the server that there was a new question
+        console.log(data);
+        io.sockets.emit("question", data);
     })
 
     // listen for disconnect event (when user leaves)

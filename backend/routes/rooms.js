@@ -3,7 +3,9 @@ Holds the API routes having to deal with the workshop rooms
 */
 const express = require('express');
 const router = express.Router();
-const WorkshopRoom = require('../models/workshop_room.model.js');
+const WorkshopRoom = require("../models/workshop_room.model.js"); //added to be able to use Schema
+
+
 
 /*
 @route GET /rooms/
@@ -11,40 +13,68 @@ const WorkshopRoom = require('../models/workshop_room.model.js');
 */
 router.route('/').get((req, res) => {
     // database query
+
+
+    /* work in progress for get all rooms
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    console.log("fetching all rooms...");
+
     WorkshopRoom.find()
         .then(rooms => res.json(rooms))
-        .catch(err => res.status(400).json(err));
+        .catch(err => res.status(400).json(err))
+    */
 })
+
 
 /*
 @route POST /rooms/create
 @desc Creates a new workshop room
 */
 router.route('/create').post((req, res) => {
-    // database query
-    const hostCode = req.body.hostCode;
-    const name = req.body.name;
-    const joinCode = req.body.joinCode;
-    const resources = req.body.resources;
-    const questions = req.body.questions;
-    const attendees = req.body.attendees;
-    const wfclickers = req.body.wfclickers;
-    const feedback = req.body.feedback;
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
 
-    const newRoom = new Room({
-        hostCode,
-        name,
-        joinCode,
-        resources,
-        questions,
-        attendees,
-        wfclickers,
-        feedback
+
+
+    /* for testing
+    console.log("in /create Route");
+    console.log("Here is the req,body below");
+    console.log(req.body);
+    */
+
+    // database query
+    //use req.body info to create new room, save it
+
+    const newRoom = new WorkshopRoom({
+        hostCode: req.body.joinCodeHost,
+        name: req.body.nameForm,
+        wsTitle: req.body.wsTitleForm,
+        wsDescript: req.body.wsDescriptForm,
+        joinCode: req.body.joinCodeUser,
+        resources: {
+            name: "",
+            link: ""
+        },
+        questions: {
+            title: "",
+            description: ""
+        },
+        attendees: [],
+        wfclickers: [{
+            clicker: "",
+            answers: [],
+            correct: ""
+        }],
+        feedback: ""
     });
 
+    console.log("Here is the room that just got created:");
+    console.log(newRoom);
+
     newRoom.save()
-        .then(() => res.json(newRoom))
-        .catch(err => err.status(400).json(err));
+        .then(() => res.redirect('/host')) //not redirecting properly
+        .catch(err => console.log(err));
+        //.catch(err => err.status(400).json(err));
+
 })
 
 /*
@@ -54,7 +84,7 @@ router.route('/create').post((req, res) => {
 router.route('/:id').get((req, res) => {
     const roomId = req.params.id;
     // database query
-    WorkshopRoom.findById(roomId)   
+    Room.findById(roomId)
         // send the room back to client-side
         .then(room => res.json(room))
         .catch(err => res.status(400).json(err));
@@ -67,7 +97,7 @@ router.route('/:id').get((req, res) => {
 router.route('/:id/questions/').get((req, res) => {
     const roomId = req.params.id;
     // database query
-    WorkshopRoom.findById(roomId)   
+    Room.findById(roomId)
         // send the questions back to client-side
         .then(room => res.json(room.questions))
         .catch(err => res.status(400).json(err));
@@ -85,12 +115,12 @@ router.route('/:id/questions/add').post((req, res) => {
     const questions = room.questions;
     questions.push(question);
     WorkshopRoom.findByIdAndUpdate(roomId, {questions: questions},
-        function(err, result){
+        function(err, ans){
             if(err) {
                 res.send(err)
             }
             else {
-                res.send(result)
+                res.send(ans)
             }
         }
     )
@@ -122,7 +152,7 @@ router.route('/:roomId/questions/:qId').get((req, res) => {
 router.route('/:id/clickers/').get((req, res) => {
     const roomId = req.params.id;
     // database query
-    WorkshopRoom.findById(roomId)   
+    Room.findById(roomId)
         // send the clicker questions back to client-side
         .then(room => res.json(room.wfclickers))
         .catch(err => res.status(400).json(err));
@@ -140,12 +170,12 @@ router.route('/:id/clickers/add').post((req, res) => {
     const wfclickers = room.wfclickers;
     wfclickers.push(wfclicker);
     WorkshopRoom.findByIdAndUpdate(roomId, {wfclickers: wfclickers},
-        function(err, result){
+        function(err, ans){
             if(err) {
                 res.send(err)
             }
             else {
-                res.send(result)
+                res.send(ans)
             }
         }
     )
