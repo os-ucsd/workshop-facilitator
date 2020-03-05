@@ -16,7 +16,6 @@ function App() {
         <Route exact path="/host" component={Host} />
         <Route exact path="/create" component={Create} />
         <Route exact path="/join" component={Join} />
-        <Route exact path="/upload" component={UploadFiles} />
       </Router>
     </div>
   );
