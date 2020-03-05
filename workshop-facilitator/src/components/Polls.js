@@ -295,6 +295,8 @@ class Polls extends React.Component {
                 <br></br>
                 {isHost? this.state.isEmptyState && 
                 <Button variant="contained" color="primary" onClick={this.handleOpen}>Add Poll</Button> : null }
+                
+                {/* Add Poll Dialog */}
                 <Dialog open={this.state.addPoll} onClose={this.handleClose} aria-labelledby="form-dialog-title" fullWidth="md">
                     <DialogTitle id="form-dialog-title">New Poll</DialogTitle>
                     <DialogContent>
@@ -365,6 +367,7 @@ class Polls extends React.Component {
                     </DialogActions>
                 </Dialog>
 
+                {/* Edit Poll Dialog */}
                 <Dialog open={this.state.editPoll} onClose={this.handleClose} aria-labelledby="form-dialog-title" fullWidth="md">
                     <DialogTitle id="form-dialog-title">Edit Poll</DialogTitle>
                     <DialogContent>
@@ -375,7 +378,7 @@ class Polls extends React.Component {
                             id="question"
                             label="Question"
                             type="text"
-                            value={this.state.poll.question}
+                            defaultValue={this.state.poll.question}
                             fullWidth
                         />
                         <TextField
