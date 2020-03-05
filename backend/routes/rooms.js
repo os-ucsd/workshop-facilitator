@@ -102,15 +102,18 @@ router.route('/:id/questions/').get((req, res) => {
 */
 router.route('/:id/questions/add').post((req, res) => {
     const roomId = req.params.id;
-    const questions = req.body.questions;
+    const question = req.body.question;
     // database query
-    Room.findByIdAndUpdate(roomId, {questions: questions},
-        function(err, result){
+    const room = Room.findById(roomId);
+    const questions = room.questions;
+    questions.push(question);
+    WorkshopRoom.findByIdAndUpdate(roomId, {questions: questions},
+        function(err, ans){
             if(err) {
                 res.send(err)
             }
             else {
-                res.send(result)
+                res.send(ans)
             }
         }
     )
@@ -124,7 +127,7 @@ router.route('/:roomId/questions/:qId').get((req, res) => {
     const roomId = req.params.roomId;
     const questionId = req.params.qId;
 
-    Room.findById(roomId, (err, room) => {
+    WorkshopRoom.findById(roomId, (err, room) => {
         var question = room.questions.filter(id => id.equals(questionId))
         if(err) {
             res.send(err)
@@ -154,15 +157,18 @@ router.route('/:id/clickers/').get((req, res) => {
 */
 router.route('/:id/clickers/add').post((req, res) => {
     const roomId = req.params.id;
-    const wfclickers = req.body.wfclickers;
+    const wfclicker = req.body.wfclicker;
     // database query
-    Room.findByIdAndUpdate(roomId, {wfclickers: wfclickers},
-        function(err, result){
+    const room = Room.findById(roomId);
+    const wfclickers = room.wfclickers;
+    wfclickers.push(wfclicker);
+    WorkshopRoom.findByIdAndUpdate(roomId, {wfclickers: wfclickers},
+        function(err, ans){
             if(err) {
                 res.send(err)
             }
             else {
-                res.send(result)
+                res.send(ans)
             }
         }
     )
@@ -176,7 +182,7 @@ router.route('/:roomId/clickers/:cId').get((req, res) => {
     const roomId = req.params.roomId;
     const wfclickerId = req.params.cId;
 
-    Room.findById(roomId, (err, room) => {
+    WorkshopRoom.findById(roomId, (err, room) => {
         var wfclicker = room.wfclickers.filter(id => id.equals(wfclickerId))
         if(err) {
             res.send(err)

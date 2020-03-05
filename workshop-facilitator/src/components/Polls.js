@@ -195,9 +195,10 @@ class Polls extends React.Component {
 
     getAnswers = evt => {
         evt.preventDefault();
+        const pollId = evt.target.id;
 
         // emit socket event to get the answers and put it in the state
-        socket.emit("getAnswers");
+        socket.emit("getAnswers", pollId);
     }
 
     showAnswer = evt => {
@@ -232,13 +233,15 @@ class Polls extends React.Component {
                     this.state.showAnswer ? "Hide Answer" : "Show Answer"
                 }
             </button>
+            <button id={this.state.poll._id} onClick={this.getAnswers}>Get User Answers</button>
+
             {/*
             <Poll socket={socket} id={this.state.poll._id} question={this.state.poll.question} 
                 options={this.state.poll.options} showAnswer={this.state.showAnswer} isPublished={this.state.poll._id === this.state.publishedPoll._id}
                 isHost={isHost}/>
             */}
             <Poll socket={socket} id={this.state.poll._id} poll={this.state.poll} showAnswer={this.state.showAnswer} 
-                isPublished={this.state.poll._id === this.state.publishedPoll._id} isHost={isHost}/>
+                isPublished={this.state.poll._id === this.state.publishedPoll._id} isHost={isHost} userAnswers={this.state.answers}/>
         </div>
 
         return (
@@ -257,7 +260,6 @@ class Polls extends React.Component {
                                     }
                                     <button id={poll._id} onClick={this.publishPoll}>Publish</button>
                                     <button id={poll._id} onClick={this.deletePoll}>Delete</button>
-                                    <button id={poll._id} onClick={this.getAnswers}>Get User Answers</button>
                                 </div>
                         ) : 
                         // if there's a published poll, show it for the user and if not, show nothing
