@@ -29,16 +29,19 @@ connection.once('open', () => {
 // initialize socket.io with the server
 const io = require('socket.io').listen(server);
 
-let answerA = 5;
-let answerB = 3;
-let answerC = 20;
-let answerD = 15;
+let answerA = 0;
+let answerB = 0;
+let answerC = 0;
+let answerD = 0;
 
 let currPollQuestion = {};
 
 // io object will listen for connection event
 io.on("connection", socket => {
     console.log("user connected");
+
+    // whenever user connected, if there's a published poll, automatically send the new user
+    if (currPollQuestion._id) io.sockets.emit("publish", currPollQuestion);
 
     // listen for when a new poll was sent out, show to all clients
     socket.on("publish", pollData => {
@@ -97,7 +100,8 @@ io.on("connection", socket => {
         answerD = 0;
 
         console.log("poll unpublished");
-        socket.emit("unpublish", {text: "unpublish complete"});
+        // unpublish for all users (host and user), so it disappears from screen
+        io.sockets.emit("unpublish", {text: "unpublish complete"});
     })
 
     // listen for when an answer was submitted

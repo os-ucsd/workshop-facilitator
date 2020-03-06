@@ -221,6 +221,9 @@ class Polls extends React.Component {
     unpublishPoll = evt => {
         evt.preventDefault();
         const pollId = evt.target.id;
+
+        // clear the answers state
+        this.setState({answers: {}})
         
         console.log("unpublishing poll...");
         // emit poll to server to emit to all clients and send poll that you
@@ -269,19 +272,22 @@ class Polls extends React.Component {
         // make every poll's id the _id that mongodb creates for each poll when we send poll to db
         const poll = 
         <div>
-            <button onClick={this.handleBack}>Back</button>
-            <button id={this.state.poll._id} onClick={this.unpublishPoll}>Unpublish</button>
-            <button id={this.state.poll._id} onClick={this.showAnswer}>
-                {
-                    // change the text of the button depending on if the user has the answer shown or hidden
-                    this.state.showAnswer ? "Hide Answer" : "Show Answer"
-                }
-            </button>
-            <button id={this.state.poll._id} onClick={this.getAnswers}>Get User Answers</button>
-
-            <button onClick={this.editPoll}>
-                Edit
-            </button>
+            {
+                // only host can have these button options
+                isHost ? 
+                    <React.Fragment>
+                        <button onClick={this.handleBack}>Back</button>
+                        <button id={this.state.poll._id} onClick={this.unpublishPoll}>Unpublish</button>
+                        <button id={this.state.poll._id} onClick={this.showAnswer}>
+                            {
+                                // change the text of the button depending on if the user has the answer shown or hidden
+                                this.state.showAnswer ? "Hide Answer" : "Show Answer"
+                            }
+                        </button>
+                        <button id={this.state.poll._id} onClick={this.getAnswers}>Get User Answers</button>
+                    </React.Fragment>
+                    : null
+            }
             {/*
             <Poll socket={socket} id={this.state.poll._id} question={this.state.poll.question} 
                 options={this.state.poll.options} showAnswer={this.state.showAnswer} isPublished={this.state.poll._id === this.state.publishedPoll._id}
@@ -309,19 +315,24 @@ class Polls extends React.Component {
                                     <button id={poll._id} onClick={this.deletePoll}>Delete</button>
                                 </div>
                         ) : 
-                        // if there's a published poll, show it for the user and if not, show nothing
+                        /* if there's a published poll, show it for the user and if not, show nothing
                         publishedPoll._id ? 
                             <Poll socket={socket} id={publishedPoll._id} poll={publishedPoll} showAnswer={this.state.showAnswer} 
                                 isPublished={true} isHost={isHost}/> : null
+                                */
+                        null
                 }
                 {
-                    isHost ? this.state.isPollState && poll : null
+                    // show current poll if a poll should be shown
+                    isHost || (!isHost && this.state.publishedPoll) ? this.state.isPollState && poll : null
                 }
                 <br></br>
+
                 {isHost? this.state.isEmptyState && 
                 <Button variant="contained" color="primary" onClick={this.handleOpen}>Add Poll</Button> : null }
                 
                 {/* Add Poll Dialog */}
+
                 <Dialog open={this.state.addPoll} onClose={this.handleClose} aria-labelledby="form-dialog-title" fullWidth="md">
                     <DialogTitle id="form-dialog-title">New Poll</DialogTitle>
                     <DialogContent>
