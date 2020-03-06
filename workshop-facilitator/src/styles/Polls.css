@@ -21,10 +21,31 @@
     width: 40vw;
     height: 10vh;
     border-radius: 10px;
+    transition: transform 0.3s ease-out;
 }
 
 .poll:hover{
     cursor: pointer;
-    background-color: gray; 
-    color: white;
+    transform: scale(0.95);
+}
+
+.header{
+    display: flex;
+    justify-content: center;
+}
+
+.btn{
+    border: none;
+    width: 150px;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px;
+    box-shadow: 1px 1px 3px 0px #ccc;
+    transition: transform 0.3s ease-out;
+    outline: none;
+}
+
+.btn:hover{
+    cursor: pointer;
+    transform: scale(0.95);
 }

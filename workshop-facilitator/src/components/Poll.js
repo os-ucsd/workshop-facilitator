@@ -1,4 +1,6 @@
 import React from 'react';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 import '../styles/Polls.css'
 
@@ -9,7 +11,29 @@ class Poll extends React.Component {
         this.state = {
             // if a user, then can only answer once so this is set to true once answered
             answered: "",
+            colors: ["#748386", "#9DC7C8", "#6A3937", "#8F6593", "#698F3F", "#387D7A"],
+            selectedColors: [],
+            anchorEl: null
         }
+    }
+
+    componentDidMount(){
+        let selectedColors = [];
+        // calculate four different random colors for each answer choice
+        let currIdx = Math.floor(Math.random() * this.state.colors.length);
+        selectedColors.push(currIdx);
+
+        // find a different color
+        while (selectedColors.includes(currIdx)) currIdx = Math.floor(Math.random() * this.state.colors.length);
+        selectedColors.push(currIdx);
+
+        while (selectedColors.includes(currIdx)) currIdx = Math.floor(Math.random() * this.state.colors.length);
+        selectedColors.push(currIdx);
+
+        while (selectedColors.includes(currIdx)) currIdx = Math.floor(Math.random() * this.state.colors.length);
+        selectedColors.push(currIdx);
+
+        this.setState({selectedColors})
     }
 
     /*
@@ -29,9 +53,25 @@ class Poll extends React.Component {
         socket.emit("answer", {answer});
     }
 
+    openSettingsClick = evt => {
+        this.setState({anchorEl: evt.target})
+    }
+
+    handleClose = evt => {
+        this.setState({anchorEl: null})
+    }
+
     render() {
-        const {isPublished, isHost, showAnswer, poll, userAnswers, showUserAnswers} = this.props;
+        const {isPublished, isHost, showAnswer, poll, userAnswers, showUserAnswers,
+            editPoll, unpublishPoll, getAnswers, displayAnswer} = this.props;
         const {answered} = this.state;
+
+        const {selectedColors} = this.state;
+        const colorA = this.state.colors[selectedColors[0]];
+        const colorB = this.state.colors[selectedColors[1]];
+        const colorC = this.state.colors[selectedColors[2]];
+        const colorD = this.state.colors[selectedColors[3]];        
+
         let totAnswers = -1;
         let percentA = -1;
         let percentB = -1;
@@ -49,9 +89,35 @@ class Poll extends React.Component {
             percentD = userAnswers.answerD ? Math.floor((userAnswers.answerD / totAnswers) * 100) : 0;
         }
 
+        const settingsMenu =
+            <div>
+                <button class="btn" onClick={this.openSettingsClick}>Menu</button>
+                <Menu anchorEl={this.state.anchorEl} keepMounted open={Boolean(this.state.anchorEl)} onClose={this.handleClose}>
+                    <MenuItem  id={poll._id} onClick={editPoll}>Edit</MenuItem>
+                    <MenuItem  id={poll._id} onClick={unpublishPoll}>Unpublish</MenuItem>
+                    {
+                        // determine whether to display show user answers or hide useranswers based on current state
+                        showUserAnswers ? <MenuItem  id={poll._id} onClick={getAnswers}>Hide User Answers</MenuItem> :
+                            <MenuItem  id={poll._id} onClick={getAnswers}>Get User Answers</MenuItem>
+
+                    }
+                    {
+                        // determine whether to display show answer or hide answer based on current state
+                        showAnswer ? <MenuItem  id={poll._id} onClick={displayAnswer}>Hide Answer</MenuItem> : 
+                            <MenuItem  id={poll._id} onClick={displayAnswer}>Show Answer</MenuItem>
+                    }
+                </Menu>
+            </div>
+
         return(
             <div>
-                <h2>{poll._id}. {poll.question}</h2>
+                <div className="header">
+                    <h2>{poll._id}. {poll.question}</h2>
+                    {
+                        // only show settings if the host is viewing
+                        isHost ? settingsMenu : null
+                    }
+                </div>
                 {
                     // if this is the currently published question, show the host that it is published
                     isPublished ? <p>Published</p> : null
@@ -64,8 +130,11 @@ class Poll extends React.Component {
                         isHost ? 
                         <button key={option} id={option} className="poll" variant="contained" onClick={this.sendAnswer} 
                             style={{
-                                backgroundColor: showAnswer && option === poll.answer ? "black" : "#E3E3E3",
-                                color: showAnswer && option === poll.answer ? "white" : "black",
+                                backgroundColor: showAnswer && option === poll.answer ? "black" : 
+                                    option === "A" ? colorA : 
+                                    option === "B" ? colorB :
+                                    option === "C" ? colorC : colorD,
+                                color: "white",
                             }} 
                             disabled>
                             {
@@ -86,14 +155,23 @@ class Poll extends React.Component {
                         </button> :
                         // if not a host, allow answering
                         answered !== "" ? 
+                            // if answered, don't allow answer again
                             <button key={option} id={option} className="poll" variant="contained"
                                 style={{
-                                    backgroundColor: answered === option ? "#B2CEDE" : null,
-                                    color: answered === option ? "white" : "black"
+                                    backgroundColor: answered === option ? "#B2CEDE" : "black",
+                                    color: "white",
+                                    //border: answered === option ? "5px" : "0px"
                                 }}>
                                 {option} : {poll.options[option]}
                             </button> :
                             <button key={option} id={option} className="poll" variant="contained" 
+                                style={{
+                                    backgroundColor: answered === option ? "#B2CEDE" : 
+                                        option === "A" ? colorA : 
+                                        option === "B" ? colorB :
+                                        option === "C" ? colorC : colorD,
+                                    color: "white"
+                                }}
                                 onClick={this.sendAnswer}>
                                 {option} : {poll.options[option]}
                             </button>

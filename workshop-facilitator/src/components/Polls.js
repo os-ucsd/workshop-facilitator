@@ -272,31 +272,10 @@ class Polls extends React.Component {
         // make every poll's id the _id that mongodb creates for each poll when we send poll to db
         const poll = 
         <div>
-            {
-                // only host can have these button options
-                isHost ? 
-                    <React.Fragment>
-                        <button onClick={this.handleBack}>Back</button>
-                        <button id={this.state.poll._id} onClick={this.unpublishPoll}>Unpublish</button>
-                        <button id={this.state.poll._id} onClick={this.showAnswer}>
-                            {
-                                // change the text of the button depending on if the user has the answer shown or hidden
-                                this.state.showAnswer ? "Hide Answer" : "Show Answer"
-                            }
-                        </button>
-                        {
-                            this.state.showUserAnswers ? 
-                                <button id={this.state.poll._id} onClick={this.getAnswers}>Hide User Answers</button> :
-                                <button id={this.state.poll._id} onClick={this.getAnswers}>Get User Answers</button>
-
-                        }
-                        <button onClick={this.editPoll}>Edit</button> 
-                    </React.Fragment>
-                    : null
-            }
             <Poll socket={socket} id={this.state.poll._id} poll={this.state.poll} showAnswer={this.state.showAnswer} 
                 isPublished={this.state.poll._id === this.state.publishedPoll._id} isHost={isHost} userAnswers={this.state.answers}
-                showUserAnswers={this.state.showUserAnswers}/>
+                showUserAnswers={this.state.showUserAnswers} unpublishPoll={this.unpublishPoll} displayAnswer={this.showAnswer}
+                getAnswers={this.getAnswers} editPoll={this.editPoll}/>
         </div>
 
         return (
