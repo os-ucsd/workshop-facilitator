@@ -10,6 +10,8 @@ import Resources from "../components/Resources";
 import Questions from "../components/Questions";
 import Polls from "../components/Polls";
 import io_client from "socket.io-client"
+import "../styles/User.css";
+
 
 
 let socket;
@@ -58,48 +60,41 @@ class User extends React.Component {
         return (
             <div className="Layout">      
                 <Grid container>
-                    <div>                     
-                        <AppBar position="fixed">
-                            <Toolbar>
-                                <Typography variant="h8">
-                                    Welcome to the Workshop!
-                                </Typography>
-                            </Toolbar>
-                        </AppBar>
-                        <Paper style={{height: "5vh" , width: "1vw"}}></Paper>                                                                
-                        <Grid item xs={8}>
-                            <Paper style={{height: "35vh" , width: this.state.collapsed ? "95vw" : "78vw"}}>
+                    <div>                      
+                            <Paper sacing={0} style={{height: "35vh" , width: this.state.collapsed ? "95vw" : "78vw"}}>
                                 <Polls/>
                             </Paper>
-                        </Grid>
-                        
                         <Grid item xs={8} >
-                        <Paper style={{height: "51vh" , width: this.state.collapsed ? "95vw" : "78vw"}}>
-                            <Questions/>
+                            <Paper style={{height: "58vh" , width: this.state.collapsed ? "95vw" : "78vw"}}>
+                                <Questions/>
+                            </Paper>
+                        </Grid>
+                        <Paper style={{height: "6vh" , width: this.state.collapsed ? "95vw" : "78vw"}}>
+                            <Grid container>
+                                <form style={{width: this.state.collapsed ? "89vw" : "72vw"}} noValidate autoComplete = "off" onSubmit = {this.postQuestion} onChange = {this.handleChange}>
+                                    <TextField fullWidth placeholder="Ask a Question" id = "question" label = "Question" variant = "outlined" />
+                                </form>
+                                <Button style={{height: "5vh", width: "6vw"}} onClick={this.postQuestion} variant = "containted">
+                                    Submit
+                                </Button>
+                            </Grid>
                         </Paper>
-                        </Grid>
-                        <Grid container>
-                            <form style={{width: this.state.collapsed ? "90vw" : "73vw"}} noValidate autoComplete = "off" onSubmit = {this.postQuestion} onChange = {this.handleChange}>
-                                <TextField fullWidth placeholder="Ask a Question" id = "question" label = "Question" variant = "outlined" />
-                            </form>
-                            <Button style={{height: "6vh", width: "6vh"}} onClick={this.postQuestion} variant = "containted" color = "primary">
-                                Submit
-                            </Button>
-                        </Grid>
                     </div>
                     
                     <div>
-                        <Paper style={{height: "5vh" , width: "1vw"}}></Paper>  
-                        <Grid container style={{maxWidth: "28vh"}}>                                                              
-                            <Button style={{height: "95vh", width: "6vh"}} onClick={this.collapse} variant="outlined"> {this.state.collapsed ? "<" : ">"} </Button>
-                            <Grid item xs={4}>
-                                <Paper style={{height: this.state.collapsed ? "0vh" : "93vh", width: this.state.collapsed ? "0vh" : "34vh"}}>
-                                    {this.state.collapsed ? false : <Resources />}
-                                </Paper>
-                            </Grid>
+                        <Grid item xs={4}>
+                            <Paper style={{height: this.state.collapsed ? "0vh" : "100vh", width: this.state.collapsed ? "0vh" : "21vw"}}>
+                                <Grid container direction="row">                                                              
+                                    <Grid item xs={15}>
+                                        <Button style={{height: this.state.collapsed ? "100vh" : "100vh", width: "3vw"}} onClick={this.collapse} variant="outlined"> {this.state.collapsed ? "<" : ">"} </Button>
+                                    </Grid>
+                                    <Grid item xs={15}>                                   
+                                        {this.state.collapsed ? false : <Resources />}                                   
+                                    </Grid>    
+                                </Grid>
+                            </Paper>
                         </Grid>
                     </div>          
-                    
                 </Grid>         
             </div>
         )

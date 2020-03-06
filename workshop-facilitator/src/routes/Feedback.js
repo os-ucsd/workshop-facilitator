@@ -1,6 +1,8 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import Checkbox from '@material-ui/core/Checkbox';
+import FormLabel from '@material-ui/core/FormLabel';
 import { BrowserRouter as Router, Link } from "react-router-dom";
 
 import "../styles/Feedback.css";
@@ -33,7 +35,7 @@ class Feedback extends React.Component {
 
   render() {
     return (
-      <div className="">
+      <div>
         <Link to="/join" className="back">
           <Button width="100%" variant="contained" color="primary">
             Back
@@ -60,11 +62,17 @@ class Feedback extends React.Component {
               <br />
               <br />
               <br />
+              <FormLabel>I would not like feedback</FormLabel>
+              <Checkbox></Checkbox>
+              <br />
+              <br />
+              <br />
               <Link to="/user" className="userLink" color="secondary">
                 <Button width="100%" variant="contained" color="secondary">
                   Join
                 </Button>
               </Link>
+              
             </form>
         </div>
       </div>

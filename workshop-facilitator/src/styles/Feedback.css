@@ -3,7 +3,7 @@
     margin-left: 35px; /* defines space around the border */
     padding-left: 10px; /* defines space between border and element */
     padding-bottom: 10px;
-    width: 80vh;
+    width: 60vw;
     border-color: rgb(0, 51, 204); 
     border-width:3px;  
     border-style:groove;
