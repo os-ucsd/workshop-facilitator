@@ -5,7 +5,7 @@ import Create from "./routes/Create";
 import Home from "./routes/Home";
 import Join from "./routes/Join";
 import User from "./routes/User";
-import UploadFiles from "./routes/UploadFiles";
+//import UploadFiles from "./routes/UploadFiles";
 import "./App.css";
 
 function App() {
