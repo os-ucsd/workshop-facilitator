@@ -405,6 +405,7 @@ class Polls extends React.Component {
                 </Dialog>
 
                 {/* Edit Poll Dialog */}
+                
                 <Dialog open={this.state.editPoll} onClose={this.handleClose} aria-labelledby="form-dialog-title" fullWidth="md">
                     <DialogTitle id="form-dialog-title">Edit Poll</DialogTitle>
                     <DialogContent>
