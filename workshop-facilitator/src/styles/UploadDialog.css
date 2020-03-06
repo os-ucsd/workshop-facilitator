@@ -1,0 +1,7 @@
+.OpenDialogBtn{
+    bottom: 2%;
+    position: absolute;
+    display: inline-block;
+    justify-content: center;
+    width: inherit;
+}
