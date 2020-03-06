@@ -1,5 +1,7 @@
 .qListContainer{
+    background-color: white;
     height: inherit;
+    min-height: 200px;
     overflow: scroll;
     overflow-x: hidden;
 }

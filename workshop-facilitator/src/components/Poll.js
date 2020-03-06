@@ -56,11 +56,6 @@ class Poll extends React.Component {
                     // if this is the currently published question, show the host that it is published
                     isPublished ? <p>Published</p> : null
                 }
-
-                {
-                    // show the answer if set to true
-                    showAnswer ? <p>{poll.answer}</p> : null
-                }
                    
                 {
                     // key, id of each answer = the letter
