@@ -36,16 +36,16 @@ class Host extends React.Component {
         return (
             <SplitPane
                 split="vertical"
-                minSize={1000}
+                minSize="90%"
                 maxSize={-200}
-                defaultSize={1300}
+                defaultSize="85%"
                 className="primary"
             >
                 <SplitPane
                     split="horizontal"
                     minSize={200}
-                    maxSize={-300}
-                    defaultSize={400}
+                    maxSize={-200}
+                    defaultSize="50%"
                 >
                     <div>
                         <Polls isHost={true}/>

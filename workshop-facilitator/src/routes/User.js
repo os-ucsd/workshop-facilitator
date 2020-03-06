@@ -28,7 +28,6 @@ class User extends React.Component {
     componentDidMount(){
         // make connection between this client and the server (which is active on port 5000)
         socket = io_client(this.state.ENDPOINT);
-
     }
 
     postQuestion = (e) => {
@@ -69,7 +68,7 @@ class User extends React.Component {
                         <Paper style={{height: "5vh" , width: "1vw"}}></Paper>                                                                
                         <Grid item xs={8}>
                             <Paper style={{height: "35vh" , width: this.state.collapsed ? "95vw" : "78vw"}}>
-                                <Polls/>
+                                <Polls isHost={false}/>
                             </Paper>
                         </Grid>
                         
