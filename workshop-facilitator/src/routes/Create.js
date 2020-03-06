@@ -63,7 +63,7 @@ class Create extends React.Component{
         //using .text() instead of .json to avoid errors
         .then((resp) => resp.text())
         // if success and data was sent back, log the data
-        .then((data) => console.log("Success. here is the resp.() dump: ", data))
+        .then((data) => handleSuccess(data))
         // if failure, log the error
         .catch((err) => console.log("Error", err));
 
@@ -117,7 +117,13 @@ class Create extends React.Component{
 
     }
 
+
+
 }
+    function handleSuccess(data){
+        console.log("Success. here is the resp.() dump: ", data);
+        window.location.replace('http://localhost:3000/host');
+    }
 
 
 
