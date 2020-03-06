@@ -29,10 +29,10 @@ connection.once('open', () => {
 // initialize socket.io with the server
 const io = require('socket.io').listen(server);
 
-let answerA = 0;
-let answerB = 0;
-let answerC = 0;
-let answerD = 0;
+let answerA = 5;
+let answerB = 3;
+let answerC = 20;
+let answerD = 15;
 
 let currPollQuestion = {};
 
@@ -118,7 +118,18 @@ io.on("connection", socket => {
     })
 
     // listen for when the host wants to see the answers
-    socket.on("getAnswers", () => {
+    socket.on("getAnswers", pollId => {
+        // if poll is not the currently published poll or no published poll, don't show answers
+        if (!currPollQuestion._id){
+            socket.emit("err", {error: "cannot get answers because no poll is published"});
+            return;
+        }
+
+        if (currPollQuestion._id && currPollQuestion._id.toString() !== pollId){
+            socket.emit("err", {error: "this poll is not the published poll, so can't get answers"});
+            return;
+        }
+
         socket.emit("getAnswers", {answerA, answerB, answerC, answerD});
     })
 
@@ -136,4 +147,7 @@ io.on("connection", socket => {
 
 // make room routes visible
 const roomsRouter = require('./routes/rooms');
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 app.use('/rooms', roomsRouter);

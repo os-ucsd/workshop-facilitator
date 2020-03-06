@@ -15,10 +15,11 @@
 }
 
 .poll {
-    padding: 20px;
+    /*padding: 20px;*/
     border: 0;
     margin: 5px;
     width: 40vw;
+    height: 20vh;
     border-radius: 10px;
 }
 
