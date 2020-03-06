@@ -20,7 +20,7 @@ function App() {
         <Route exact path="/create" component={Create} />
         <Route exact path="/join" component={Join} />
         <Route exact path="/user" component={User} />
-        //<Route exact path="/upload" component={UploadFiles} />
+        {/*<Route exact path="/upload" component={UploadFiles} />*/}
         <Route exact path="/feedback" component={Feedback} />
 
       </Router>
