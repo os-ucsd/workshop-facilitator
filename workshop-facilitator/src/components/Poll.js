@@ -30,7 +30,7 @@ class Poll extends React.Component {
     }
 
     render() {
-        const {isPublished, isHost, showAnswer, poll, userAnswers} = this.props;
+        const {isPublished, isHost, showAnswer, poll, userAnswers, showUserAnswers} = this.props;
         const {answered} = this.state;
         let totAnswers = -1;
         let percentA = -1;
@@ -70,7 +70,7 @@ class Poll extends React.Component {
                             disabled>
                             {
                                 // if published, able to show answers. if not, then don't show any answers
-                                isPublished && totAnswers !== -1 ? 
+                                isPublished && showUserAnswers && totAnswers !== -1 ? 
                                     <div style={{
                                         float: "left", backgroundColor: "#B2CEDE", 
                                         width: `${option === "A" ? percentA : 

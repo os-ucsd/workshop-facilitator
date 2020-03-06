@@ -72,7 +72,7 @@ class User extends React.Component {
                     defaultSize="50%"
                 >
                     <div>
-                        <Polls isHost={true}/>
+                        <Polls isHost={false}/>
                     </div>
                     <div>
                         <Questions />
