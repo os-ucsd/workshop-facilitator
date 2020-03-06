@@ -285,6 +285,7 @@ class Polls extends React.Component {
                             }
                         </button>
                         <button id={this.state.poll._id} onClick={this.getAnswers}>Get User Answers</button>
+                        <button onClick={this.editPoll}>Edit</button> 
                     </React.Fragment>
                     : null
             }
