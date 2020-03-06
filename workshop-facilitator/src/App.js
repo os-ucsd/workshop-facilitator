@@ -6,6 +6,8 @@ import Home from "./routes/Home";
 import Join from "./routes/Join";
 import User from "./routes/User";
 //import UploadFiles from "./routes/UploadFiles";
+import Feedback from "./routes/Feedback";
+
 import "./App.css";
 
 function App() {
@@ -18,6 +20,9 @@ function App() {
         <Route exact path="/create" component={Create} />
         <Route exact path="/join" component={Join} />
         <Route exact path="/user" component={User} />
+        //<Route exact path="/upload" component={UploadFiles} />
+        <Route exact path="/feedback" component={Feedback} />
+
       </Router>
     </div>
   );
