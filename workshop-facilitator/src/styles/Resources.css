@@ -2,10 +2,10 @@
     text-align: left;
     padding-left: 2%;
 }
-.uploadBtn{
+.UploadDialog{
     bottom: 2%;
-    position: absolute;
     display: inline-block;
+    position: absolute;
     justify-content: center;
-    width: inherit;
+    text-align: center;
 }

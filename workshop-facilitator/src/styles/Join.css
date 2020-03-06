@@ -28,6 +28,7 @@
   width: 50px;
 }
 
+
 .back {
   margin: 0;
   position: absolute;
@@ -35,4 +36,10 @@
   left: 4%;
   -ms-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
+}
+
+.backButton{
+    text-align: left;
+    margin-left: 10px;
+    margin-top: 10px;
 }

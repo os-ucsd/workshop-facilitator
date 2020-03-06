@@ -13,16 +13,12 @@ const WorkshopRoom = require("../models/workshop_room.model.js"); //added to be 
 */
 router.route('/').get((req, res) => {
     // database query
-
-
-    /* work in progress for get all rooms
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     console.log("fetching all rooms...");
 
     WorkshopRoom.find()
         .then(rooms => res.json(rooms))
         .catch(err => res.status(400).json(err))
-    */
 })
 
 
@@ -32,9 +28,6 @@ router.route('/').get((req, res) => {
 */
 router.route('/create').post((req, res) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-
-
-
     /* for testing
     console.log("in /create Route");
     console.log("Here is the req,body below");
