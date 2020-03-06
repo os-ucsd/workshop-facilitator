@@ -51,6 +51,7 @@ class Polls extends React.Component {
             publishedPoll: {},
             addPoll: false,
             editPoll: false,
+            showUserAnswers: false,
             //new poll
             question: '',
             optionA: '',
@@ -95,7 +96,8 @@ class Polls extends React.Component {
         socket.on("getAnswers", answers => {
             console.log("getting answers...");
             this.setState({
-                answers
+                answers,
+                showUserAnswers: true,
             })
         })
 
@@ -245,8 +247,14 @@ class Polls extends React.Component {
         evt.preventDefault();
         const pollId = evt.target.id;
 
-        // emit socket event to get the answers and put it in the state
-        socket.emit("getAnswers", pollId);
+        // if already showing user answers, hide it and if not showing, get answers
+        if (this.state.showUserAnswers){
+            this.setState({showUserAnswers: false});
+        }
+        else{
+            // emit socket event to get the answers and put it in the state
+            socket.emit("getAnswers", pollId);
+        }
     }
 
     showAnswer = evt => {
@@ -284,7 +292,12 @@ class Polls extends React.Component {
                                 this.state.showAnswer ? "Hide Answer" : "Show Answer"
                             }
                         </button>
-                        <button id={this.state.poll._id} onClick={this.getAnswers}>Get User Answers</button>
+                        {
+                            this.state.showUserAnswers ? 
+                                <button id={this.state.poll._id} onClick={this.getAnswers}>Hide User Answers</button> :
+                                <button id={this.state.poll._id} onClick={this.getAnswers}>Get User Answers</button>
+
+                        }
                     </React.Fragment>
                     : null
             }
@@ -294,9 +307,10 @@ class Polls extends React.Component {
                 isHost={isHost}/>
             */}
             <Poll socket={socket} id={this.state.poll._id} poll={this.state.poll} showAnswer={this.state.showAnswer} 
-                isPublished={this.state.poll._id === this.state.publishedPoll._id} isHost={isHost} userAnswers={this.state.answers}/>
+                isPublished={this.state.poll._id === this.state.publishedPoll._id} isHost={isHost} userAnswers={this.state.answers}
+                showUserAnswers={this.state.showUserAnswers}/>
         </div>
-
+        console.log(isHost);
         return (
             <div>
                 <h2>Polls</h2>
