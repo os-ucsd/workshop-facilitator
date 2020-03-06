@@ -14,6 +14,7 @@ class Feedback extends React.Component {
       name: "",
       email: "",
       roomCode: "",
+      feedback: false,
       valid: false
     };
   }
@@ -22,15 +23,20 @@ class Feedback extends React.Component {
     this.setState({
         [e.target.id]: e.target.value
     })
+    if(this.state.email!="") {
+      this.setState({
+        feedback: true
+      })
+    }
 }
 
   submitForm = e => {
     e.preventDefault();
     console.log(e.target);
+    console.log(this.state.feedback);
     this.setState({
       valid: true //Handle code validation here
     });
-
   };
 
   render() {

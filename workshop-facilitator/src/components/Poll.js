@@ -5,6 +5,11 @@ import '../styles/Polls.css'
 class Poll extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            // if a user, then can only answer once so this is set to true once answered
+            answered: "",
+        }
     }
 
     /*
@@ -17,7 +22,8 @@ class Poll extends React.Component {
         const {socket} = this.props;
         const answer = evt.target.id;
 
-        console.log(this.props);
+        // make it so the user can't answer again
+        this.setState({answered: answer})
 
         // send the answer to the server
         socket.emit("answer", {answer});
@@ -25,17 +31,23 @@ class Poll extends React.Component {
 
     render() {
         const {isPublished, isHost, showAnswer, poll, userAnswers} = this.props;
-        console.log(userAnswers);
+        const {answered} = this.state;
+        let totAnswers = -1;
+        let percentA = -1;
+        let percentB = -1;
+        let percentC = -1;
+        let percentD = -1;
 
-        // calculate what % of users voted for which answer if there exists any answers
-        const totAnswers = userAnswers.answerA ? 
-            userAnswers.answerA + userAnswers.answerB + userAnswers.answerC + userAnswers.answerD : 0;
-        console.log(totAnswers);
-        const percentA = userAnswers.answerA ? Math.floor((userAnswers.answerA / totAnswers) * 100) : 0;
-        const percentB = userAnswers.answerB ? Math.floor((userAnswers.answerB / totAnswers) * 100) : 0;
-        const percentC = userAnswers.answerC ? Math.floor((userAnswers.answerC / totAnswers) * 100) : 0;
-        const percentD = userAnswers.answerD ? Math.floor((userAnswers.answerD / totAnswers) * 100) : 0;
-        console.log(percentA, percentB, percentC, percentD);
+        // if user answers should be shown, show them
+        if (Object.entries(userAnswers).length !== 0 && userAnswers.constructor === Object){
+            // calculate what % of users voted for which answer if there exists any answers
+            totAnswers = userAnswers.answerA ? 
+                userAnswers.answerA + userAnswers.answerB + userAnswers.answerC + userAnswers.answerD : 0;
+            percentA = userAnswers.answerA ? Math.floor((userAnswers.answerA / totAnswers) * 100) : 0;
+            percentB = userAnswers.answerB ? Math.floor((userAnswers.answerB / totAnswers) * 100) : 0;
+            percentC = userAnswers.answerC ? Math.floor((userAnswers.answerC / totAnswers) * 100) : 0;
+            percentD = userAnswers.answerD ? Math.floor((userAnswers.answerD / totAnswers) * 100) : 0;
+        }
 
         return(
             <div>
@@ -63,7 +75,7 @@ class Poll extends React.Component {
                             disabled>
                             {
                                 // if published, able to show answers. if not, then don't show any answers
-                                isPublished ? 
+                                isPublished && totAnswers !== -1 ? 
                                     <div style={{
                                         float: "left", backgroundColor: "#B2CEDE", 
                                         width: `${option === "A" ? percentA : 
@@ -78,10 +90,18 @@ class Poll extends React.Component {
                             </p>
                         </button> :
                         // if not a host, allow answering
-                        <button key={option} id={option} className="poll" variant="contained" 
-                            onClick={this.sendAnswer}>
-                            {option} : {poll.options[option]}
-                        </button>
+                        answered !== "" ? 
+                            <button key={option} id={option} className="poll" variant="contained"
+                                style={{
+                                    backgroundColor: answered === option ? "#B2CEDE" : null,
+                                    color: answered === option ? "white" : "black"
+                                }}>
+                                {option} : {poll.options[option]}
+                            </button> :
+                            <button key={option} id={option} className="poll" variant="contained" 
+                                onClick={this.sendAnswer}>
+                                {option} : {poll.options[option]}
+                            </button>
                     )
                 }
             </div>

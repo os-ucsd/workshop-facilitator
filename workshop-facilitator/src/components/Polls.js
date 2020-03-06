@@ -10,6 +10,7 @@ import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
 
 
 import '../styles/Polls.css'
@@ -48,14 +49,15 @@ class Polls extends React.Component {
             poll: {},
             answers: {},
             publishedPoll: {},
-            addModal: false,
-            
+            addPoll: false,
+            editPoll: false,
             //new poll
             question: '',
             optionA: '',
             optionB: '',
             optionC: '',
-            optionD: ''
+            optionD: '',
+            answer: ''
         }
     }
 
@@ -117,14 +119,22 @@ class Polls extends React.Component {
 
     handleClose = () => {
         this.setState({
-            addPoll: false
+            addPoll: false,
+            editPoll: false
         })
     }
 
     handleChange = evt => {
-        this.setState({
-            [evt.target.id] : evt.target.value
-        })
+        if(evt.target.id === undefined) {
+            this.setState({
+                [evt.target.name] : evt.target.value,
+            })
+        }
+        else {
+            this.setState({
+                [evt.target.id] : evt.target.value,
+            })
+        }
     }
     
     handleAdd = () => {
@@ -137,12 +147,48 @@ class Polls extends React.Component {
                 B: this.state.optionB,
                 C: this.state.optionC,
                 D: this.state.optionD
-            }
+            },
+            answer: this.state.answer
         }
         polls.push(newPoll)
         this.setState({
-            polls: polls
+            polls
         })
+        this.handleClose();
+    }
+
+    editPoll = () => {
+        this.setState({
+            editPoll: true
+        })
+    }
+
+    handleEdit = evt => {
+        evt.preventDefault();
+        let updatedPoll = {
+            _id: this.state.poll._id,
+            question: evt.target[0].value,
+            options : {
+                A: evt.target[1].value,
+                B: evt.target[2].value,
+                C: evt.target[3].value,
+                D: evt.target[4].value
+            },
+            answer: evt.target[5].value
+        }
+
+        // Update the Polls array
+        const pollId = this.state.poll._id;
+        // find poll in the array of polls
+        const pollIndx = this.state.polls.findIndex(poll => poll._id === parseInt(pollId));
+        let polls = this.state.polls;
+        polls[pollIndx] = updatedPoll;
+        
+        this.setState({
+            poll: updatedPoll,
+            polls
+        })
+
         this.handleClose();
     }
 
@@ -152,7 +198,6 @@ class Polls extends React.Component {
 
         // find poll in the array of polls and remove it
         const pollIndx = this.state.polls.findIndex(poll => poll._id === parseInt(pollId));
-        console.log(pollIndx);
         this.setState(prevState => {
             prevState.polls.splice(pollIndx, 1);
             let polls = prevState.polls;
@@ -176,6 +221,9 @@ class Polls extends React.Component {
     unpublishPoll = evt => {
         evt.preventDefault();
         const pollId = evt.target.id;
+
+        // clear the answers state
+        this.setState({answers: {}})
         
         console.log("unpublishing poll...");
         // emit poll to server to emit to all clients and send poll that you
@@ -217,7 +265,6 @@ class Polls extends React.Component {
     }
 
     render() {
-        console.log(this.state);
         // prop sent from host or user page determining if the current user is a host or user
         const {isHost} = this.props;
         const {publishedPoll} = this.state;
@@ -225,16 +272,22 @@ class Polls extends React.Component {
         // make every poll's id the _id that mongodb creates for each poll when we send poll to db
         const poll = 
         <div>
-            <button onClick={this.handleBack}>Back</button>
-            <button id={this.state.poll._id} onClick={this.unpublishPoll}>Unpublish</button>
-            <button id={this.state.poll._id} onClick={this.showAnswer}>
-                {
-                    // change the text of the button depending on if the user has the answer shown or hidden
-                    this.state.showAnswer ? "Hide Answer" : "Show Answer"
-                }
-            </button>
-            <button id={this.state.poll._id} onClick={this.getAnswers}>Get User Answers</button>
-
+            {
+                // only host can have these button options
+                isHost ? 
+                    <React.Fragment>
+                        <button onClick={this.handleBack}>Back</button>
+                        <button id={this.state.poll._id} onClick={this.unpublishPoll}>Unpublish</button>
+                        <button id={this.state.poll._id} onClick={this.showAnswer}>
+                            {
+                                // change the text of the button depending on if the user has the answer shown or hidden
+                                this.state.showAnswer ? "Hide Answer" : "Show Answer"
+                            }
+                        </button>
+                        <button id={this.state.poll._id} onClick={this.getAnswers}>Get User Answers</button>
+                    </React.Fragment>
+                    : null
+            }
             {/*
             <Poll socket={socket} id={this.state.poll._id} question={this.state.poll.question} 
                 options={this.state.poll.options} showAnswer={this.state.showAnswer} isPublished={this.state.poll._id === this.state.publishedPoll._id}
@@ -262,16 +315,24 @@ class Polls extends React.Component {
                                     <button id={poll._id} onClick={this.deletePoll}>Delete</button>
                                 </div>
                         ) : 
-                        // if there's a published poll, show it for the user and if not, show nothing
+                        /* if there's a published poll, show it for the user and if not, show nothing
                         publishedPoll._id ? 
                             <Poll socket={socket} id={publishedPoll._id} poll={publishedPoll} showAnswer={this.state.showAnswer} 
                                 isPublished={true} isHost={isHost}/> : null
+                                */
+                        null
                 }
                 {
-                    isHost ? this.state.isPollState && poll : null
+                    // show current poll if a poll should be shown
+                    isHost || (!isHost && this.state.publishedPoll) ? this.state.isPollState && poll : null
                 }
                 <br></br>
-                <Button variant="contained" color="primary" onClick={this.handleOpen}>Add Poll</Button>
+
+                {isHost? this.state.isEmptyState && 
+                <Button variant="contained" color="primary" onClick={this.handleOpen}>Add Poll</Button> : null }
+                
+                {/* Add Poll Dialog */}
+
                 <Dialog open={this.state.addPoll} onClose={this.handleClose} aria-labelledby="form-dialog-title" fullWidth="md">
                     <DialogTitle id="form-dialog-title">New Poll</DialogTitle>
                     <DialogContent>
@@ -317,20 +378,89 @@ class Polls extends React.Component {
                             fullWidth
                         />
                         <FormControl style={{minWidth: 150}}>
-                            <InputLabel htmlFor="age-native-required" autoWidth>Correct Answer</InputLabel>
+                            <InputLabel htmlFor="age-native-required" >Correct Answer</InputLabel>
                             <Select
                                 value={this.state.answer}
                                 onChange={this.handleChange}
-                                id="answer"
-                                inputProps={{
-                                    id: 'age-native-required',
-                                }}
+                                name="answer"
                                 >
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
-                                <option value="none">None</option>
+                                <MenuItem value="A">A</MenuItem>
+                                <MenuItem value="B">B</MenuItem>
+                                <MenuItem value="C">C</MenuItem>
+                                <MenuItem value="D">D</MenuItem>
+                                <MenuItem value="none">None</MenuItem>
+                            </Select>
+                        </FormControl> 
+                    </form>
+                    </DialogContent>
+                    <DialogActions>
+                    <Button onClick={this.handleClose} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={this.handleAdd} color="primary">
+                        Confirm
+                    </Button>
+                    </DialogActions>
+                </Dialog>
+
+                {/* Edit Poll Dialog */}
+                <Dialog open={this.state.editPoll} onClose={this.handleClose} aria-labelledby="form-dialog-title" fullWidth="md">
+                    <DialogTitle id="form-dialog-title">Edit Poll</DialogTitle>
+                    <DialogContent>
+                    <form id="editForm" onSubmit={this.handleEdit}>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="question"
+                            label="Question"
+                            type="text"
+                            defaultValue={this.state.poll.question}
+                            fullWidth
+                        />
+                        <TextField
+                            margin="dense"
+                            id="optionA"
+                            label="Option A"
+                            type="text"
+                            defaultValue={"I can't parse the damn object..."}
+                            fullWidth
+                        />
+                        <TextField
+                            margin="dense"
+                            id="optionB"
+                            label="Option B"
+                            type="text"
+                            defaultValue={"I can't parse the damn object..."}
+                            fullWidth
+                        />
+                        <TextField
+                            margin="dense"
+                            id="optionC"
+                            label="Option C"
+                            type="text"
+                            defaultValue={"I can't parse the damn object..."}
+                            fullWidth
+                        />
+                        <TextField
+                            margin="dense"
+                            id="optionD"
+                            label="Option D"
+                            type="text"
+                            defaultValue={"I can't parse the damn object..."}
+                            fullWidth
+                        />
+                        <FormControl style={{minWidth: 150}}>
+                            <InputLabel>{this.state.poll.answer}</InputLabel>
+                            <Select
+                                value={this.state.answer}
+                                onChange={this.handleChange}
+                                name="answer"
+                                >
+                                <MenuItem value="A">A</MenuItem>
+                                <MenuItem value="B">B</MenuItem>
+                                <MenuItem value="C">C</MenuItem>
+                                <MenuItem value="D">D</MenuItem>
+                                <MenuItem value="none">None</MenuItem>
                             </Select>
                         </FormControl>
                     </form>
@@ -339,7 +469,7 @@ class Polls extends React.Component {
                     <Button onClick={this.handleClose} color="primary">
                         Cancel
                     </Button>
-                    <Button onClick={this.handleAdd} color="primary">
+                    <Button color="primary" type="submit" form="editForm">
                         Confirm
                     </Button>
                     </DialogActions>
