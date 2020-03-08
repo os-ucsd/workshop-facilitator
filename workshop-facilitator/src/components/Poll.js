@@ -82,12 +82,13 @@ class Poll extends React.Component {
         // if user answers should be shown, show them
         if (Object.entries(userAnswers).length !== 0 && userAnswers.constructor === Object){
             // calculate what % of users voted for which answer if there exists any answers
-            totAnswers = userAnswers.answerA ? 
+            totAnswers = userAnswers.answerA >= 0? 
                 userAnswers.answerA + userAnswers.answerB + userAnswers.answerC + userAnswers.answerD : 0;
             percentA = userAnswers.answerA ? Math.floor((userAnswers.answerA / totAnswers) * 100) : 0;
             percentB = userAnswers.answerB ? Math.floor((userAnswers.answerB / totAnswers) * 100) : 0;
             percentC = userAnswers.answerC ? Math.floor((userAnswers.answerC / totAnswers) * 100) : 0;
             percentD = userAnswers.answerD ? Math.floor((userAnswers.answerD / totAnswers) * 100) : 0;
+
         }
 
         const settingsMenu =
@@ -115,17 +116,15 @@ class Poll extends React.Component {
         return(
             <div>
                 <div className="header">
-                    <h2>{poll._id}. {poll.question}</h2>
+                    <div className="header-text">
+                        <h2>{poll._id}. {poll.question} </h2>
+                        <p className="is-published-text">{isPublished && isHost ? "(published)" : null}</p>
+                    </div>
                     {
                         // only show settings if the host is viewing
                         isHost ? settingsMenu : null
                     }
                 </div>
-                {
-                    // if this is the currently published question, show the host that it is published
-                    isPublished ? <p>Published</p> : null
-                }
-                   
                 {
                     // key, id of each answer = the letter
                     Object.keys(poll.options).map(option => 
@@ -137,22 +136,21 @@ class Poll extends React.Component {
                                     option === "A" ? colorA : 
                                     option === "B" ? colorB :
                                     option === "C" ? colorC : colorD,
-                                color: "white",
+                                color: "white"
                             }} 
                             disabled>
                             {
                                 // if published, able to show answers. if not, then don't show any answers
-                                isPublished && showUserAnswers && totAnswers !== -1 ? 
-                                    <div style={{
-                                        float: "left", backgroundColor: "#B2CEDE", 
-                                        width: `${option === "A" ? percentA : 
-                                            option === "B" ? percentB : option === "C" ? percentC :
-                                            option === "D" ? percentD : 0}%`, 
-                                        height: "80%", borderRadius: "10px",
-                                        margin: "5px"}}>
-                                    </div> : null
+                                isPublished && showUserAnswers && totAnswers !== -1 ?        
+                                        <div className="num-votes" style={{
+                                            float: "left", backgroundColor: "#B2CEDE", 
+                                            width: `${option === "A" ? percentA : 
+                                                option === "B" ? percentB : option === "C" ? percentC :
+                                                option === "D" ? percentD : 0}%`, 
+                                            height: "100%", borderRadius: "10px", bottom: "0px"}}>
+                                        </div> : null
                             }
-                            <p>
+                            <p className="options-text">
                                 {option} : {poll.options[option]}
                             </p>
                         </button> :

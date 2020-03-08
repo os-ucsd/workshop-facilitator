@@ -2,6 +2,7 @@ import React from "react";
 import Poll from "./Poll";
 import Button from '@material-ui/core/Button';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import AddIcon from '@material-ui/icons/Add';
 import io_client from "socket.io-client";
 import EditPoll from "./EditPoll";
 import AddPoll from "./AddPoll";
@@ -191,6 +192,12 @@ class Polls extends React.Component {
         evt.preventDefault();
         const pollId = evt.target.id;
 
+        // if this poll is published, tell user to unpublish before deleting
+        if (pollId === this.state.publishedPoll._id.toString()){
+            alert("Unpublish this poll in order to delete");
+            return;
+        }
+
         // find poll in the array of polls and remove it
         const pollIndx = this.state.polls.findIndex(poll => poll._id === parseInt(pollId));
         this.setState(prevState => {
@@ -287,32 +294,36 @@ class Polls extends React.Component {
                             <div className="back-container"><ArrowBackIosIcon onClick={this.handleBack} /></div> : null
                     }
                     <h2>Polls</h2>
+                    {
+                        isHost? this.state.isEmptyState && 
+                            <div className="add-icon-container">
+                                <AddIcon onClick={this.handleOpen} />
+                            </div> : null 
+                    }
                 </div>
-                {
-                    // show list of questions if host and nothing if user -- user only sees published posts
-                    isHost ? 
-                        this.state.polls.map(poll => 
-                            this.state.isEmptyState && this.state.polls && this.state.polls.length > 0 && 
-                                <div>
-                                    <PollQuestion handleClick={this.triggerPollState} 
-                                        poll={poll}/>
-                                    {
-                                        poll._id === publishedPoll._id ? <p>Published</p> : null
-                                    }
-                                    <button id={poll._id} onClick={this.publishPoll}>Publish</button>
-                                    <button id={poll._id} onClick={this.deletePoll}>Delete</button>
-                                </div>
-                        ) : 
-                        null
-                }
-                {
-                    // show current poll if a poll should be shown
-                    isHost || (!isHost && this.state.publishedPoll) ? this.state.isPollState && poll : null
-                }
-                <br></br>
-
-                {isHost? this.state.isEmptyState && 
-                <Button variant="contained" color="primary" onClick={this.handleOpen}>Add Poll</Button> : null }
+                <div className="scrollable poll-list-container">
+                    {
+                        // show list of questions if host and nothing if user -- user only sees published posts
+                        isHost ? 
+                            this.state.polls.map(poll => 
+                                this.state.isEmptyState && this.state.polls && this.state.polls.length > 0 && 
+                                    <div className="poll-container">
+                                        <PollQuestion handleClick={this.triggerPollState} 
+                                            poll={poll} isPublished={poll._id === publishedPoll._id}/>
+                                        <div className="btn-container">
+                                            <button className="sm-btn" id={poll._id} onClick={this.publishPoll}>Publish</button>
+                                            <button className="sm-btn" id={poll._id} onClick={this.deletePoll}>Delete</button>
+                                        </div>
+                                    </div>
+                            ) : 
+                            null
+                    }
+                    {
+                        // show current poll if a poll should be shown
+                        isHost || (!isHost && this.state.publishedPoll) ? this.state.isPollState && poll : null
+                    }
+                    <br></br>
+                </div>
                 
                 {/* Add Poll Dialog */}
                 <AddPoll addPoll={this.state.addPoll} handleClose={this.handleClose} handleChange={this.handleChange}
@@ -329,8 +340,10 @@ class Polls extends React.Component {
 
 const PollQuestion = props => {
     return (
-    <div >
-        <button className="pollQuestion" onClick={props.handleClick} value={props.poll._id}>
+    <div>
+        <button className="pollQuestion" onClick={props.handleClick} value={props.poll._id}
+            style={{backgroundColor: props.isPublished ? "#6DC0D5" : null,
+            color: props.isPublished ? "white" : "black"}}>
             {props.poll._id}. {props.poll.question}
         </button>
     </div>
