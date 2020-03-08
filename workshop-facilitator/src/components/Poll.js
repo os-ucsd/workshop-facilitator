@@ -1,6 +1,7 @@
 import React from 'react';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import '../styles/Polls.css'
 
@@ -91,7 +92,9 @@ class Poll extends React.Component {
 
         const settingsMenu =
             <div>
-                <button class="btn" onClick={this.openSettingsClick}>Menu</button>
+                <div className="setting-icon-container">
+                    <MoreVertIcon onClick={this.openSettingsClick}></MoreVertIcon>
+                </div>
                 <Menu anchorEl={this.state.anchorEl} keepMounted open={Boolean(this.state.anchorEl)} onClose={this.handleClose}>
                     <MenuItem  id={poll._id} onClick={editPoll}>Edit</MenuItem>
                     <MenuItem  id={poll._id} onClick={unpublishPoll}>Unpublish</MenuItem>

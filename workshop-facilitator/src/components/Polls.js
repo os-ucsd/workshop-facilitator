@@ -1,6 +1,7 @@
 import React from "react";
 import Poll from "./Poll";
 import Button from '@material-ui/core/Button';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import io_client from "socket.io-client";
 import EditPoll from "./EditPoll";
 import AddPoll from "./AddPoll";
@@ -280,7 +281,13 @@ class Polls extends React.Component {
 
         return (
             <div>
-                <h2>Polls</h2>
+                <div className="poll-header-container">
+                    {
+                        this.state.isPollState ? 
+                            <div className="back-container"><ArrowBackIosIcon onClick={this.handleBack} /></div> : null
+                    }
+                    <h2>Polls</h2>
+                </div>
                 {
                     // show list of questions if host and nothing if user -- user only sees published posts
                     isHost ? 
