@@ -12,29 +12,8 @@ class Poll extends React.Component {
         this.state = {
             // if a user, then can only answer once so this is set to true once answered
             answered: "",
-            colors: ["#748386", "#9DC7C8", "#6A3937", "#8F6593", "#698F3F", "#387D7A"],
-            selectedColors: [],
             anchorEl: null
         }
-    }
-
-    componentDidMount(){
-        let selectedColors = [];
-        // calculate four different random colors for each answer choice
-        let currIdx = Math.floor(Math.random() * this.state.colors.length);
-        selectedColors.push(currIdx);
-
-        // find a different color
-        while (selectedColors.includes(currIdx)) currIdx = Math.floor(Math.random() * this.state.colors.length);
-        selectedColors.push(currIdx);
-
-        while (selectedColors.includes(currIdx)) currIdx = Math.floor(Math.random() * this.state.colors.length);
-        selectedColors.push(currIdx);
-
-        while (selectedColors.includes(currIdx)) currIdx = Math.floor(Math.random() * this.state.colors.length);
-        selectedColors.push(currIdx);
-
-        this.setState({selectedColors})
     }
 
     /*
@@ -64,14 +43,14 @@ class Poll extends React.Component {
 
     render() {
         const {isPublished, isHost, showAnswer, poll, userAnswers, showUserAnswers,
-            editPoll, unpublishPoll, getAnswers, displayAnswer} = this.props;
+            editPoll, unpublishPoll, getAnswers, displayAnswer, colors} = this.props;
         const {answered} = this.state;
 
-        const {selectedColors} = this.state;
-        const colorA = this.state.colors[selectedColors[0]];
-        const colorB = this.state.colors[selectedColors[1]];
-        const colorC = this.state.colors[selectedColors[2]];
-        const colorD = this.state.colors[selectedColors[3]];        
+        //const {selectedColors} = this.state;
+        const colorA = colors[0];
+        const colorB = colors[1];
+        const colorC = colors[2];
+        const colorD = colors[3];        
 
         let totAnswers = -1;
         let percentA = -1;

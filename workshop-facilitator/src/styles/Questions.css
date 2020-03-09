@@ -2,8 +2,8 @@
     background-color: white;
     height: inherit;
     min-height: 200px;
-    overflow: scroll;
-    overflow-x: hidden;
+    /*overflow: scroll;
+    overflow-x: hidden;*/
     position: absolute;
     width: 100%;
     z-index: 1;

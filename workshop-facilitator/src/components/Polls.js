@@ -1,11 +1,11 @@
 import React from "react";
 import Poll from "./Poll";
-import Button from '@material-ui/core/Button';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import AddIcon from '@material-ui/icons/Add';
 import io_client from "socket.io-client";
 import EditPoll from "./EditPoll";
 import AddPoll from "./AddPoll";
+import { Scrollbars } from 'react-custom-scrollbars';
 
 import '../styles/Polls.css'
 
@@ -15,6 +15,8 @@ class Polls extends React.Component {
     constructor() {
         super();
         this.state = {
+            colors: ["#E27979", "#70CCE9", "#61E77E", "#9349F0", "#698F3F", "#387D7A"],
+            selectedColor: 0,
             showAnswer: false,
             isEmptyState: true,
             isPollState: false,
@@ -102,7 +104,11 @@ class Polls extends React.Component {
                 return {showAnswer: !prevState.showAnswer};
             })
         })
-        
+
+        // calculate the random color for when a poll is published
+        const colors = this.state.colors;
+        this.setState({selectedColor: Math.floor(Math.random() * colors.length)});    
+
         // should also make the http request to get all polls and store in state
     }
 
@@ -275,7 +281,7 @@ class Polls extends React.Component {
     render() {
         // prop sent from host or user page determining if the current user is a host or user
         const {isHost} = this.props;
-        const {publishedPoll} = this.state;
+        const {publishedPoll, selectedColor, colors} = this.state;
 
         // make every poll's id the _id that mongodb creates for each poll when we send poll to db
         const poll = 
@@ -283,7 +289,7 @@ class Polls extends React.Component {
             <Poll socket={socket} id={this.state.poll._id} poll={this.state.poll} showAnswer={this.state.showAnswer} 
                 isPublished={this.state.poll._id === this.state.publishedPoll._id} isHost={isHost} userAnswers={this.state.answers}
                 showUserAnswers={this.state.showUserAnswers} unpublishPoll={this.unpublishPoll} displayAnswer={this.showAnswer}
-                getAnswers={this.getAnswers} editPoll={this.editPoll}/>
+                getAnswers={this.getAnswers} editPoll={this.editPoll} colors={this.state.colors}/>
         </div>
 
         return (
@@ -301,14 +307,14 @@ class Polls extends React.Component {
                             </div> : null 
                     }
                 </div>
-                <div className="scrollable poll-list-container">
+                <Scrollbars style={{height: "50vh", width: "85vw"}}>
                     {
                         // show list of questions if host and nothing if user -- user only sees published posts
                         isHost ? 
                             this.state.polls.map(poll => 
                                 this.state.isEmptyState && this.state.polls && this.state.polls.length > 0 && 
                                     <div className="poll-container">
-                                        <PollQuestion handleClick={this.triggerPollState} 
+                                        <PollQuestion selectedColor={colors[selectedColor]} handleClick={this.triggerPollState} 
                                             poll={poll} isPublished={poll._id === publishedPoll._id}/>
                                         <div className="btn-container">
                                             <button className="sm-btn" id={poll._id} onClick={this.publishPoll}>Publish</button>
@@ -323,7 +329,7 @@ class Polls extends React.Component {
                         isHost || (!isHost && this.state.publishedPoll) ? this.state.isPollState && poll : null
                     }
                     <br></br>
-                </div>
+                </Scrollbars>
                 
                 {/* Add Poll Dialog */}
                 <AddPoll addPoll={this.state.addPoll} handleClose={this.handleClose} handleChange={this.handleChange}
@@ -342,7 +348,7 @@ const PollQuestion = props => {
     return (
     <div>
         <button className="pollQuestion" onClick={props.handleClick} value={props.poll._id}
-            style={{backgroundColor: props.isPublished ? "#6DC0D5" : null,
+            style={{backgroundColor: props.isPublished ? props.selectedColor : null,
             color: props.isPublished ? "white" : "black"}}>
             {props.poll._id}. {props.poll.question}
         </button>
