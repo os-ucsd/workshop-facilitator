@@ -1,10 +1,24 @@
+.scrollable{
+    overflow-y: scroll;
+    height: 55vh;
+}
+
+.poll-container{
+    display: flex;
+    flex-direction: row;
+}
+
+.poll-list-container{
+    width: 85vw;    
+}
+
 .pollQuestion{
     padding: 15px;
     border: 0;
     margin: 8px;
     font-size: 20px;
     border-radius: 10px;
-    width: 84vw;
+    width: 70vw;
     text-align: left;
 }
 
@@ -14,17 +28,118 @@
     color: white;
 }
 
+.poll-header-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
 .poll {
     /*padding: 20px;*/
     border: 0;
+    padding: 0;
     margin: 5px;
     width: 40vw;
     height: 10vh;
     border-radius: 10px;
+    transition: transform 0.3s ease-out;
+    outline: none;
+    position: relative;
+    z-index: 1;
 }
 
 .poll:hover{
     cursor: pointer;
-    background-color: gray; 
-    color: white;
+    transform: scale(0.95);
+}
+
+.header{
+    display: flex;
+    justify-content: center;
+}
+
+.header-text{
+    display: flex;
+}
+
+.is-published-text{
+    margin-left: 8px;
+    margin-top: 25px;
+}
+
+.setting-icon-container{
+    margin-top: 22px;
+    margin-left: 5px;
+}
+
+.setting-icon-container:hover{
+    cursor: pointer;
+}
+
+.add-icon-container{
+    margin-top: 22px;
+    margin-left: 5px;
+    transition: transform 0.3s ease-out;
+}
+
+.add-icon-container:hover{
+    cursor: pointer;
+    transform: scale(0.95);
+}
+
+.back-container{
+    margin-top: 22px;
+    margin-right: 5px;
+    transition: transform 0.3s ease-out;
+}
+
+.back-container:hover{
+    cursor: pointer;
+    transform: scale(0.95);
+}
+
+.btn-container{
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.btn{
+    border: none;
+    width: 150px;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px;
+    box-shadow: 1px 1px 3px 0px #ccc;
+    transition: transform 0.3s ease-out;
+    outline: none;
+}
+
+.btn:hover{
+    cursor: pointer;
+    transform: scale(0.95);
+}
+
+.sm-btn{
+    margin: 3px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 1px 1px 3px 0px #ccc;
+    padding: 4px 10px;
+    transition: transform 0.3s ease-out;
+    outline: none;
+}
+
+.sm-btn:hover{
+    cursor: pointer;
+    transform: scale(0.95);
+}
+
+.options-text{
+    z-index: 1;
+}
+
+.num-votes{
+    position: absolute;
+    z-index: -1;
 }
