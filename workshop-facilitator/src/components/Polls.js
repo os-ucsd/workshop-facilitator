@@ -317,7 +317,9 @@ class Polls extends React.Component {
                                         <PollQuestion selectedColor={colors[selectedColor]} handleClick={this.triggerPollState} 
                                             poll={poll} isPublished={poll._id === publishedPoll._id}/>
                                         <div className="btn-container">
-                                            <button className="sm-btn" id={poll._id} onClick={this.publishPoll}>Publish</button>
+                                            {publishedPoll._id !== poll._id ?
+                                                <button className="sm-btn" id={poll._id} onClick={this.publishPoll}>Publish</button> :
+                                                <button className="sm-btn" id={poll._id} onClick={this.unpublishPoll}>Unpublish</button>} 
                                             <button className="sm-btn" id={poll._id} onClick={this.deletePoll}>Delete</button>
                                         </div>
                                     </div>
