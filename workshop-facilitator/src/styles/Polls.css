@@ -4,6 +4,7 @@
 }
 
 .poll-container{
+    margin-left: 2vw;
     display: flex;
     flex-direction: row;
 }
