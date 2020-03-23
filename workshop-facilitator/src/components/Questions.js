@@ -2,6 +2,7 @@ import React from "react";
 import Question from './Question';
 import io_client from "socket.io-client";
 import '../styles/Questions.css';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 let socket;
 
@@ -33,6 +34,7 @@ class Questions extends React.Component {
 
     render() {
         return (
+            <Scrollbars style={{height: "50vh", width: "85vw"}}>
             <div className="qListContainer">
                 {
                     this.state.questions && this.state.questions.length > 0 ?
@@ -42,6 +44,7 @@ class Questions extends React.Component {
                     : <p>No questions to yet</p>
                 }
             </div>
+            </Scrollbars>
         )
     }
 }
