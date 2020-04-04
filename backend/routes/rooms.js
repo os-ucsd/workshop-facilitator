@@ -43,20 +43,10 @@ router.route('/create').post((req, res) => {
         wsTitle: req.body.wsTitleForm,
         wsDescript: req.body.wsDescriptForm,
         joinCode: req.body.joinCodeUser,
-        resources: {
-            name: "",
-            link: ""
-        },
-        questions: {
-            title: "",
-            description: ""
-        },
+        resources: [],
+        questions: [], // will contain {title:"", description:""}
         attendees: [],
-        wfclickers: [{
-            clicker: "",
-            answers: [],
-            correct: ""
-        }],
+        wfclickers: [], //w ill contain {clicker:"", answers:[], correct:""}
         feedback: ""
     });
 
@@ -64,7 +54,7 @@ router.route('/create').post((req, res) => {
     console.log(newRoom);
 
     newRoom.save()
-        .then(() => res.redirect('/host')) //not redirecting properly
+        .then(() => res.json(newRoom)) //not redirecting properly
         .catch(err => console.log(err));
         //.catch(err => err.status(400).json(err));
 
@@ -191,6 +181,30 @@ router.route('/:roomId/clickers/:cId').get((req, res) => {
             res.send(wfclicker)
         }
     })
+})
+
+/*
+@route POST /rooms/resources/upload
+@desc uploads a file resource to the database
+*/
+router.route("/resources/upload").post((req, res) => {
+    // req should contain the file to upload
+})
+
+/*
+@route GET /rooms/resources/:name
+@desc uploads a file resource to the database
+*/
+router.route("/resources/:name").get((req, res) => {
+    // find the file resource with the given name
+})
+
+/*
+@route GET /rooms/resources/
+@desc get all resources in the file resources list
+*/
+router.route("/resources/").get((req, res) => {
+    // find the file resource with the given name
 })
 
 module.exports = router;
