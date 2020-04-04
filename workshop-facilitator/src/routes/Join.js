@@ -107,7 +107,7 @@ class Join extends React.Component {
               </Button>
             </div>
             <div className="vertical-center">
-                <h1>Enter the workshop code!</h1>
+                <h1>Workshop Code:</h1>
                 <form noValidate autoComplete="off" onSubmit={this.submitForm} onChange={this.changeForms}>
                   <TextField
                     required

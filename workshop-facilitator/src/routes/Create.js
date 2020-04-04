@@ -29,7 +29,7 @@ class Create extends React.Component{
     submitForm = (evt) => {
         // prevents default action of form submit (which is a page refresh)
         evt.preventDefault();
-        alert("Form Submitted: Name: " + this.state.nameForm + " Title: " + this.state.wsTitleForm
+        alert("Form Submitted: Host: " + this.state.nameForm + " Title: " + this.state.wsTitleForm
         + "Description: " + this.state.wsDescripForm);
 
         // generate random 4 digit code
@@ -38,7 +38,7 @@ class Create extends React.Component{
         let joinCodeUser = generateRandomCode();
         console.log("joinCodeUser: " + joinCodeUser);
 
-        //Make sure they aren't equal, keep generating untill not equal
+        //Make sure they aren't equal, keep generating until not equal
         while(joinCodeHost === joinCodeUser){
             joinCodeUser = new generateRandomCode();
         }
@@ -57,7 +57,7 @@ class Create extends React.Component{
             //POST fetch("the API route that creates the room, like /rooms/create", {method: "POST", body:
             //{data to pass in, such as room name, description, etc.}})
             method: 'post',
-            headers: {"Content-Type" : "application/json"}, //have to specify content type as json, or else server thinks its something else;
+            headers: {"Content-Type" : "application/json"}, //have to specify content type as json, or else server thinks it's something else;
             body: JSON.stringify(userData)
         })
         //using .text() instead of .json to avoid errors
@@ -89,29 +89,32 @@ class Create extends React.Component{
     render(){
 
         return(
-            <div>
+            <div className="Create">
                 <div className = "BackButton">
                     <Button variant="contained" color="primary" href="/" className = "BackButton">
                       Home
                     </Button>
                 </div>
-                <h1 className = "Title"> Create your workshop </h1>
-                <form onSubmit={this.submitForm} onChange={this.changeForms} className = "CreateForm"  >
-                    <TextField required multiline fullWidth id="nameForm" label="Name: John Smith" defaultValue="" helperText = "Required" />
-                    <br/>
-                    <br/>
+                <div className="vertical-center">
+                    <h1> Create a New Workshop: </h1>
+                    <form onSubmit={this.submitForm} onChange={this.changeForms} className = "CreateForm"  >
+                        <TextField required multiline fullWidth id="wsTitleForm" label="Workshop Title" defaultValue="" helperText = "Required" />
+                        <br/>
+                        <br/>
 
-                    <TextField required multiline fullWidth id="wsTitleForm" label="Workshop Title: React Workshop" defaultValue="" helperText = "Required" />
-                    <br/>
-                    <br/>
+                        <TextField required multiline fullWidth id="wsDescripForm" label="Description" defaultValue="" helperText = "Required" />
+                        <br/>
+                        <br/>
 
-                    <TextField required multiline fullWidth id="wsDescripForm" label="Description: Learn some React!" defaultValue="" helperText = "Requried" />
-                    <br/>
-                    <br/>
+                        <TextField required multiline fullWidth id="nameForm" label="Host" defaultValue="" helperText = "Required" />
+                        <br/>
+                        <br/>
 
-                    <div className = "SubmitButton" > <Button variant="contained" type="submit" >Submit</Button> </div>
-
-                </form>
+                        <div className = "SubmitButton" >
+                            <Button variant="contained" type="submit" color="primary">Submit</Button>
+                        </div>
+                    </form>
+                </div>
             </div>
         );
 
