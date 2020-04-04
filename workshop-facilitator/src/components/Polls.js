@@ -199,7 +199,7 @@ class Polls extends React.Component {
         const pollId = evt.target.id;
 
         // if this poll is published, tell user to unpublish before deleting
-        if (pollId === this.state.publishedPoll._id.toString()){
+        if (this.state.publishedPoll._id && (pollId === this.state.publishedPoll._id.toString())){
             alert("Unpublish this poll in order to delete");
             return;
         }

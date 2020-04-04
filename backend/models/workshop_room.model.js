@@ -9,10 +9,10 @@ var roomSchema = new Schema({
     wsDescript: String,
     //
     joinCode: Number,
-    resources: {
+    resources: [{
         name: String,
         link: String
-    },
+    }],
     questions: [{
         title: String,
         description: String
