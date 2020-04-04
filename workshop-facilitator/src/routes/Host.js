@@ -33,6 +33,8 @@ class Host extends React.Component {
     }
 
     render() {
+        // when pass in newly created room from Create.js, will be in this.props.location.state i think
+        // if we pass props through window.history.push
         return (
             <SplitPane
                 split="vertical"

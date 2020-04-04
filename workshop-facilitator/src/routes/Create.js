@@ -61,7 +61,7 @@ class Create extends React.Component{
             body: JSON.stringify(userData)
         })
         //using .text() instead of .json to avoid errors
-        .then((resp) => resp.text())
+        .then((resp) => resp.json())
         // if success and data was sent back, log the data
         .then((data) => handleSuccess(data))
         // if failure, log the error
@@ -122,7 +122,7 @@ class Create extends React.Component{
 }
     function handleSuccess(data){
         console.log("Success. here is the resp.() dump: ", data);
-        window.location.replace('http://localhost:3000/host');
+        //window.location.replace('http://localhost:3000/host'); this.props.history.push
     }
 
 
