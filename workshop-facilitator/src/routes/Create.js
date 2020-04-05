@@ -17,6 +17,7 @@ class Create extends React.Component{
             wsDescripForm: ""
         }
 
+
     }
 
 
@@ -25,6 +26,8 @@ class Create extends React.Component{
             [evt.target.id]: evt.target.value
         })
     }
+
+
 
     submitForm = (evt) => {
         // prevents default action of form submit (which is a page refresh)
@@ -61,9 +64,9 @@ class Create extends React.Component{
             body: JSON.stringify(userData)
         })
         //using .text() instead of .json to avoid errors
-        .then((resp) => resp.json())
+        .then((resp) => resp.json() )
         // if success and data was sent back, log the data
-        .then((data) => handleSuccess(data))
+        .then((data) => this.props.history.push('/host', {room:data} )  ) //handleSuccess(data))
         // if failure, log the error
         .catch((err) => console.log("Error", err));
 

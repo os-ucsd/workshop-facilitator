@@ -37,7 +37,7 @@ class User extends React.Component {
         e.preventDefault();
         const newQst = this.state.question;
         console.log(newQst);
-        // emit question for all users to see 
+        // emit question for all users to see
         if (newQst) socket.emit("question", {question: newQst});
 
         // clear chatbox
@@ -57,6 +57,12 @@ class User extends React.Component {
     }
 
     render() {
+        // when pass in newly created room from Create.js/Join.js will be in this.props.location.state
+        // if we pass props through this.props.history.push
+        const roomState = this.props.location.state.room;
+        console.log("here is the room sent from JoinPage: " + roomState);
+        console.log("Room code: " + roomState.joinCode);
+
         return (
             <SplitPane
                 split="vertical"

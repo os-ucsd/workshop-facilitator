@@ -22,6 +22,8 @@ class Join extends React.Component {
           onlyNums: true,
           fourNums: true
         };
+
+        this.checkRooms = this.checkRooms.bind(this);
     }
 
 
@@ -53,7 +55,7 @@ class Join extends React.Component {
             })
             .then((resp) => resp.json())
             // if success and data was sent back, log the data
-            .then((data) => checkRooms(data, this.state.roomCode))
+            .then((data) => this.checkRooms(data, this.state.roomCode))
             // if failure, log the error
             .catch((err) => console.log("Error", err));
 
@@ -97,8 +99,40 @@ class Join extends React.Component {
 
   */
 
+checkRooms(rooms, code){
+    //host code 9485 works
+    //join code 7317 works
+    let flagValid = false;
+    console.log("Here are all the rooms", rooms);
+    for(const room of rooms){
+        if(code == room.hostCode){ //don't type check as well, cuz code is a string
+            console.log("This is a host code!");
+            //resolve host code
+            flagValid = true;
+            //this.props.history.push(`/customers/${customer.id}`);/
+            this.props.history.push(`/host`, {room: room});
+            //window.location.replace('http://localhost:3000/host');
+            break;
+        }else if(code == room.joinCode){
+            console.log("This is a join code!");
+            //resolve join code
+            flagValid = true;
+            this.props.history.push(`/user`, {room: room});
+
+            break;
+        }
+  }
+  if(!flagValid){
+      alert("code is not valid");
+      //setOpen(true);
+  }
+}
+
+
 
     render() {
+        //const { history } = this.props;
+
         return (
           <div className="Join">
             <div className="backButton">
@@ -129,6 +163,13 @@ class Join extends React.Component {
           </div>
         );
       }
+
+
+
+
+
+
+
 }
 
 
@@ -143,6 +184,8 @@ function incorrectCode( onlyNums, fourNums){
 
 }
 
+
+/*
 function checkRooms(rooms, code){
     //host code 9485 works
     //join code 7317 works
@@ -153,6 +196,8 @@ function checkRooms(rooms, code){
             console.log("This is a host code!");
             //resolve host code
             flagValid = true;
+            //this.props.history.push(`/customers/${customer.id}`);/
+            //this.props.history.push(`http://localhost:3000/host/${room}`);
             window.location.replace('http://localhost:3000/host');
             break;
         }else if(code == room.joinCode){
@@ -168,6 +213,8 @@ function checkRooms(rooms, code){
       //setOpen(true);
   }
 }
+
+*/
 
 
 

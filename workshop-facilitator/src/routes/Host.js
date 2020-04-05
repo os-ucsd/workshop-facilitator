@@ -11,6 +11,7 @@ let socket;
 class Host extends React.Component {
     constructor() {
         super();
+
         this.state = {
             // should be the same as the port you're using for server
             ENDPOINT: "localhost:5000",
@@ -19,11 +20,11 @@ class Host extends React.Component {
 
     componentDidMount(){
         /*
-        make the connection to the socket (when user visits this component, 
+        make the connection to the socket (when user visits this component,
         connection event will be emitted because of this connection)
 
         now, there exists a websocket between this client and our server, so
-        we can emit events to our server 
+        we can emit events to our server
         */
         socket = io(this.state.ENDPOINT);
 
@@ -33,8 +34,12 @@ class Host extends React.Component {
     }
 
     render() {
-        // when pass in newly created room from Create.js, will be in this.props.location.state i think
-        // if we pass props through window.history.push
+        // when pass in newly created room from Create.js/Join.js will be in this.props.location.state
+        // if we pass props through this.props.history.push
+        const roomState = this.props.location.state.room;
+        console.log("here is the room sent from JoinPage: " + roomState);
+        console.log("Room code: " + roomState.hostCode);
+
         return (
             <SplitPane
                 split="vertical"
