@@ -27,7 +27,7 @@ router.route('/').get((req, res) => {
 @desc Creates a new workshop room
 */
 router.route('/create').post((req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', "localhost:3000/create");
+    res.setHeader('Access-Control-Allow-Origin', '*');//should prob change from * to something else
     /* for testing
     console.log("in /create Route");
     console.log("Here is the req,body below");

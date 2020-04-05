@@ -53,7 +53,7 @@ class Create extends React.Component{
                 "joinCodeUser": joinCodeUser
             };
 
-        console.log(userData);
+        //console.log(userData);
 
         fetch('http://localhost:5000/rooms/create', {
             // send as a POST request with new room information in body,
@@ -63,10 +63,10 @@ class Create extends React.Component{
             headers: {"Content-Type" : "application/json"}, //have to specify content type as json, or else server thinks its something else;
             body: JSON.stringify(userData)
         })
-        //using .text() instead of .json to avoid errors
+        //have to use .json instead of .text becuase we want to remain in json format/object not text
         .then((resp) => resp.json() )
         // if success and data was sent back, log the data
-        .then((data) => this.props.history.push('/host', {room:data} )  ) //handleSuccess(data))
+        .then((data) => this.props.history.push('/host', {room: data } ) )//handleSuccess(data))
         // if failure, log the error
         .catch((err) => console.log("Error", err));
 

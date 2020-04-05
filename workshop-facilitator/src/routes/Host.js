@@ -37,8 +37,8 @@ class Host extends React.Component {
         // when pass in newly created room from Create.js/Join.js will be in this.props.location.state
         // if we pass props through this.props.history.push
         const roomState = this.props.location.state.room;
-        console.log("here is the room sent from JoinPage: " + roomState);
-        console.log("Room code: " + roomState.hostCode);
+        console.log("here is the room sent from Join/Create Page: " + roomState);
+        console.log("Host code: " + roomState.hostCode);
 
         return (
             <SplitPane
