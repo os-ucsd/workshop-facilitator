@@ -59,35 +59,50 @@ class User extends React.Component {
     render() {
         // when pass in newly created room from Create.js/Join.js will be in this.props.location.state
         // if we pass props through this.props.history.push
-        const roomState = this.props.location.state.room;
-        console.log("here is the room sent from JoinPage: " + roomState);
-        console.log("Room code: " + roomState.joinCode);
+        let roomState = null;
+        if(this.props.location.state != null){
+            roomState = this.props.location.state.room;
+            console.log("here is the room sent from Join/Create Page: " + roomState);
+            console.log("Host code: " + roomState.hostCode);
+
+        }
 
         return (
-            <SplitPane
-                split="vertical"
-                minSize="90%"
-                maxSize={-200}
-                defaultSize="85%"
-                className="primary"
-            >
-                <SplitPane
-                    split="horizontal"
-                    minSize={200}
-                    maxSize={-200}
-                    defaultSize="50%"
-                >
+            <div>
+                {(roomState != null) ?
                     <div>
-                        <Polls isHost={false}/>
+                        <h3> User code is: {roomState.joinCode} </h3>
                     </div>
+                    :
+                    <h3> No room FOR TESTING ONLY </h3>
+
+                }
+
+                <SplitPane
+                    split="vertical"
+                    minSize="90%"
+                    maxSize={-200}
+                    defaultSize="85%"
+                    className="primary"
+                >
+                    <SplitPane
+                        split="horizontal"
+                        minSize={200}
+                        maxSize={-200}
+                        defaultSize="50%"
+                    >
+                        <div>
+                            <Polls isHost={false}/>
+                        </div>
+                        <div>
+                            <Questions />
+                        </div>
+                    </SplitPane>
                     <div>
-                        <Questions />
+                        <Resources />
                     </div>
                 </SplitPane>
-                <div>
-                    <Resources />
-                </div>
-            </SplitPane>
+            </div>
         )
     }
 }
