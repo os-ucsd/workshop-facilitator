@@ -36,13 +36,14 @@ class Host extends React.Component {
     render() {
         // when pass in newly created room from Create.js/Join.js will be in this.props.location.state
         // if we pass props through this.props.history.push
-        let roomState = null;
+        var roomState = null;
         if(this.props.location.state != null){
             roomState = this.props.location.state.room;
             console.log("here is the room sent from Join/Create Page: " + roomState);
             console.log("Host code: " + roomState.hostCode);
-
         }
+
+
 
         return (
             <div>
@@ -70,7 +71,8 @@ class Host extends React.Component {
                         defaultSize="50%"
                     >
                         <div>
-                            <Polls isHost={true}/>
+                            {console.log("room state in Host is : " + roomState)}
+                            <Polls isHost= { { isHost: true, room: roomState } }  /> 
                         </div>
                         <div>
                             <Questions />
@@ -84,6 +86,7 @@ class Host extends React.Component {
 
         )
     }
+
 }
 
 export default Host;
