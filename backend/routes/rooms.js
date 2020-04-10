@@ -13,7 +13,7 @@ const WorkshopRoom = require("../models/workshop_room.model.js"); //added to be 
 */
 router.route('/').get((req, res) => {
     // database query
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     console.log("fetching all rooms...");
 
     WorkshopRoom.find()
@@ -27,7 +27,7 @@ router.route('/').get((req, res) => {
 @desc Creates a new workshop room
 */
 router.route('/create').post((req, res) => {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     /* for testing
     console.log("in /create Route");
     console.log("Here is the req,body below");
@@ -36,13 +36,14 @@ router.route('/create').post((req, res) => {
 
     // database query
     //use req.body info to create new room, save it
+    console.log(req.body);
 
     const newRoom = new WorkshopRoom({
-        hostCode: req.body.joinCodeHost,
-        name: req.body.nameForm,
-        wsTitle: req.body.wsTitleForm,
-        wsDescript: req.body.wsDescriptForm,
-        joinCode: req.body.joinCodeUser,
+        hostCode: req.body.hostCode,
+        name: req.body.name,
+        wsTitle: req.body.wsTitle,
+        wsDescript: req.body.wsDescript,
+        joinCode: req.body.joinCode,
         resources: [],
         questions: [], // will contain {title:"", description:""}
         attendees: [],
@@ -67,7 +68,7 @@ router.route('/create').post((req, res) => {
 router.route('/:id').get((req, res) => {
     const roomId = req.params.id;
     // database query
-    Room.findById(roomId)
+    WorkshopRoom.findById(roomId)
         // send the room back to client-side
         .then(room => res.json(room))
         .catch(err => res.status(400).json(err));
@@ -80,7 +81,7 @@ router.route('/:id').get((req, res) => {
 router.route('/:id/questions/').get((req, res) => {
     const roomId = req.params.id;
     // database query
-    Room.findById(roomId)
+    WorkshopRoom.findById(roomId)
         // send the questions back to client-side
         .then(room => res.json(room.questions))
         .catch(err => res.status(400).json(err));
@@ -92,21 +93,20 @@ router.route('/:id/questions/').get((req, res) => {
 */
 router.route('/:id/questions/add').post((req, res) => {
     const roomId = req.params.id;
-    const question = req.body.question;
+    //const question = req.body.question;
+    const question = req.body;
+    console.log(question);
     // database query
-    const room = Room.findById(roomId);
-    const questions = room.questions;
-    questions.push(question);
-    WorkshopRoom.findByIdAndUpdate(roomId, {questions: questions},
-        function(err, ans){
-            if(err) {
-                res.send(err)
-            }
-            else {
-                res.send(ans)
-            }
-        }
-    )
+    WorkshopRoom.findById(roomId)
+        .then(room => {
+            //let questions = room.questions;
+            room.questions.push(question);
+            // save the room with the updated questions array
+            room.save()
+                .then(() => res.json(room))
+                .catch(err => res.status(400).json(err));
+        })
+        .catch(err => res.status(404).json(err));;
 })
 
 /*
@@ -118,12 +118,14 @@ router.route('/:roomId/questions/:qId').get((req, res) => {
     const questionId = req.params.qId;
 
     WorkshopRoom.findById(roomId, (err, room) => {
-        var question = room.questions.filter(id => id.equals(questionId))
         if(err) {
-            res.send(err)
+            //res.send(err)
+            res.json(err);
         }
         else {
-            res.send(question)
+           // res.send(question)
+           var question = room.questions.filter(id => id.equals(questionId))
+           res.json(question);
         }
     })
 })
@@ -135,7 +137,7 @@ router.route('/:roomId/questions/:qId').get((req, res) => {
 router.route('/:id/clickers/').get((req, res) => {
     const roomId = req.params.id;
     // database query
-    Room.findById(roomId)
+    WorkshopRoom.findById(roomId)
         // send the clicker questions back to client-side
         .then(room => res.json(room.wfclickers))
         .catch(err => res.status(400).json(err));
@@ -147,21 +149,17 @@ router.route('/:id/clickers/').get((req, res) => {
 */
 router.route('/:id/clickers/add').post((req, res) => {
     const roomId = req.params.id;
-    const wfclicker = req.body.wfclicker;
+    //const wfclicker = req.body.clicker;
+    const wfclicker = req.body;
     // database query
-    const room = Room.findById(roomId);
-    const wfclickers = room.wfclickers;
-    wfclickers.push(wfclicker);
-    WorkshopRoom.findByIdAndUpdate(roomId, {wfclickers: wfclickers},
-        function(err, ans){
-            if(err) {
-                res.send(err)
-            }
-            else {
-                res.send(ans)
-            }
-        }
-    )
+    WorkshopRoom.findById(roomId)
+        .then(room => {
+            //let wfclickers = room.wfclickers;
+            room.wfclickers.push(wfclicker);
+            room.save()
+                .then(() => res.json(room.wfclickers))
+                .catch(err => res.status(400).json(err))
+        });
 })
 
 /*
@@ -172,15 +170,12 @@ router.route('/:roomId/clickers/:cId').get((req, res) => {
     const roomId = req.params.roomId;
     const wfclickerId = req.params.cId;
 
-    WorkshopRoom.findById(roomId, (err, room) => {
-        var wfclicker = room.wfclickers.filter(id => id.equals(wfclickerId))
-        if(err) {
-            res.send(err)
-        }
-        else {
-            res.send(wfclicker)
-        }
-    })
+    WorkshopRoom.findById(roomId)
+        .then(room => {
+            const clicker = room.wfclickers.filter(clicker => clicker ? clicker._id.toString() === wfclickerId : null);
+            res.json(clicker);
+        })
+        .catch(err => res.status(404).json(err));
 })
 
 /*
