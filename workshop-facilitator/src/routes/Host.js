@@ -11,6 +11,7 @@ let socket;
 class Host extends React.Component {
     constructor() {
         super();
+
         this.state = {
             // should be the same as the port you're using for server
             ENDPOINT: "localhost:5000",
@@ -19,11 +20,11 @@ class Host extends React.Component {
 
     componentDidMount(){
         /*
-        make the connection to the socket (when user visits this component, 
+        make the connection to the socket (when user visits this component,
         connection event will be emitted because of this connection)
 
         now, there exists a websocket between this client and our server, so
-        we can emit events to our server 
+        we can emit events to our server
         */
         socket = io(this.state.ENDPOINT);
 
@@ -33,36 +34,59 @@ class Host extends React.Component {
     }
 
     render() {
-        // when pass in newly created room from Create.js, will be in this.props.location.state i think
-        // if we pass props through window.history.push
+        // when pass in newly created room from Create.js/Join.js will be in this.props.location.state
+        // if we pass props through this.props.history.push
+        var roomState = null;
+        if(this.props.location.state != null){
+            roomState = this.props.location.state.room;
+            console.log("here is the room sent from Join/Create Page: " + roomState);
+            console.log("Host code: " + roomState.hostCode);
+        }
+
+
+
         return (
-            <SplitPane
-                split="vertical"
-                minSize="90%"
-                maxSize={-200}
-                defaultSize="85%"
-                className="primary"
-            >
-                <SplitPane
-                    split="horizontal"
-                    minSize={200}
-                    maxSize={-200}
-                    defaultSize="50%"
-                >
+            <div>
+                {(roomState != null) ?
                     <div>
-                        <Polls isHost={true}/>
+                        <h3> Host code is: {roomState.hostCode} </h3>
+                        <h3> User code is: {roomState.joinCode} </h3>
                     </div>
+                    :
+                    <h3> No room FOR TESTING ONLY </h3>
+
+                }
+
+                <SplitPane
+                    split="vertical"
+                    minSize="90%"
+                    maxSize={-200}
+                    defaultSize="85%"
+                    className="primary"
+                >
+                    <SplitPane
+                        split="horizontal"
+                        minSize={200}
+                        maxSize={-200}
+                        defaultSize="50%"
+                    >
+                        <div>
+                            {console.log("room state in Host is : " + roomState)}
+                            <Polls isHost= { { isHost: true, room: roomState } }  /> 
+                        </div>
+                        <div>
+                            <Questions />
+                        </div>
+                    </SplitPane>
                     <div>
-                        <Questions />
+                        <Resources />
                     </div>
                 </SplitPane>
-                <div>
-                    <Resources />
-                </div>
-            </SplitPane>
+            </div>
 
         )
     }
+
 }
 
 export default Host;

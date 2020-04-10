@@ -37,7 +37,7 @@ class User extends React.Component {
         e.preventDefault();
         const newQst = this.state.question;
         console.log(newQst);
-        // emit question for all users to see 
+        // emit question for all users to see
         if (newQst) socket.emit("question", {question: newQst});
 
         // clear chatbox
@@ -57,31 +57,51 @@ class User extends React.Component {
     }
 
     render() {
+        // when pass in newly created room from Create.js/Join.js will be in this.props.location.state
+        // if we pass props through this.props.history.push
+        let roomState = null;
+        if(this.props.location.state != null){
+            roomState = this.props.location.state.room;
+            console.log("here is the room sent from Join Page: " + roomState);
+            console.log("User code: " + roomState.joinCode);
+        }
+
         return (
-            <SplitPane
-                split="vertical"
-                minSize="90%"
-                maxSize={-200}
-                defaultSize="85%"
-                className="primary"
-            >
-                <SplitPane
-                    split="horizontal"
-                    minSize={200}
-                    maxSize={-200}
-                    defaultSize="50%"
-                >
+            <div>
+                {(roomState != null) ?
                     <div>
-                        <Polls isHost={false}/>
+                        <h3> User code is: {roomState.joinCode} </h3>
                     </div>
+                    :
+                    <h3> No room FOR TESTING ONLY </h3>
+
+                }
+
+                <SplitPane
+                    split="vertical"
+                    minSize="90%"
+                    maxSize={-200}
+                    defaultSize="85%"
+                    className="primary"
+                >
+                    <SplitPane
+                        split="horizontal"
+                        minSize={200}
+                        maxSize={-200}
+                        defaultSize="50%"
+                    >
+                        <div>
+                            <Polls isHost={false}/> //room prop would be nul    l
+                        </div>
+                        <div>
+                            <Questions />
+                        </div>
+                    </SplitPane>
                     <div>
-                        <Questions />
+                        <Resources />
                     </div>
                 </SplitPane>
-                <div>
-                    <Resources />
-                </div>
-            </SplitPane>
+            </div>
         )
     }
 }
