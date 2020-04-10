@@ -15,7 +15,7 @@ var roomSchema = new Schema({
     }],
     questions: [{
         title: String,
-        description: String
+        description: String,
     }],
     attendees: [String],
     wfclickers: [{
