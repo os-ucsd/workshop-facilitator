@@ -64,7 +64,7 @@ class Upload extends Component {
       return (
         <Button
           variant="contained"
-          disabled={this.state.files.length == 0 || this.state.uploading}
+          disabled={this.state.files.length === 0 || this.state.uploading}
           onClick={this.uploadFiles}
         >
           Upload

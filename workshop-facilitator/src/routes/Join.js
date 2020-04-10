@@ -44,7 +44,7 @@ class Join extends React.Component {
 
         let isnum = /^\d+$/.test(code); //is it all numbers?
 
-        if(isnum && code.length == 4){
+        if(isnum && code.length === 4){
             // make axios call to a route that checks if there's a room with the given 4 digit code
             // if so, send the room's info (could just send the id) to the user view page
 
@@ -64,7 +64,7 @@ class Join extends React.Component {
                 alert("code is not a number");
                 this.setState({onlyNums: false});
                 this.setState({valid: false});
-            }else if(code.length != 4){
+            }else if(code.length !== 4){
                 alert("code is 4 digits!");
                 this.setState({fourNums: false});
                 this.setState({valid: false});
@@ -149,13 +149,13 @@ function checkRooms(rooms, code){
     let flagValid = false;
     console.log("Here are all the rooms", rooms);
     for(const room of rooms){
-        if(code == room.hostCode){ //don't type check as well, cuz code is a string
+        if(code === room.hostCode){ //don't type check as well, cuz code is a string
             console.log("This is a host code!");
             //resolve host code
             flagValid = true;
             window.location.replace('http://localhost:3000/host');
             break;
-        }else if(code == room.joinCode){
+        }else if(code === room.joinCode){
             console.log("This ia a join code!");
             //resolve join code
             flagValid = true;
