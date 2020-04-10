@@ -19,7 +19,8 @@ var roomSchema = new Schema({
     }],
     attendees: [String],
     wfclickers: [{
-        clicker: String,
+        id: String,
+        question: String,
         answers: [String],
         correct: String
     }],

@@ -139,7 +139,7 @@ class Polls extends React.Component {
         }
     }
 
-    handleAdd = () => {
+    handleAdd = () => { //needs parameter to be room?
         let polls = this.state.polls;
         let newPoll = {
             _id: this.state.polls.length+1,
@@ -156,6 +156,7 @@ class Polls extends React.Component {
         this.setState({
             polls
         })
+        //currRoom.wfclickers.push(newPoll);  attempting to record information in room obj as well
         this.handleClose();
     }
 
@@ -278,6 +279,7 @@ class Polls extends React.Component {
         })
     }
 
+
     render() {
         // prop sent from host or user page determining if the current user is a host or user
         const isHost = this.props.isHost.isHost; //isHost correctly gets true
@@ -339,7 +341,7 @@ class Polls extends React.Component {
 
                 {/* Add Poll Dialog */}
                 <AddPoll addPoll={this.state.addPoll} handleClose={this.handleClose} handleChange={this.handleChange}
-                    answer={this.state.answer} handleAdd={this.handleAdd}/>
+                    answer={this.state.answer} handleAdd={this.handleAdd} room={currRoom} />
 
                 <EditPoll editPoll={this.state.editPoll} handleClose={this.handleClose} handleEdit={this.handleEdit}
                     poll={this.state.poll} handleChange={this.handleChange} answer={this.state.answer}/>

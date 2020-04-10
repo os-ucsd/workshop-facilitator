@@ -62,9 +62,8 @@ class User extends React.Component {
         let roomState = null;
         if(this.props.location.state != null){
             roomState = this.props.location.state.room;
-            console.log("here is the room sent from Join/Create Page: " + roomState);
-            console.log("Host code: " + roomState.hostCode);
-
+            console.log("here is the room sent from Join Page: " + roomState);
+            console.log("User code: " + roomState.joinCode);
         }
 
         return (
@@ -92,7 +91,7 @@ class User extends React.Component {
                         defaultSize="50%"
                     >
                         <div>
-                            <Polls isHost={false}/>
+                            <Polls isHost={false}/> //room prop would be nul    l
                         </div>
                         <div>
                             <Questions />

@@ -46,7 +46,7 @@ router.route('/create').post((req, res) => {
         resources: [],
         questions: [], // will contain {title:"", description:""}
         attendees: [],
-        wfclickers: [], //w ill contain {clicker:"", answers:[], correct:""}
+        wfclickers: [], //w ill contain { id: "" clicker:"", answers:[], correct:""}
         feedback: ""
     });
 
