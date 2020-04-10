@@ -64,7 +64,7 @@ class Polls extends React.Component {
         socket.on("err", errorData => {
             alert(errorData.error);
         })
-    
+
         // listen for a publish event if a poll was published
         socket.on("publish", pollData => {
             console.log("publishing...", pollData);
@@ -107,7 +107,7 @@ class Polls extends React.Component {
 
         // calculate the random color for when a poll is published
         const colors = this.state.colors;
-        this.setState({selectedColor: Math.floor(Math.random() * colors.length)});    
+        this.setState({selectedColor: Math.floor(Math.random() * colors.length)});
 
         // should also make the http request to get all polls and store in state
     }
@@ -138,8 +138,8 @@ class Polls extends React.Component {
             })
         }
     }
-    
-    handleAdd = () => {
+
+    handleAdd = () => { //needs parameter to be room?
         let polls = this.state.polls;
         let newPoll = {
             _id: this.state.polls.length+1,
@@ -156,6 +156,7 @@ class Polls extends React.Component {
         this.setState({
             polls
         })
+        //currRoom.wfclickers.push(newPoll);  attempting to record information in room obj as well
         this.handleClose();
     }
 
@@ -185,7 +186,7 @@ class Polls extends React.Component {
         const pollIndx = this.state.polls.findIndex(poll => poll._id === parseInt(pollId));
         let polls = this.state.polls;
         polls[pollIndx] = updatedPoll;
-        
+
         this.setState({
             poll: updatedPoll,
             polls
@@ -221,7 +222,7 @@ class Polls extends React.Component {
         const poll = this.state.polls.filter(poll =>{
             return poll._id === parseInt(pollId);
         })
-        
+
         // emit poll to server to emit to all clients
         socket.emit("publish", {pollData: poll[0]})
     }
@@ -232,7 +233,7 @@ class Polls extends React.Component {
 
         // clear the answers state
         this.setState({answers: {}})
-        
+
         console.log("unpublishing poll...");
         // emit poll to server to emit to all clients and send poll that you
         // are trying to unpublish to make sure its the same as the current poll
@@ -278,15 +279,20 @@ class Polls extends React.Component {
         })
     }
 
+
     render() {
         // prop sent from host or user page determining if the current user is a host or user
-        const {isHost} = this.props;
+        const isHost = this.props.isHost.isHost; //isHost correctly gets true
+        console.log("The value of isHost is: " + isHost);
+        const currRoom = this.props.isHost.room; //this.props.room is undefined for some reason
+        console.log("Here is the room that was passed from Host to Polls: " + currRoom);
+
         const {publishedPoll, selectedColor, colors} = this.state;
 
         // make every poll's id the _id that mongodb creates for each poll when we send poll to db
-        const poll = 
+        const poll =
         <div>
-            <Poll socket={socket} id={this.state.poll._id} poll={this.state.poll} showAnswer={this.state.showAnswer} 
+            <Poll socket={socket} id={this.state.poll._id} poll={this.state.poll} showAnswer={this.state.showAnswer}
                 isPublished={this.state.poll._id === this.state.publishedPoll._id} isHost={isHost} userAnswers={this.state.answers}
                 showUserAnswers={this.state.showUserAnswers} unpublishPoll={this.unpublishPoll} displayAnswer={this.showAnswer}
                 getAnswers={this.getAnswers} editPoll={this.editPoll} colors={this.state.colors}/>
@@ -296,34 +302,34 @@ class Polls extends React.Component {
             <div>
                 <div className="poll-header-container">
                     {
-                        this.state.isPollState ? 
+                        this.state.isPollState ?
                             <div className="back-container"><ArrowBackIosIcon onClick={this.handleBack} /></div> : null
                     }
                     <h2>Polls</h2>
                     {
-                        isHost? this.state.isEmptyState && 
+                        isHost? this.state.isEmptyState &&
                             <div className="add-icon-container">
                                 <AddIcon onClick={this.handleOpen} />
-                            </div> : null 
+                            </div> : null
                     }
                 </div>
                 <Scrollbars style={{height: "50vh", width: "85vw"}}>
                     {
                         // show list of questions if host and nothing if user -- user only sees published posts
-                        isHost ? 
-                            this.state.polls.map(poll => 
-                                this.state.isEmptyState && this.state.polls && this.state.polls.length > 0 && 
+                        isHost ?
+                            this.state.polls.map(poll =>
+                                this.state.isEmptyState && this.state.polls && this.state.polls.length > 0 &&
                                     <div className="poll-container">
-                                        <PollQuestion selectedColor={colors[selectedColor]} handleClick={this.triggerPollState} 
+                                        <PollQuestion selectedColor={colors[selectedColor]} handleClick={this.triggerPollState}
                                             poll={poll} isPublished={poll._id === publishedPoll._id}/>
                                         <div className="btn-container">
                                             {publishedPoll._id !== poll._id ?
                                                 <button className="sm-btn" id={poll._id} onClick={this.publishPoll}>Publish</button> :
-                                                <button className="sm-btn" id={poll._id} onClick={this.unpublishPoll}>Unpublish</button>} 
+                                                <button className="sm-btn" id={poll._id} onClick={this.unpublishPoll}>Unpublish</button>}
                                             <button className="sm-btn" id={poll._id} onClick={this.deletePoll}>Delete</button>
                                         </div>
                                     </div>
-                            ) : 
+                            ) :
                             null
                     }
                     {
@@ -332,15 +338,15 @@ class Polls extends React.Component {
                     }
                     <br></br>
                 </Scrollbars>
-                
+
                 {/* Add Poll Dialog */}
                 <AddPoll addPoll={this.state.addPoll} handleClose={this.handleClose} handleChange={this.handleChange}
-                    answer={this.state.answer} handleAdd={this.handleAdd}/>
-                
+                    answer={this.state.answer} handleAdd={this.handleAdd} room={currRoom} />
+
                 <EditPoll editPoll={this.state.editPoll} handleClose={this.handleClose} handleEdit={this.handleEdit}
                     poll={this.state.poll} handleChange={this.handleChange} answer={this.state.answer}/>
                 {/* Edit Poll Dialog */}
-                
+
             </div>
         )
     }
