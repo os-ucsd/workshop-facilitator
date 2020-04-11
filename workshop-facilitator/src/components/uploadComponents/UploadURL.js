@@ -27,7 +27,6 @@ class Upload extends Component {
         <div className="Upload">
           <Button
             variant="contained"
-            disabled={this.state.urls.length === 0}
             onClick={this.uploadURL}
             style={{margin: "0 auto"}}
           >

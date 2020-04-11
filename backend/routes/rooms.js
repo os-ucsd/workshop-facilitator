@@ -106,7 +106,7 @@ router.route('/:id/questions/add').post((req, res) => {
                 .then(() => res.json(room))
                 .catch(err => res.status(400).json(err));
         })
-        .catch(err => res.status(404).json(err));;
+        .catch(err => res.status(404).json(err));
 })
 
 /*

@@ -7,23 +7,25 @@ var roomSchema = new Schema({
     //added to reflect states in Create.js
     wsTitle: String,
     wsDescript: String,
-    //
     joinCode: Number,
     resources: [{
         name: String,
-        link: String
+        link: String,
+        type: String
     }],
-    questions: [{
-        title: String,
-        description: String,
+    questions: [String],
+    // list of emails
+    attendees: [{
+        email: String,
+        followup: Boolean
     }],
-    attendees: [String],
-    wfclickers: [{
+    polls: [{
         id: String,
         question: String,
         answers: [String],
         correct: String
     }],
+    // email template
     feedback: String
 });
 
