@@ -25,12 +25,35 @@ class User extends React.Component {
             collapsed: false,
             // should be the same as the port you're using for server
             ENDPOINT: "localhost:5000",
+            room: null
         }
     }
 
     componentDidMount(){
         // make connection between this client and the server (which is active on port 5000)
         socket = io_client(this.state.ENDPOINT);
+
+
+        //get fetches the room by ID if the ID was sent,saves in state
+        if(this.props.location.state != null){
+            console.log("Here is the ID: " + this.props.location.state.roomID);
+            //this.setState( {roomID: this.props.location.state.roomID} );
+            //console.log("Here is the ID that was passed: " +  this.state.roomID);
+            let getString = "http://localhost:5000/rooms/" + this.props.location.state.roomID;
+            console.log("getString: " + getString);
+
+            fetch(getString, {
+                method: 'get',
+            })
+            .then((resp) => resp.json())
+            // if success and data was sent back, log the data
+            .then((data) => this.setState({ room: data}) )
+            // if failure, log the error
+            .catch((err) => console.log("Error", err));
+
+
+        }
+
     }
 
     postQuestion = (e) => {
@@ -57,25 +80,20 @@ class User extends React.Component {
     }
 
     render() {
-        // when pass in newly created room from Create.js/Join.js will be in this.props.location.state
-        // if we pass props through this.props.history.push
-        let roomState = null;
-        if(this.props.location.state != null){
-            roomState = this.props.location.state.room;
-            console.log("here is the room sent from Join Page: " + roomState);
-            console.log("User code: " + roomState.joinCode);
-        }
+        console.log("State room: " + this.state.room);
+
 
         return (
             <div>
-                {(roomState != null) ?
+                {(this.state.room != null) ?
                     <div>
-                        <h3> User code is: {roomState.joinCode} </h3>
+                        <h3> User code is: {this.state.room.joinCode} </h3>
                     </div>
                     :
                     <h3> No room FOR TESTING ONLY </h3>
 
                 }
+
 
                 <SplitPane
                     split="vertical"
@@ -91,7 +109,7 @@ class User extends React.Component {
                         defaultSize="50%"
                     >
                         <div>
-                            <Polls isHost={false}/> //room prop would be nul    l
+                            <Polls isHost={false}/>
                         </div>
                         <div>
                             <Questions />

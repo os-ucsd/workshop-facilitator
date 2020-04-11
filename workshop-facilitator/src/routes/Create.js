@@ -14,9 +14,20 @@ class Create extends React.Component{
         this.state = {
             nameForm: "",
             wsTitleForm: "",
-            wsDescripForm: ""
+            wsDescripForm: "",
+            rooms: []
         }
+    }
 
+    componentDidMount(){
+        fetch('http://localhost:5000/rooms/', {
+            method: 'get',
+        })
+        .then((resp) => resp.json())
+        // if success and data was sent back, log the data
+        .then((data) => this.setState( {rooms: data} ))
+        // if failure, log the error
+        .catch((err) => console.log("Error", err));
 
     }
 
@@ -46,6 +57,37 @@ class Create extends React.Component{
             joinCodeUser = new generateRandomCode();
         }
 
+        /*
+        to check for uniqueness: will need to do a database query to get all rooms
+        then loop through them and see if any of them contain joinCode
+
+        Use a while loop:
+        */
+        const listOfRooms = this.state.rooms;
+
+        for (let i = 0; i < listOfRooms.length; i++){
+            if (joinCodeUser == listOfRooms[i].joinCode){
+                // get new join code
+                joinCodeUser = generateRandomCode();
+                // reset the for loop to check for all rooms again
+                i = 0;
+            }
+
+        }
+
+        for( let i = 0; i < listOfRooms.length; i++){
+            if(joinCodeHost == listOfRooms[i].hostCode){
+                //get new host Code
+                joinCodeHost = generateRandomCode();
+                //reset for loop
+                i = 0;
+            }
+        }
+
+        console.log("Here are checked codes: Host, Join: " + joinCodeHost + " ," + joinCodeUser);
+
+
+
         let userData = { "nameForm" : this.state.nameForm,
                 "wsTitleForm": this.state.wsTitleForm,
                 "wsDescriptForm": this.state.wsDescripForm,
@@ -53,7 +95,13 @@ class Create extends React.Component{
                 "joinCodeUser": joinCodeUser
             };
 
-        //console.log(userData);
+        console.log("User data: " + userData);
+
+
+
+
+
+
 
         fetch('http://localhost:5000/rooms/create', {
             // send as a POST request with new room information in body,
@@ -66,27 +114,13 @@ class Create extends React.Component{
         //have to use .json instead of .text becuase we want to remain in json format/object not text
         .then((resp) => resp.json() )
         // if success and data was sent back, log the data
-        .then((data) => this.props.history.push('/host', {room: data } ) )//handleSuccess(data))
+        .then((data) => this.props.history.push('/host', {roomID: data._id } ) )//will send ID of newly created room
         // if failure, log the error
         .catch((err) => console.log("Error", err));
 
-        /*
-        to check for uniqueness: will need to do a database query to get all rooms
-        then loop through them and see if any of them contain joinCode
 
-        Use a while loop:
-        let joinCode = generateRandomCode();
-        const listOfRooms = some query to get all rooms
 
-        for (let i = 0; i < listOfRooms.length; i++){
-            if (joinCode == listOfRooms[i].joinCode){
-                // get new join code
-                joinCode = generateRandomCode();
-                // reset the for loop to check for all rooms again
-                i = 0;
-            }
-        }
-        */
+
     }
 
     render(){

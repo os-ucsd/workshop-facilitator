@@ -139,7 +139,7 @@ class Polls extends React.Component {
         }
     }
 
-    handleAdd = () => { //needs parameter to be room?
+    handleAdd = () => {
         let polls = this.state.polls;
         let newPoll = {
             _id: this.state.polls.length+1,
@@ -282,10 +282,12 @@ class Polls extends React.Component {
 
     render() {
         // prop sent from host or user page determining if the current user is a host or user
-        const isHost = this.props.isHost.isHost; //isHost correctly gets true
+        const isHost = this.props.isHost; //isHost correctly gets true
         console.log("The value of isHost is: " + isHost);
+        /*
         const currRoom = this.props.isHost.room; //this.props.room is undefined for some reason
         console.log("Here is the room that was passed from Host to Polls: " + currRoom);
+        */
 
         const {publishedPoll, selectedColor, colors} = this.state;
 
@@ -341,7 +343,7 @@ class Polls extends React.Component {
 
                 {/* Add Poll Dialog */}
                 <AddPoll addPoll={this.state.addPoll} handleClose={this.handleClose} handleChange={this.handleChange}
-                    answer={this.state.answer} handleAdd={this.handleAdd} room={currRoom} />
+                    answer={this.state.answer} handleAdd={this.handleAdd}  />
 
                 <EditPoll editPoll={this.state.editPoll} handleClose={this.handleClose} handleEdit={this.handleEdit}
                     poll={this.state.poll} handleChange={this.handleChange} answer={this.state.answer}/>
