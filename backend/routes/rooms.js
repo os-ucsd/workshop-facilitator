@@ -28,15 +28,12 @@ router.route('/').get((req, res) => {
 */
 router.route('/create').post((req, res) => {
     //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    /* for testing
     console.log("in /create Route");
     console.log("Here is the req,body below");
     console.log(req.body);
-    */
 
     // database query
     //use req.body info to create new room, save it
-    console.log(req.body);
 
     const newRoom = new WorkshopRoom({
         hostCode: req.body.hostCode,
