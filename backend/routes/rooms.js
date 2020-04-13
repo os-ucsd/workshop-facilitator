@@ -36,11 +36,11 @@ router.route('/create').post((req, res) => {
     //use req.body info to create new room, save it
 
     const newRoom = new WorkshopRoom({
-        hostCode: req.body.joinCodeHost,
-        name: req.body.nameForm,
-        wsTitle: req.body.wsTitleForm,
-        wsDescript: req.body.wsDescriptForm,
-        joinCode: req.body.joinCodeUser,
+        hostCode: req.body.hostCode,
+        name: req.body.name,
+        wsTitle: req.body.wsTitle,
+        wsDescript: req.body.wsDescript,
+        joinCode: req.body.joinCode,
         resources: [],
         questions: [], // will contain {title:"", description:""}
         attendees: [],
