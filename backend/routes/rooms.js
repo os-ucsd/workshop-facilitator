@@ -90,14 +90,17 @@ router.route('/:id/questions/').get((req, res) => {
 */
 router.route('/:id/questions/add').post((req, res) => {
     const roomId = req.params.id;
+    console.log(roomId);
     //const question = req.body.question;
     const question = req.body;
+    console.log('in /rooms/questions/add');
     console.log(question);
     // database query
     WorkshopRoom.findById(roomId)
         .then(room => {
             //let questions = room.questions;
-            room.questions.push(question);
+            room.questions.push(question.question);
+            console.log(room.questions);
             // save the room with the updated questions array
             room.save()
                 .then(() => res.json(room))
