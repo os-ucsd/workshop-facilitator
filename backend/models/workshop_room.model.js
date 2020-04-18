@@ -13,10 +13,7 @@ var roomSchema = new Schema({
         name: String,
         link: String
     }],
-    questions: [{
-        title: String,
-        description: String,
-    }],
+    questions: [String],
     attendees: [String],
     wfclickers: [{
         id: String,
