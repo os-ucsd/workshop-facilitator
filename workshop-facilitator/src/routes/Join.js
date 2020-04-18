@@ -20,7 +20,7 @@ class Join extends React.Component {
           roomCode: "",
           valid: true,
           onlyNums: true,
-          fourNums: true
+          fourNums: true,
         };
 
         this.checkRooms = this.checkRooms.bind(this);
@@ -110,14 +110,14 @@ checkRooms(rooms, code){
             //resolve host code
             flagValid = true;
             //this.props.history.push(`/customers/${customer.id}`);/
-            this.props.history.push(`/host`, {room: room});
+            this.props.history.push(`/host`, {roomID: room._id});//now just sends the room ID instead of obj
             //window.location.replace('http://localhost:3000/host');
             break;
         }else if(code == room.joinCode){
             console.log("This is a join code!");
             //resolve join code
             flagValid = true;
-            this.props.history.push(`/user`, {room: room});
+            this.props.history.push(`/user`, {roomID: room._id}); //now just sends the room ID instead of obj
 
             break;
         }

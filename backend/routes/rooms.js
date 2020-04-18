@@ -28,15 +28,12 @@ router.route('/').get((req, res) => {
 */
 router.route('/create').post((req, res) => {
     //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    /* for testing
     console.log("in /create Route");
     console.log("Here is the req,body below");
     console.log(req.body);
-    */
 
     // database query
     //use req.body info to create new room, save it
-    console.log(req.body);
 
     const newRoom = new WorkshopRoom({
         hostCode: req.body.hostCode,
@@ -93,14 +90,17 @@ router.route('/:id/questions/').get((req, res) => {
 */
 router.route('/:id/questions/add').post((req, res) => {
     const roomId = req.params.id;
+    console.log(roomId);
     //const question = req.body.question;
     const question = req.body;
+    console.log('in /rooms/questions/add');
     console.log(question);
     // database query
     WorkshopRoom.findById(roomId)
         .then(room => {
             //let questions = room.questions;
-            room.questions.push(question);
+            room.questions.push(question.question);
+            console.log(room.questions);
             // save the room with the updated questions array
             room.save()
                 .then(() => res.json(room))

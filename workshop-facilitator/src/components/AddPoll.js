@@ -22,8 +22,7 @@ class AddPoll extends React.Component {
 
         //right now addPolls doesn't do anything with currRoom
         const {addPoll, handleClose, handleChange, answer, handleAdd} = this.props;
-        const currRoom = this.props.room;
-        console.log("Here is the room that was passed in from polls to addPoll: " + currRoom);
+        
         return(
             <Dialog open={addPoll} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth="md">
             <DialogTitle id="form-dialog-title">New Poll</DialogTitle>
