@@ -59,51 +59,56 @@ class Polls extends React.Component {
     }
 
     componentDidMount(){
-        socket = io_client("http://localhost:5000");
+        //socket = io_client("http://localhost:5000");
+        socket = this.props.socket;
 
-        socket.on("err", errorData => {
-            alert(errorData.error);
-        })
-
-        // listen for a publish event if a poll was published
-        socket.on("publish", pollData => {
-            console.log("publishing...", pollData);
-            // show the newly published poll questions
-            this.setState({
-                //...this.state,
-                isEmptyState: false,
-                isPollState: true,
-                poll : pollData,
-                publishedPoll: pollData
+        // if socket hasn't been connected yet, don't do anything
+        if (socket){
+            socket.on("err", errorData => {
+                alert(errorData.error);
             })
-        })
 
-        socket.on("unpublish", () => {
-            // close question from view when successfully unpublished
-            this.setState({
-                ...this.state,
-                isEmptyState: true,
-                isPollState: false,
-                publishedPoll: {}
+            // listen for a publish event if a poll was published
+            socket.on("publish", pollData => {
+                console.log("publishing...", pollData);
+            
+                // show the newly published poll questions
+                this.setState({
+                    //...this.state,
+                    isEmptyState: false,
+                    isPollState: true,
+                    poll : pollData,
+                    publishedPoll: pollData
+                })
             })
-        })
 
-        // listen for a getAnswers event to populate the state variable with user answers
-        socket.on("getAnswers", answers => {
-            console.log("getting answers...");
-            this.setState({
-                answers,
-                showUserAnswers: true,
+            socket.on("unpublish", () => {
+                // close question from view when successfully unpublished
+                this.setState({
+                    ...this.state,
+                    isEmptyState: true,
+                    isPollState: false,
+                    publishedPoll: {}
+                })
             })
-        })
 
-        // listen for showanswer event and set the showanswer state to previous
-        socket.on("showAnswer", answer => {
-            console.log("showing answer...");
-            this.setState(prevState => {
-                return {showAnswer: !prevState.showAnswer};
+            // listen for a getAnswers event to populate the state variable with user answers
+            socket.on("getAnswers", answers => {
+                console.log("getting answers...");
+                this.setState({
+                    answers,
+                    showUserAnswers: true,
+                })
             })
-        })
+
+            // listen for showanswer event and set the showanswer state to previous
+            socket.on("showAnswer", answer => {
+                console.log("showing answer...");
+                this.setState(prevState => {
+                    return {showAnswer: !prevState.showAnswer};
+                })
+            })
+        }
 
         // calculate the random color for when a poll is published
         const colors = this.state.colors;
@@ -217,19 +222,22 @@ class Polls extends React.Component {
     publishPoll = evt => {
         evt.preventDefault();
         const pollId = evt.target.id;
+        const {roomId} = this.props;
 
         // find poll in the array of polls
         const poll = this.state.polls.filter(poll =>{
             return poll._id === parseInt(pollId);
         })
 
+        console.log(roomId);
         // emit poll to server to emit to all clients
-        socket.emit("publish", {pollData: poll[0]})
+        socket.emit("publish", {pollData: poll[0], name: roomId})
     }
 
     unpublishPoll = evt => {
         evt.preventDefault();
         const pollId = evt.target.id;
+        const {roomId} = this.props;
 
         // clear the answers state
         this.setState({answers: {}})
@@ -237,7 +245,7 @@ class Polls extends React.Component {
         console.log("unpublishing poll...");
         // emit poll to server to emit to all clients and send poll that you
         // are trying to unpublish to make sure its the same as the current poll
-        socket.emit("unpublish", pollId);
+        socket.emit("unpublish", {pollId, name: roomId});
     }
 
     triggerPollState = e => {
@@ -284,6 +292,7 @@ class Polls extends React.Component {
         // prop sent from host or user page determining if the current user is a host or user
         const isHost = this.props.isHost; //isHost correctly gets true
         console.log("The value of isHost is: " + isHost);
+        
         /*
         const currRoom = this.props.isHost.room; //this.props.room is undefined for some reason
         console.log("Here is the room that was passed from Host to Polls: " + currRoom);

@@ -28,7 +28,6 @@ class User extends React.Component {
         // make connection between this client and the server (which is active on port 5000)
         socket = io_client(this.state.ENDPOINT);
 
-
         //get fetches the room by ID if the ID was sent,saves in state
         if(this.props.location.state != null){
             console.log("Here is the ID: " + this.props.location.state.roomID);
@@ -36,6 +35,9 @@ class User extends React.Component {
             //console.log("Here is the ID that was passed: " +  this.state.roomID);
             let getString = "http://localhost:5000/rooms/" + this.props.location.state.roomID;
             console.log("getString: " + getString);
+
+            // join the socket room with the given room id
+            socket.emit("join", {name: this.props.location.state.roomID});
 
             fetch(getString, {
                 method: 'get',
@@ -64,6 +66,9 @@ class User extends React.Component {
         let getRoom = 'http://localhost:5000/rooms/5e9a0338a9209c47e48782ed' + '/questions/add'; //tests for a specific room 
         console.log('getRoom: ' + getRoom);
 
+        // join the socket room with the given room
+        socket.emit("join", {name: this.props.location.state.roomId});
+
         fetch(getRoom, {
             // send as a POST request with new room information in body,
             //POST fetch("the API route that adds a new question, {method: "POST", body:
@@ -91,8 +96,9 @@ class User extends React.Component {
 
     render() {
         console.log("State room: " + this.state.room);
+        const {roomID} = this.props.location.state;
 
-
+        if (!socket) return null;
         return (
             <div>
                 {(this.state.room != null) ?
@@ -119,7 +125,7 @@ class User extends React.Component {
                         defaultSize="40%"
                     >
                         <div>
-                            <Polls isHost={false}/>
+                            <Polls isHost={false} roomId={roomID} socket={socket}/>
                         </div>
                         <div>
                             <Questions />

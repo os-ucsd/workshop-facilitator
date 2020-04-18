@@ -43,6 +43,9 @@ class Host extends React.Component {
             let getString = "http://localhost:5000/rooms/" + this.props.location.state.roomID;
             console.log("getString: " + getString);
 
+            // join the socket room with the given room
+            socket.emit("join", {name: this.props.location.state.roomID});
+
             fetch(getString, {
                 method: 'get',
             })
@@ -61,7 +64,9 @@ class Host extends React.Component {
         // when pass in newly created room from Create.js/Join.js will be in this.props.location.state
         // if we pass props through this.props.history.push
         console.log("State room: " + this.state.room);
+        const {roomID} = this.props.location.state;
 
+        if (socket){
         return (
             <div>
                 {(this.state.room != null) ?
@@ -88,7 +93,7 @@ class Host extends React.Component {
                         defaultSize="50%"
                     >
                         <div>
-                            <Polls isHost= {true}    />
+                            <Polls isHost= {true} roomId={roomID} socket={socket}/>
                         </div>
                         <div>
                             <Questions />
@@ -101,6 +106,8 @@ class Host extends React.Component {
             </div>
 
         )
+        }
+        else return null;
     }
 
 }
