@@ -35,12 +35,13 @@ router.route('/create').post((req, res) => {
     // database query
     //use req.body info to create new room, save it
 
+    // 4/21 Please don't change,
     const newRoom = new WorkshopRoom({
-        hostCode: req.body.hostCode,
-        name: req.body.name,
-        wsTitle: req.body.wsTitle,
-        wsDescript: req.body.wsDescript,
-        joinCode: req.body.joinCode,
+        hostCode: req.body.joinCodeHost,
+        name: req.body.nameForm,
+        wsTitle: req.body.wsTitleForm,
+        wsDescript: req.body.wsDescriptForm,
+        joinCode: req.body.joinCodeUser,
         resources: [],
         questions: [], // will contain {title:"", description:""}
         attendees: [],
