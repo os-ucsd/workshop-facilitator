@@ -1,16 +1,29 @@
-.CreateForm{
-    /* https://www.templatemonster.com/help/css-understanding-border-margin-and-padding-properties.html */
-    margin-left: auto; /* defines space around the border */
+.Create {
+    height: auto;
+    text-align: center;
+}
+
+/* .CreateForm {
+    margin-left: auto; 
     margin-right: auto;
-    padding-left: 25px; /* defines space between border and element */
+    padding-left: 25px; 
     padding-right: 25px;
     padding-top: 10px;
     padding-bottom: 10px;
-    width: 25%;
-    border-color: rgb(0, 51, 204);
-    border-width:3px;
+    width: 100%;
+    border-color: rgb(0, 51, 204); 
+    border-width:3px; 
     border-style:groove;
-}
+} */
+
+.vertical-center {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 45%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
 
 .Title{
     text-align: center;

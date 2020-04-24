@@ -26,7 +26,7 @@ class Home extends React.Component {
     return(
       <div className="Home">
         <div className="vertical-center">
-          <h1>Are you creating or joining?</h1> <br/>
+          <h1>WORKSHOP FACILITATOR</h1> <br/>
           <div className="Buttons">
             <div className="createBtnContainer">
               <Button fullWidth={true} variant="contained" color="primary" href="/create">
