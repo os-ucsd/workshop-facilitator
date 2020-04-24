@@ -36,14 +36,11 @@ class Upload extends Component {
       type: "url"
     }
     this.setState({urlData});
-
-    console.log(urlData);
     
     socket.emit("uploadURL", {urlData: urlData});
   }
   
   onChange = e => {
-    console.log(e.target.value)
     if (e.target.value.indexOf("http://") == 0 || e.target.value.indexOf("https://") == 0) {
       this.setState({ errorText: '', invalidURL : false  })
     } else {
