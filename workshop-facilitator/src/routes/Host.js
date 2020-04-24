@@ -95,7 +95,7 @@ class Host extends React.Component {
                         </div>
                     </SplitPane>
                     <div>
-                        <Resources />
+                        <Resources isHost={true}/>
                     </div>
                 </SplitPane>
             </div>
