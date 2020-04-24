@@ -4,7 +4,12 @@ import '../styles/Host.css';
 import Resources from "../components/Resources";
 import Questions from "../components/Questions";
 import Polls from "../components/Polls";
+
+import HostCode from "../components/HostCode";
+import JoinCode from "../components/JoinCode";
+
 import io from "socket.io-client";
+
 
 let socket;
 
@@ -15,7 +20,9 @@ class Host extends React.Component {
         this.state = {
             // should be the same as the port you're using for server
             ENDPOINT: "localhost:5000",
-            room: null
+            room: null,
+            hostCode: "",
+            joinCode: ""
         }
     }
 
@@ -48,19 +55,30 @@ class Host extends React.Component {
             })
             .then((resp) => resp.json())
             // if success and data was sent back, log the data
-            .then((data) => this.setState({ room: data}) )
+            .then((data) => this.roomInit(data) ) //this.setState({room: data}) )
             // if failure, log the error
             .catch((err) => console.log("Error", err));
 
 
         }
 
+
+
     }
+
+    roomInit = (data) => {
+        this.setState({room: data});
+        this.setState({hostCode: data.hostCode});
+        this.setState({joinCode: data.joinCode});
+    }
+
 
     render() {
         // when pass in newly created room from Create.js/Join.js will be in this.props.location.state
         // if we pass props through this.props.history.push
         console.log("State room: " + this.state.room);
+        //if there is a room, change hostCode to the designated hostCode, else it will remain the emtpy strig.
+
 
         return (
             <div>
@@ -73,6 +91,8 @@ class Host extends React.Component {
                     <h3> No room FOR TESTING ONLY </h3>
 
                 }
+
+
 
                 <SplitPane
                     split="vertical"
@@ -94,7 +114,11 @@ class Host extends React.Component {
                             <Questions />
                         </div>
                     </SplitPane>
+
                     <div>
+
+                        <HostCode hostCode={this.state.hostCode} />
+                        <JoinCode joinCode={this.state.joinCode} />
                         <Resources />
                     </div>
                 </SplitPane>

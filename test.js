@@ -4,11 +4,11 @@ class BtnExample extends React.Component{
         //this.btnClick = this.btnClick.bind(this);
         this.state = {asdf: "asdf"}
     }
-    
+
     /*
     btnClick(){
         alert("you clicked me");
-        this.state.asdf    
+        this.state.asdf
     }
     */
 
