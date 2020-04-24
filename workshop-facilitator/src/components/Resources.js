@@ -38,14 +38,11 @@ class Resources extends React.Component {
         socket = io_client("http://localhost:5000");
 
         socket.on("uploadURL", data => {
-            console.log("uploading url... ", data);
             let newResources = this.state.resources;
             newResources.push(data.urlData);
             this.setState({
                 resources: newResources
             })
-            console.log(newResources);
-            console.log(this.state.resources);
         })
     }
 

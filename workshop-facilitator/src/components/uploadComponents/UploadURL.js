@@ -17,7 +17,9 @@ class Upload extends Component {
       urlData: {
         title: "",
         url: ""
-      }
+      },
+      errorText: "",
+      invalidURL: true
     }
   }
 
@@ -40,13 +42,30 @@ class Upload extends Component {
     socket.emit("uploadURL", {urlData: urlData});
   }
   
+  onChange = e => {
+    console.log(e.target.value)
+    if (e.target.value.indexOf("http://") == 0 || e.target.value.indexOf("https://") == 0) {
+      this.setState({ errorText: '', invalidURL : false  })
+    } else {
+      this.setState({ errorText: "Missing http:// or https://"})
+    }
+  }
+
   render() {
     return (
       <div>
         <form noValidate autoComplete="off" onSubmit={this.uploadURL}>
           <TextField id="title" label="Title" fullWidth/>
           <br/>
-          <TextField id="url" type="url" label="URL" fullWidth />
+          <TextField 
+              id="url" 
+              onChange={this.onChange}
+              error={!!this.state.errorText}
+              helperText={this.state.errorText}
+              type="url"
+              label="URL" 
+              fullWidth />
+          <br />
           <br />
           <div className="Upload">
             <Button
@@ -54,6 +73,7 @@ class Upload extends Component {
               style={{margin: "0 auto"}}
               type="submit"
               onClick={this.props.close}
+              disabled={this.state.invalidURL}
             >
               Upload
             </Button>

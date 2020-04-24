@@ -61,7 +61,7 @@ class User extends React.Component {
 
         let questionData = {"question" : this.state.question}
         //let getRoom = this.state.room + '/questions/add';
-        let getRoom = 'http://localhost:5000/rooms/5e9a0338a9209c47e48782ed' + '/questions/add'; //tests for a specific room 
+        let getRoom = 'http://localhost:5000/rooms/5e9a0338a9209c47e48782ed' + '/questions/add'; //tests for a specific room
         console.log('getRoom: ' + getRoom);
 
         fetch(getRoom, {
@@ -132,6 +132,15 @@ class User extends React.Component {
                         </div>
                     </SplitPane>
                     <div>
+
+                        {(this.state.room != null) ?
+                            <div>
+                                <h3> User code is: {this.state.room.joinCode} </h3>
+                            </div>
+                            :
+                            <h3> No room FOR TESTING ONLY </h3>
+
+                        }
                         <Resources />
                     </div>
                 </SplitPane>
