@@ -76,7 +76,7 @@ class Create extends React.Component{
         }
 
         for( let i = 0; i < listOfRooms.length; i++){
-            if(joinCodeHost == listOfRooms[i].hostCode){
+            if(joinCodeHost === listOfRooms[i].hostCode){
                 //get new host Code
                 joinCodeHost = generateRandomCode();
                 //reset for loop
