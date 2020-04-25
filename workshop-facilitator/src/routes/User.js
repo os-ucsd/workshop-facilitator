@@ -57,11 +57,9 @@ class User extends React.Component {
         console.log(newQst);
         // emit question for all users to see
         if (newQst) socket.emit("question", {question: newQst});
-        console.log('room: ' + this.state.room);
 
         let questionData = {"question" : this.state.question}
-        //let getRoom = this.state.room + '/questions/add';
-        let getRoom = 'http://localhost:5000/rooms/5e9a0338a9209c47e48782ed' + '/questions/add'; //tests for a specific room
+        let getRoom = 'http://localhost:5000/rooms/' + this.state.room._id + '/questions/add';
         console.log('getRoom: ' + getRoom);
 
         fetch(getRoom, {
@@ -90,8 +88,6 @@ class User extends React.Component {
     }
 
     render() {
-        console.log("State room: " + this.state.room);
-
 
         return (
             <div>

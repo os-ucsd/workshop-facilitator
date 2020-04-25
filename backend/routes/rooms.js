@@ -91,10 +91,8 @@ router.route('/:id/questions/').get((req, res) => {
 */
 router.route('/:id/questions/add').post((req, res) => {
     const roomId = req.params.id;
-    console.log(roomId);
     //const question = req.body.question;
     const question = req.body;
-    console.log('in /rooms/questions/add');
     console.log(question);
     // database query
     WorkshopRoom.findById(roomId)
@@ -201,6 +199,41 @@ router.route("/resources/:name").get((req, res) => {
 */
 router.route("/resources/").get((req, res) => {
     // find the file resource with the given name
+})
+
+/*
+@route POST /rooms/feedback/add
+@desc Adds a new attendee to the specific workshop room
+*/
+router.route('/:id/feedback/add').post((req, res) => {
+    const roomId = req.params.id;
+    const email = req.body;
+    console.log(email);
+    // database query
+    WorkshopRoom.findById(roomId)
+        .then(room => {
+            //let questions = room.questions;
+            room.attendees.push(email.email);
+            console.log(room.attendees);
+            // save the room with the updated questions array
+            room.save()
+                .then(() => res.json(room))
+                .catch(err => res.status(400).json(err));
+        })
+        .catch(err => res.status(404).json(err));;
+})
+
+/*
+@route GET /rooms/:id/feedback/
+@desc Gets all the emails in a given room
+*/
+router.route('/:id/feedback/').get((req, res) => {
+    const roomId = req.params.id;
+    // database query
+    WorkshopRoom.findById(roomId)
+        // send the emails back to client-side
+        .then(room => res.json(room.attendees))
+        .catch(err => res.status(400).json(err));
 })
 
 module.exports = router;
