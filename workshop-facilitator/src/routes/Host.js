@@ -116,10 +116,9 @@ class Host extends React.Component {
                     </SplitPane>
 
                     <div>
-
                         <HostCode hostCode={this.state.hostCode} />
                         <JoinCode joinCode={this.state.joinCode} />
-                        <Resources />
+                        <Resources isHost={true}/>
                     </div>
                 </SplitPane>
             </div>
