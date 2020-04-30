@@ -5,6 +5,9 @@ import Resources from "../components/Resources";
 import Questions from "../components/Questions";
 import Polls from "../components/Polls";
 
+
+import Button from "@material-ui/core/Button";
+
 import HostCode from "../components/HostCode";
 import JoinCode from "../components/JoinCode";
 
@@ -22,7 +25,8 @@ class Host extends React.Component {
             ENDPOINT: "localhost:5000",
             room: null,
             hostCode: "",
-            joinCode: ""
+            joinCode: "",
+            slowerPeople: 0
         }
     }
 
@@ -36,8 +40,12 @@ class Host extends React.Component {
         */
         socket = io(this.state.ENDPOINT);
 
-        socket.on("test", () => {
-            console.log("test event received!");
+
+        socket.on("slower", () =>{
+            console.log("someone wanna go slower");
+            this.setState({slowerPeople: (this.state.slowerPeople + 1)});
+            console.log("slowerPeople: " +  this.state.slowerPeople);
+
         })
 
 
@@ -62,14 +70,17 @@ class Host extends React.Component {
 
         }
 
-
-
     }
 
     roomInit = (data) => {
         this.setState({room: data});
         this.setState({hostCode: data.hostCode});
         this.setState({joinCode: data.joinCode});
+    }
+
+    resetSlow = () =>{
+        this.setState({slowerPeople: 0});
+        socket.emit("slowerReset", {data:"none"});
     }
 
 
@@ -119,6 +130,8 @@ class Host extends React.Component {
 
                         <HostCode hostCode={this.state.hostCode} />
                         <JoinCode joinCode={this.state.joinCode} />
+                        <h3> People wanna go slower: {this.state.slowerPeople} </h3>
+                        <Button variant="outlined" onClick={this.resetSlow}> Went Slower </Button>
                         <Resources />
                     </div>
                 </SplitPane>

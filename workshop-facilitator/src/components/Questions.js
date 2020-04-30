@@ -21,12 +21,12 @@ class Questions extends React.Component {
 
         // listen for when the server sends a new question that some client sent
         socket.on("question", data => {
-          // update the questions to include the new question 
+          // update the questions to include the new question
           this.setState(prevState => {
             const questions = prevState.questions.push({id:this.state.curID, question:data.question, upvotes:0});
             return questions;
           })
-        })    
+        })
         this.setState({
             curID: this.state.curID + 1
         })
@@ -38,13 +38,14 @@ class Questions extends React.Component {
             <div className="qListContainer">
                 {
                     this.state.questions && this.state.questions.length > 0 ?
-                        this.state.questions.map(question => 
+                        this.state.questions.map(question =>
                             <Question key={question.id} question={question} />
                         )
                     : <p>No questions to yet</p>
                 }
             </div>
             </Scrollbars>
+
         )
     }
 }

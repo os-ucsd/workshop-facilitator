@@ -147,6 +147,21 @@ io.on("connection", socket => {
     socket.on("disconnect", () => {
         console.log("a user disconnected");
     })
+
+    //testing go slow
+    socket.on("slower", () => {
+        console.log("someone wants to go slower");
+        io.sockets.emit("slower", {data:"nothing"});
+    })
+
+    socket.on("slowerReset", () => {
+        console.log("slower reset");
+        io.sockets.emit("slowerReset", {data:"nothing"});
+
+    })
+
+
+
 })
 
 // make room routes visible
