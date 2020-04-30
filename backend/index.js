@@ -40,7 +40,7 @@ let currPollQuestion = {};
 io.on("connection", socket => {
     console.log("user connected");
 
-    // whenever user connected, if there's a published poll, automatically send the new user
+    // whenever user connected, if there's a published poll, automatically send to the new user
     if (currPollQuestion._id) io.sockets.emit("publish", currPollQuestion);
 
     // listen for when a new poll was sent out, show to all clients
@@ -141,6 +141,11 @@ io.on("connection", socket => {
         // emit to all sockets connected to the server that there was a new question
         console.log(data);
         io.sockets.emit("question", data);
+    })
+
+    socket.on("uploadURL", urlData => {
+        console.log("uploading url " + urlData);
+        io.sockets.emit("uploadURL", urlData);
     })
 
     // listen for disconnect event (when user leaves)

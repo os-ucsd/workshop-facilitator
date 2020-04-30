@@ -127,12 +127,13 @@ class Host extends React.Component {
                     </SplitPane>
 
                     <div>
-
                         <HostCode hostCode={this.state.hostCode} />
                         <JoinCode joinCode={this.state.joinCode} />
+
                         <h3> People wanna go slower: {this.state.slowerPeople} </h3>
                         <Button variant="outlined" onClick={this.resetSlow}> Went Slower </Button>
-                        <Resources />
+                        <Resources isHost={true}/>
+
                     </div>
                 </SplitPane>
             </div>
