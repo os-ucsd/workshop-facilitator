@@ -29,6 +29,7 @@ class JoinCode extends React.Component{
         <div>
           <InputLabel htmlFor="outlined-adornment-password">Join Code</InputLabel>
           <OutlinedInput
+            disabled
             id="outlined-adornment-password"
             value={this.props.joinCode}
 

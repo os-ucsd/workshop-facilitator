@@ -37,6 +37,7 @@ class HostCode extends React.Component{
         <div>
           <InputLabel htmlFor="outlined-adornment-password">Host Code</InputLabel>
           <OutlinedInput
+            disabled
             id="outlined-adornment-password"
             type={this.state.showPassword ? 'text' : 'password'}
             value={this.props.hostCode}
