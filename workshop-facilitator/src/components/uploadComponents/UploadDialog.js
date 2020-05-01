@@ -61,7 +61,7 @@ export default function UploadDialog() {
             >
                 <DialogTitle id="upload-dialog-title">Upload via URL</DialogTitle>
                 <DialogContent className="UploadDialogContent">
-                    <UploadURL />
+                    <UploadURL close={handleClose}/>
                 </DialogContent>
                 <DialogActions>
                 </DialogActions>
