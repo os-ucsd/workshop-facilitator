@@ -121,12 +121,14 @@ class Host extends React.Component {
                     </SplitPane>
 
                     <div>
+                        <SendMail id={this.state.id}/>
+                        <br></br>
+                        <br></br>
                         <HostCode hostCode={this.state.hostCode} />
                         <JoinCode joinCode={this.state.joinCode} />
                         <Resources isHost={true}/>
                     </div>
                 </SplitPane>
-                <SendMail id={this.state.id}/>
             </div>
 
         )

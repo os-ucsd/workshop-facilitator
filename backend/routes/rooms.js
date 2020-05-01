@@ -3,6 +3,7 @@ Holds the API routes having to deal with the workshop rooms
 */
 const express = require('express');
 const router = express.Router();
+const nodemailer = require("nodemailer");
 const WorkshopRoom = require("../models/workshop_room.model.js"); //added to be able to use Schema
 
 
@@ -234,6 +235,40 @@ router.route('/:id/feedback/').get((req, res) => {
         // send the emails back to client-side
         .then(room => res.json(room.attendees))
         .catch(err => res.status(400).json(err));
+})
+
+/*
+@route sends out emails
+*/
+router.route('/:id/feedback/send').post((req, res) => {
+    let transporter = nodemailer.createTransport({
+    host: "smtp.gmail.com",
+    //service: 'gmail',
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+        user: 'srabharris@gmail.com', 
+        pass: '7hzrx32am' 
+    },
+    tls:{
+        rejectUnauthrized: false
+    }
+    });
+    console.log(req.body);
+    const emails = req.body.list;
+    const subject = req.body.subject;
+    const text = req.body.text;
+
+    //send mail with defined transport object
+  let info = transporter.sendMail({
+    from: '"Workshop Facilitator" <srabharris@gmail.com>', // sender address
+    to: emails, // list of receivers
+    subject: subject, // Subject line
+    text: text, // plain text body
+  });
+
+    console.log("Message sent: %s", info.messageId);
+    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 })
 
 module.exports = router;

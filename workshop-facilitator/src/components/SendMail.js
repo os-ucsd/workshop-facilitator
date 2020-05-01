@@ -1,8 +1,6 @@
 import React from 'react';
-//import nodemailer from 'nodemailer';
 import Button from '@material-ui/core/Button';
-
-const nodemailer = require("nodemailer");
+import TextField from "@material-ui/core/TextField";
 
 class SendMail extends React.Component {
 
@@ -10,8 +8,12 @@ class SendMail extends React.Component {
         super(props);
         this.state = {
             roomId: this.props.id,
-            emails: []
-        }
+            expanded: false,
+            subject: "",
+            text: "",
+        };
+        this.collectEmails = this.collectEmails.bind(this);
+
     }
 
     componentWillReceiveProps(nextProps){
@@ -20,58 +22,84 @@ class SendMail extends React.Component {
         }
     }
 
+    handleChange = (e) => {
+        this.setState({
+            [e.target.id]: e.target.value
+        })
+    }
+    
+    expand = () => {
+        this.setState({
+            expanded: (!(this.state.expanded))
+        })
+    }
+
     send = () => {
         const id = this.state.roomId;
-        console.log(id);
-
-        // create reusable transporter object using the default SMTP transport
-        let transporter = nodemailer.createTransport({
-          service: 'gmail',
-          auth: {
-            user: '',
-            pass: ''
-          }
-        });
 
         let getString = "http://localhost:5000/rooms/" + id + '/feedback';
-        let emailList = [];
 
         fetch(getString, {
             method: 'get',
         })
         .then((resp) => resp.json())
-        .then((data) =>  {
-            for(let i = 0; i < data.length; i++) {
-                console.log(data[i]);
-                emailList.push(data[i]);
-            }
-        })
+        .then((data) => this.collectEmails(data, getString))
         // if failure, log the error
         .catch((err) => console.log("Error", err));
 
-        console.log('email state: ' + emailList);
+        alert("Email Sent Subject: " + this.state.subject);
+    }
 
-        // send mail with defined transport object
-        let mailOptions = {
-            from: '"Workshop Facilitator" <>', // sender address
-            to: emailList, // list of receivers
-            subject: "Hello ✔", // Subject line
-            text: "Hello world?", // plain text body
-          };
-      }
+    collectEmails(emails, getString) {
+        let emailList = "";
+        for(const email of emails) {
+            if(email !== "" && emailList === "") {
+                emailList = email;
+            }
+            else if(email !== "") {
+                emailList = emailList + ', ' + email;
+            }
+        }
+        console.log('emails: ' + emailList);
+        getString = getString + '/send';
+        let emailData = {"list": emailList, "subject": this.state.subject, "text": this.state.text};
+        
+        fetch(getString, {
+            method: 'post',
+            headers: {"Content-Type" : "application/json"}, //have to specify content type as json, or else server thinks its something else;
+            body: JSON.stringify(emailData)
+        })
+        .then((resp) => resp.json())
+        .then((data) => console.log("Email sent"))
+        .catch((err) => console.log("Error", err));
+    }
+
+
 
     render() {
         return (
             <div>
-                <div>
-                    <Button onClick={this.send} type="submit" variant="contained" color="secondary">
-                        Send Mail
-                    </Button>
-                </div>
+                <Button onClick={this.expand}>Send Mail</Button>
+                <br></br>
+                <br></br>
+                {this.state.expanded ? 
+                <form noValidate autoComplete = "off" onChange = {this.handleChange}>
+                    <TextField id="subject" label="Subject" variant="outlined" multiline></TextField>
+                    <br></br>
+                    <br></br>
+                    <TextField id="text" label="Body" variant="outlined" multiline rows={5} rowsMax={30}></TextField>
+                    <br></br>
+                    <br></br>
+                    <div>
+                        <Button onClick={this.send} variant="contained" color="secondary">
+                            Send
+                        </Button>
+                    </div>
+                </form>
+                : null}
             </div>
         );
     }
 }
-
 
 export default SendMail;

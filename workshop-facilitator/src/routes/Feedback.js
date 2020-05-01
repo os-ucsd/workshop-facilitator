@@ -60,20 +60,23 @@ class Feedback extends React.Component {
         let getRoom = 'http://localhost:5000/rooms/' + this.state.room._id + '/feedback/add';
         console.log('getRoom: ' + getRoom);
 
-        fetch(getRoom, {
-            // send as a POST request with new room information in body,
-            //POST fetch("the API route that adds a new email, {method: "POST", body:
-            //{email data to pass in}})
-            method: 'post',
-            headers: {"Content-Type" : "application/json"}, //have to specify content type as json, or else server thinks its something else;
-            body: JSON.stringify(emailData)
-        })
-        //using .text() instead of .json to avoid errors
-        .then((resp) => resp.json())
-        // if success and data was sent back, log the data
-        .then((data) => handleSuccess(data))
-        // if failure, log the error
-        .catch((err) => console.log("Error", err));
+
+        if(this.state.feedback) {
+          fetch(getRoom, {
+              // send as a POST request with new room information in body,
+              //POST fetch("the API route that adds a new email, {method: "POST", body:
+              //{email data to pass in}})
+              method: 'post',
+              headers: {"Content-Type" : "application/json"}, //have to specify content type as json, or else server thinks its something else;
+              body: JSON.stringify(emailData)
+          })
+          //using .text() instead of .json to avoid errors
+          .then((resp) => resp.json())
+          // if success and data was sent back, log the data
+          .then((data) => handleSuccess(data))
+          // if failure, log the error
+          .catch((err) => console.log("Error", err));
+      }
 
         this.props.history.push(`/user`, {roomID: this.state.room._id});
       };
