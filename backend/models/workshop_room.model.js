@@ -9,9 +9,9 @@ var roomSchema = new Schema({
     wsDescript: String,
     joinCode: Number,
     resources: [{
-        name: String,
-        link: String,
-        type: String
+        title: String,
+        src: String,
+        resType: String
     }],
     questions: [String],
     // list of emails

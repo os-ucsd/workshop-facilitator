@@ -132,7 +132,7 @@ class Host extends React.Component {
 
                         <h3> People wanna go slower: {this.state.slowerPeople} </h3>
                         <Button variant="outlined" onClick={this.resetSlow}> Went Slower </Button>
-                        <Resources isHost={true}/>
+                        <Resources isHost={true} roomID={this.props.location.state.roomID}/>
 
                     </div>
                 </SplitPane>

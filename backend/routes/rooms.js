@@ -180,19 +180,34 @@ router.route('/:roomId/clickers/:cId').get((req, res) => {
 })
 
 /*
-@route POST /rooms/resources/upload
+@route POST /rooms/:roomId/resources/upload
 @desc uploads a file resource to the database
 */
-router.route("/resources/upload").post((req, res) => {
+router.route("/:roomId/resources/upload").post((req, res) => {
     // req should contain the file to upload
+    const roomId = req.params.roomId;
+    const resource = req.body;
+    console.log(roomId)
+    WorkshopRoom.findById(roomId)
+        .then(room => {
+            room.resources.push(resource);
+            room.save()
+                .then(() => res.json(room.resources))
+                .catch(err => res.status(400).json(err))
+        })
 })
 
 /*
-@route GET /rooms/resources/:name
+@route GET /rooms/:roomId/resources/
 @desc uploads a file resource to the database
 */
-router.route("/resources/:name").get((req, res) => {
+router.route("/:roomId/resources/").get((req, res) => {
     // find the file resource with the given name
+    const roomId = req.params.roomId;
+    
+    WorkshopRoom.findById(roomId)
+        .then(room => res.json(room.resources))
+        .catch(err => res.status(400).json(err));
 })
 
 /*
