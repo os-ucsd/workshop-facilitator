@@ -11,11 +11,6 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 
 class EditPoll extends React.Component {
-    constructor(){
-        super();
-
-    }
-
     render(){
         //editPoll={this.state.editPoll} onClose={this.handleClose} handleEdit={this.handleEdit}
         //poll={this.state.poll} handleChange={this.handleChange} answer={this.state.answer}

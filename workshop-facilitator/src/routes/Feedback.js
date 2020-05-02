@@ -3,7 +3,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Checkbox from '@material-ui/core/Checkbox';
 import FormLabel from '@material-ui/core/FormLabel';
-import { BrowserRouter as Router, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import "../styles/Feedback.css";
 
@@ -23,7 +23,7 @@ class Feedback extends React.Component {
     this.setState({
         [e.target.id]: e.target.value
     })
-    if(this.state.email!="") {
+    if(this.state.email !== "") {
       this.setState({
         feedback: true
       })

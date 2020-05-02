@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import "../../styles/Upload.css";
 import Dropzone from './Dropzone';
 import { Button } from '@material-ui/core';
-import Resources from '../Resources';
 import Progress from './Progress';
 
 class Upload extends Component {
