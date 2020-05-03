@@ -1,6 +1,7 @@
 import React from "react";
 import SplitPane from 'react-split-pane';
 import '../styles/Host.css';
+import SendMail from '../components/SendMail';
 import Resources from "../components/Resources";
 import Questions from "../components/Questions";
 import Polls from "../components/Polls";
@@ -26,6 +27,7 @@ class Host extends React.Component {
             room: null,
             hostCode: "",
             joinCode: "",
+            id: null,
             slowerPeople: 0
         }
     }
@@ -53,6 +55,9 @@ class Host extends React.Component {
 
         if(this.props.location.state != null){
             console.log("Here is the ID: " + this.props.location.state.roomID);
+            this.setState({
+                id: this.props.location.state.roomID
+            })
             //this.setState( {roomID: this.props.location.state.roomID} );
             //console.log("Here is the ID that was passed: " +  this.state.roomID);
             let getString = "http://localhost:5000/rooms/" + this.props.location.state.roomID;
@@ -127,6 +132,9 @@ class Host extends React.Component {
                     </SplitPane>
 
                     <div>
+                        <SendMail id={this.state.id}/>
+                        <br></br>
+                        <br></br>
                         <HostCode hostCode={this.state.hostCode} />
                         <JoinCode joinCode={this.state.joinCode} />
 

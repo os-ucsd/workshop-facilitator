@@ -15,10 +15,7 @@ var roomSchema = new Schema({
     }],
     questions: [String],
     // list of emails
-    attendees: [{
-        email: String,
-        followup: Boolean
-    }],
+    attendees: [String],
     polls: [{
         id: String,
         question: String,
