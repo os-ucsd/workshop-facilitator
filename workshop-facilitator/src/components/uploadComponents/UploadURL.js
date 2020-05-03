@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import "../../styles/Upload.css";
-import Dropzone from './Dropzone';
 import { Button } from '@material-ui/core';
-import Resources from '../Resources';
-import Progress from './Progress';
 import TextField from '@material-ui/core/TextField'
 import io_client from "socket.io-client";
 
@@ -14,10 +11,6 @@ class Upload extends Component {
     super();
 
     this.state = {
-      urlData: {
-        title: "",
-        url: ""
-      },
       errorText: "",
       invalidURL: true
     }
@@ -33,10 +26,20 @@ class Upload extends Component {
     let urlData = {
       title: e.target[0].value,
       src: e.target[1].value,
-      type: "url"
+      resType: "url"
     }
     this.setState({urlData});
     
+    let reqURL = "http://localhost:5000/rooms/" + this.props.roomID + "/resources/upload"
+    fetch(reqURL, {
+      method: 'POST',
+      body: JSON.stringify(urlData),
+      headers: { 'Content-type': 'application/json' }
+    })
+    .then((res) => res.json())
+    .then((data) => console.log("Success! ", data))
+    .catch(err => console.log("Error " + err));
+
     socket.emit("uploadURL", {urlData: urlData});
 
     this.props.close()

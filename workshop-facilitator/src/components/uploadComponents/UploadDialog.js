@@ -12,7 +12,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 import "../../styles/UploadDialog.css";
 
-export default function UploadDialog() {
+const UploadDialog = (props) => {
     const [open, setOpen] = React.useState(false);
     const [URLOpen, setURLOpen] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(false);
@@ -61,7 +61,7 @@ export default function UploadDialog() {
             >
                 <DialogTitle id="upload-dialog-title">Upload via URL</DialogTitle>
                 <DialogContent className="UploadDialogContent">
-                    <UploadURL close={handleClose}/>
+                    <UploadURL close={handleClose} roomID={props.roomID}/>
                 </DialogContent>
                 <DialogActions>
                 </DialogActions>
@@ -84,3 +84,5 @@ export default function UploadDialog() {
         </div>
     );
 }
+
+export default UploadDialog;

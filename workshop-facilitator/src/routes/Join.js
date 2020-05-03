@@ -1,16 +1,6 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import { BrowserRouter as Router, Link } from "react-router-dom";
-
-
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-
-
 import "../styles/Join.css";
 
 class Join extends React.Component {
@@ -74,11 +64,6 @@ class Join extends React.Component {
             }
         }
 
-
-
-
-
-
         /* send props to user view page (change to /user when component created)
         this.props.history.push({
           pathname: "/host",
@@ -99,34 +84,34 @@ class Join extends React.Component {
 
   */
 
-checkRooms(rooms, code){
-    //host code 9485 works
-    //join code 7317 works
-    let flagValid = false;
-    console.log("Here are all the rooms", rooms);
-    for(const room of rooms){
-        if(code == room.hostCode){ //don't type check as well, cuz code is a string
-            console.log("This is a host code!");
-            //resolve host code
-            flagValid = true;
-            //this.props.history.push(`/customers/${customer.id}`);/
-            this.props.history.push(`/host`, {roomID: room._id});//now just sends the room ID instead of obj
-            //window.location.replace('http://localhost:3000/host');
-            break;
-        }else if(code == room.joinCode){
-            console.log("This is a join code!");
-            //resolve join code
-            flagValid = true;
-            this.props.history.push(`/feedback`, {roomID: room._id}); //now just sends the room ID instead of obj
+    checkRooms(rooms, code){
+        //host code 9485 works
+        //join code 7317 works
+        let flagValid = false;
+        console.log("Here are all the rooms", rooms);
+        for(const room of rooms){
+            if(code === room.hostCode.toString()){ //don't type check as well, cuz code is a string
+                console.log("This is a host code!");
+                //resolve host code
+                flagValid = true;
+                //this.props.history.push(`/customers/${customer.id}`);/
+                this.props.history.push(`/host`, {roomID: room._id});//now just sends the room ID instead of obj
+                //window.location.replace('http://localhost:3000/host');
+                break;
+            }else if(code === room.joinCode.toString()){
+                console.log("This is a join code!");
+                //resolve join code
+                flagValid = true;
+                this.props.history.push(`/user`, {roomID: room._id}); //now just sends the room ID instead of obj
 
-            break;
-        }
-  }
-  if(!flagValid){
-      alert("code is not valid");
-      //setOpen(true);
-  }
-}
+                break;
+            }
+      }
+      if(!flagValid){
+          alert("code is not valid");
+          //setOpen(true);
+      }
+    }
 
 
 
@@ -163,17 +148,7 @@ checkRooms(rooms, code){
           </div>
         );
       }
-
-
-
-
-
-
-
 }
-
-
-
 
 function incorrectCode( onlyNums, fourNums){
     if(!onlyNums){
@@ -215,7 +190,5 @@ function checkRooms(rooms, code){
 }
 
 */
-
-
 
 export default Join;

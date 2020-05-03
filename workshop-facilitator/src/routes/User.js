@@ -20,13 +20,19 @@ class User extends React.Component {
             question: "",
             // should be the same as the port you're using for server
             ENDPOINT: "localhost:5000",
-            room: null
+            room: null,
+            slowerSent: false
         }
     }
 
     componentDidMount(){
         // make connection between this client and the server (which is active on port 5000)
         socket = io_client(this.state.ENDPOINT);
+
+        socket.on("slowerReset", () =>{
+            console.log("host noticed you!");
+            this.setState({slowerSent: false});
+        })
 
 
         //get fetches the room by ID if the ID was sent,saves in state
@@ -87,6 +93,12 @@ class User extends React.Component {
         })
     }
 
+    handleSlower = () => {
+        socket.emit("slower", {data:"nothing"});
+        this.setState({slowerSent: true});
+        console.log("slower sent is:  " + this.state.slowerSent);
+    }
+
     render() {
 
         return (
@@ -98,6 +110,13 @@ class User extends React.Component {
                     :
                     <h3> No room FOR TESTING ONLY </h3>
 
+                }
+
+
+                {(this.state.slowerSent) ?
+                    <Button variant = "outlined" disabled > Message Sent to Host </Button>
+                    :
+                    <Button variant = "outlined" onClick={this.handleSlower}> Go Slower </Button>
                 }
 
 
@@ -137,7 +156,7 @@ class User extends React.Component {
                             <h3> No room FOR TESTING ONLY </h3>
 
                         }
-                        <Resources />
+                        <Resources roomID={this.props.location.state.roomID}/>
                     </div>
                 </SplitPane>
             </div>

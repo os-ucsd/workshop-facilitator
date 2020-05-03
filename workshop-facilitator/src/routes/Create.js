@@ -1,10 +1,7 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
-
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import "../styles/Create.css";
-
 import {generateRandomCode} from '../utils';
 
 
@@ -66,7 +63,7 @@ class Create extends React.Component{
         const listOfRooms = this.state.rooms;
 
         for (let i = 0; i < listOfRooms.length; i++){
-            if (joinCodeUser == listOfRooms[i].joinCode){
+            if (joinCodeUser === listOfRooms[i].joinCode){
                 // get new join code
                 joinCodeUser = generateRandomCode();
                 // reset the for loop to check for all rooms again
@@ -154,18 +151,7 @@ class Create extends React.Component{
                 </div>
             </div>
         );
-
     }
-
-
-
 }
-    function handleSuccess(data){
-        console.log("Success. here is the resp.() dump: ", data);
-        //window.location.replace('http://localhost:3000/host'); this.props.history.push
-    }
-
-
-
 
 export default Create;
