@@ -55,6 +55,9 @@ class User extends React.Component {
             let getString = "http://localhost:5000/rooms/" + this.props.location.state.roomID;
             console.log("getString: " + getString);
 
+            // join the socket room with the given room id
+            socket.emit("join", {name: this.props.location.state.roomID});
+
             fetch(getString, {
                 method: 'get',
             })
@@ -79,6 +82,9 @@ class User extends React.Component {
         let questionData = {"question" : this.state.question}
         let getRoom = 'http://localhost:5000/rooms/' + this.state.room._id + '/questions/add';
         console.log('getRoom: ' + getRoom);
+
+        // join the socket room with the given room
+        socket.emit("join", {name: this.props.location.state.roomId});
 
         fetch(getRoom, {
             // send as a POST request with new room information in body,

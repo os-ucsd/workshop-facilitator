@@ -233,19 +233,22 @@ class Polls extends React.Component {
     publishPoll = evt => {
         evt.preventDefault();
         const pollId = evt.target.id;
+        const {roomId} = this.props;
 
         // find poll in the array of polls
         const poll = this.state.polls.filter(poll =>{
             return poll._id === parseInt(pollId);
         })
 
+        console.log(roomId);
         // emit poll to server to emit to all clients
-        socket.emit("publish", {pollData: poll[0], name: this.props.roomID})
+        socket.emit("publish", {pollData: poll[0], name: roomId})
     }
 
     unpublishPoll = evt => {
         evt.preventDefault();
         const pollId = evt.target.id;
+        const {roomId} = this.props;
 
         // clear the answers state
         this.setState({answers: {}})
@@ -253,7 +256,7 @@ class Polls extends React.Component {
         console.log("unpublishing poll...");
         // emit poll to server to emit to all clients and send poll that you
         // are trying to unpublish to make sure its the same as the current poll
-        socket.emit("unpublish", {pollId, name: this.props.roomID});
+        socket.emit("unpublish", {pollId, name: roomId});
     }
 
     triggerPollState = e => {

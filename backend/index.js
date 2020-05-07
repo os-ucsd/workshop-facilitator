@@ -74,6 +74,7 @@ io.on("connection", socket => {
             console.log("question is already published for room " + pollData.name);
             socket.emit("err", {error: "question is already published for room " + pollData.name + ": " + publishedPolls[hasPublishedIdx].poll.question})
         }
+        
         else{
             console.log("published", pollData);
             // to keep track of what the current question is
@@ -87,6 +88,9 @@ io.on("connection", socket => {
 
     socket.on("unpublish", data => {
         // store question and answers in db
+        const {pollId, name} = pollData;
+        // find if room has an active question already
+        const active = findIfActiveQuestion(null, name);
 
         /* check if there was a poll actually published before this
         if (! currPollQuestion._id){
@@ -94,9 +98,10 @@ io.on("connection", socket => {
             socket.emit("err", {error: "no question is currently published"});
             return;
         }
-        console.log(currPollQuestion._id, pollId);
         // check to make poll the host is trying to unpublish is the current poll
-        if (currPollQuestion._id.toString() !== pollId){
+        //if (currPollQuestion._id.toString() !== pollId){
+        console.log(currPollQuestions, active)
+        if (currPollQuestions[active].currPollQuestion._id.toString() !== pollId){
             console.log("a different poll is published, so cannot unpublish this poll");
             socket.emit("err", {error: "a different poll is published, so cannot unpublish this poll"});
             return;

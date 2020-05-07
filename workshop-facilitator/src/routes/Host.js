@@ -68,6 +68,9 @@ class Host extends React.Component {
             let getString = "http://localhost:5000/rooms/" + this.props.location.state.roomID;
             console.log("getString: " + getString);
 
+            // join the socket room with the given room
+            socket.emit("join", {name: this.props.location.state.roomID});
+
             fetch(getString, {
                 method: 'get',
             })
