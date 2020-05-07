@@ -34,6 +34,11 @@ class User extends React.Component {
             this.setState({slowerSent: false});
         })
 
+         /* if a new user joins, publish the already published question if any
+         socket.on("publishNewUser", data => {
+             alert(data);
+         })*/
+
 
         //get fetches the room by ID if the ID was sent,saves in state
         if(this.props.location.state != null){

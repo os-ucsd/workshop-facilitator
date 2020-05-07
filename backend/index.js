@@ -47,33 +47,27 @@ roomHasPublishedQuestion = roomName => {
 
 // io object will listen for connection event
 io.on("connection", socket => {
-    console.log("user connected");
-
     // whenever user connected, if there's a published poll, automatically send to the new user
     //if (currPollQuestion._id) io.sockets.emit("publish", currPollQuestion);
     socket.on("join", data => {
         // name is the id of the workshop room
         socket.join(data.name);
-        console.log("socket has joined room " + data.name);
+
+        // if this room has a poll published already, send an emit call to publish
+        const hasPublishedIdx = roomHasPublishedQuestion(data.name);
+        if (hasPublishedIdx > -1){
+            const poll = publishedPolls[hasPublishedIdx].poll;
+            console.log(`room ${data.name} has a question published already: ${poll.question}`);
+            socket.emit("publishNewUser", poll)
+        }
+
+        console.log(`socket has joined ${data.name}. now there's ${io.sockets.adapter.rooms[data.name].length} users`);
         socket.emit("welcome", {roomID: data.name});
     })
 
     // listen for when a new poll was sent out, show to all clients
     socket.on("publish", pollData => {
-        /* make sure only 1 question published at a time
-        if (currPollQuestion._id && currPollQuestion._id !== pollData.pollData._id){
-            console.log("already published question, cannot publish");
-            socket.emit("err", {error: "there's an active question already", currPollQuestion: currPollQuestion});
-        }
-        else if (currPollQuestion && currPollQuestion._id === pollData.pollData._id){
-            // if trying to publish the same question
-            console.log("this question is already published");
-            const err = {
-                error: "this question already published"
-            }
-            socket.emit("err", err)
-        }
-        */
+        // checks to make sure only one question is published at a time for a room
         const hasPublishedIdx = roomHasPublishedQuestion(pollData.name);
         // if hasPublished is true, then that room has a published poll
         if(hasPublishedIdx > -1){
@@ -85,9 +79,6 @@ io.on("connection", socket => {
             // to keep track of what the current question is
             publishedPolls.push({poll: pollData.pollData, name: pollData.name});
 
-            /*
-            TODO: add socket.on("publish") event to user view page, so the user can view the poll
-            */
             // send poll question to all clients and allow host to know which question is published
             //io.sockets.emit("publish", currPollQuestion);
             io.in(pollData.name).emit("publish", pollData.pollData);

@@ -67,6 +67,19 @@ class Polls extends React.Component {
                 alert(errorData.error);
             })
 
+            // if a new user joins, publish the already published question if any
+            socket.on("publishNewUser", data => {
+                console.log("publishing...", data);
+                // show the newly published poll questions
+                this.setState({
+                    //...this.state,
+                    isEmptyState: false,
+                    isPollState: true,
+                    poll : data,
+                    publishedPoll: data
+                })
+            })
+
             // listen for a publish event if a poll was published
             socket.on("publish", pollData => {
                 console.log("publishing...", pollData);
