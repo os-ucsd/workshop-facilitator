@@ -87,10 +87,6 @@ io.on("connection", socket => {
     })
 
     socket.on("unpublish", data => {
-        // store question and answers in db
-        const {pollId, name} = pollData;
-        // find if room has an active question already
-        const active = findIfActiveQuestion(null, name);
 
         /* check if there was a poll actually published before this
         if (! currPollQuestion._id){

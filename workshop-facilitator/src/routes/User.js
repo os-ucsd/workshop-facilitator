@@ -153,7 +153,7 @@ class User extends React.Component {
                         defaultSize="40%"
                     >
                         <div>
-                            <Polls isHost={false} socket={socket} roomID={this.props.location.state.roomID}/>
+                            <Polls isHost={false} socket={socket} roomId={this.props.location.state.roomID}/>
                         </div>
                         <div>
                             <Questions />

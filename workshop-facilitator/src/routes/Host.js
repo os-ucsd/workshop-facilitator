@@ -133,7 +133,7 @@ class Host extends React.Component {
                         defaultSize="50%"
                     >
                         <div>
-                            <Polls isHost= {true} roomID={this.props.location.state.roomID} socket={socket}/>
+                            <Polls isHost= {true} roomId={this.props.location.state.roomID} socket={socket}/>
                         </div>
                         <div>
                             <Questions />
