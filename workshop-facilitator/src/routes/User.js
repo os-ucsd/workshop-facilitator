@@ -38,6 +38,13 @@ class User extends React.Component {
         //get fetches the room by ID if the ID was sent,saves in state
         if(this.props.location.state != null){
             console.log("Here is the ID: " + this.props.location.state.roomID);
+
+             // join the socket room for this workshop room
+            const roomID = this.props.location.state.roomID;
+            socket.emit("join", {name: roomID});
+
+            socket.on("welcome", data => console.log(data));
+
             //this.setState( {roomID: this.props.location.state.roomID} );
             //console.log("Here is the ID that was passed: " +  this.state.roomID);
             let getString = "http://localhost:5000/rooms/" + this.props.location.state.roomID;
@@ -100,6 +107,7 @@ class User extends React.Component {
     }
 
     render() {
+        if (!socket) return null;
 
         return (
             <div>
@@ -134,7 +142,7 @@ class User extends React.Component {
                         defaultSize="40%"
                     >
                         <div>
-                            <Polls isHost={false}/>
+                            <Polls isHost={false} socket={socket} roomID={this.props.location.state.roomID}/>
                         </div>
                         <div>
                             <Questions />

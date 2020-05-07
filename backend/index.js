@@ -34,19 +34,33 @@ let answerB = 0;
 let answerC = 0;
 let answerD = 0;
 
-let currPollQuestion = {};
+//let currPollQuestion = {};
+// contents: [{poll: {}, name: ""}]
+let publishedPolls = [];
+
+roomHasPublishedQuestion = roomName => {
+    for (let i = 0; i < publishedPolls.length; i++){
+        if (publishedPolls[i].name === roomName) return i;
+    }
+    return -1;
+}
 
 // io object will listen for connection event
 io.on("connection", socket => {
     console.log("user connected");
 
     // whenever user connected, if there's a published poll, automatically send to the new user
-    if (currPollQuestion._id) io.sockets.emit("publish", currPollQuestion);
+    //if (currPollQuestion._id) io.sockets.emit("publish", currPollQuestion);
+    socket.on("join", data => {
+        // name is the id of the workshop room
+        socket.join(data.name);
+        console.log("socket has joined room " + data.name);
+        socket.emit("welcome", {roomID: data.name});
+    })
 
     // listen for when a new poll was sent out, show to all clients
     socket.on("publish", pollData => {
-        console.log(currPollQuestion);
-        // make sure only 1 question published at a time
+        /* make sure only 1 question published at a time
         if (currPollQuestion._id && currPollQuestion._id !== pollData.pollData._id){
             console.log("already published question, cannot publish");
             socket.emit("err", {error: "there's an active question already", currPollQuestion: currPollQuestion});
@@ -59,24 +73,31 @@ io.on("connection", socket => {
             }
             socket.emit("err", err)
         }
+        */
+        const hasPublishedIdx = roomHasPublishedQuestion(pollData.name);
+        // if hasPublished is true, then that room has a published poll
+        if(hasPublishedIdx > -1){
+            console.log("question is already published for room " + pollData.name);
+            socket.emit("err", {error: "question is already published for room " + pollData.name + ": " + publishedPolls[hasPublishedIdx].poll.question})
+        }
         else{
             console.log("published", pollData);
             // to keep track of what the current question is
-            console.log(pollData.pollData);
-            currPollQuestion = pollData.pollData;
+            publishedPolls.push({poll: pollData.pollData, name: pollData.name});
 
             /*
             TODO: add socket.on("publish") event to user view page, so the user can view the poll
             */
             // send poll question to all clients and allow host to know which question is published
-            io.sockets.emit("publish", currPollQuestion);
+            //io.sockets.emit("publish", currPollQuestion);
+            io.in(pollData.name).emit("publish", pollData.pollData);
         }
     })
 
-    socket.on("unpublish", pollId => {
+    socket.on("unpublish", data => {
         // store question and answers in db
 
-        // check if there was a poll actually published before this
+        /* check if there was a poll actually published before this
         if (! currPollQuestion._id){
             console.log("no poll published, so can't unpublish");
             socket.emit("err", {error: "no question is currently published"});
@@ -92,6 +113,21 @@ io.on("connection", socket => {
 
         // reset to empty
         currPollQuestion = {};
+        */
+        // check if poll actually published
+        const hasPublishedIdx = roomHasPublishedQuestion(data.name);
+        if (hasPublishedIdx === -1) {
+            socket.emit("err", {error: "no question is currently published for room " + data.name});
+            return;
+        }
+        else {
+            const poll = publishedPolls[hasPublishedIdx].poll;
+            // check if the published poll matches the poll the user is trying to unpublish
+            if (poll._id.toString() !== data.pollId) {
+                socket.emit("err", {error: "a different poll is published: " + poll.question});
+                return;
+            }
+        }
 
         // reset all answers
         answerA = 0;
@@ -100,8 +136,12 @@ io.on("connection", socket => {
         answerD = 0;
 
         console.log("poll unpublished");
+        // remove poll from array of published polls
+        publishedPolls.splice(hasPublishedIdx, 1);
+
         // unpublish for all users (host and user), so it disappears from screen
-        io.sockets.emit("unpublish", {text: "unpublish complete"});
+        //io.sockets.emit("unpublish", {text: "unpublish complete"});
+        io.in(data.name).emit("unpublish", {text: "unpublished complete", roomID: data.name})
     })
 
     // listen for when an answer was submitted

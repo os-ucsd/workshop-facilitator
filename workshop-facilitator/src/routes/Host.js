@@ -42,6 +42,11 @@ class Host extends React.Component {
         */
         socket = io(this.state.ENDPOINT);
 
+        // join the socket room for this workshop room
+        const roomID = this.props.location.state.roomID;
+        socket.emit("join", {name: roomID});
+
+        socket.on("welcome", data => console.log(data));
 
         socket.on("slower", () =>{
             console.log("someone wanna go slower");
@@ -92,10 +97,11 @@ class Host extends React.Component {
     render() {
         // when pass in newly created room from Create.js/Join.js will be in this.props.location.state
         // if we pass props through this.props.history.push
-        console.log("State room: " + this.state.room);
+        //console.log("State room: " + this.state.room);
         //if there is a room, change hostCode to the designated hostCode, else it will remain the emtpy strig.
 
-
+        if (!socket) return null;
+        
         return (
             <div>
                 {(this.state.room != null) ?
@@ -124,7 +130,7 @@ class Host extends React.Component {
                         defaultSize="50%"
                     >
                         <div>
-                            <Polls isHost= {true}    />
+                            <Polls isHost= {true} roomID={this.props.location.state.roomID} socket={socket}/>
                         </div>
                         <div>
                             <Questions />
