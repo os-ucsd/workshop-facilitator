@@ -9,6 +9,8 @@ import Polls from "../components/Polls";
 import io_client from "socket.io-client"
 import "../styles/User.css";
 
+import turtle from "../TURTLE.png";
+
 
 
 let socket;
@@ -113,11 +115,6 @@ class User extends React.Component {
                 }
 
 
-                {(this.state.slowerSent) ?
-                    <Button variant = "outlined" disabled > Message Sent to Host </Button>
-                    :
-                    <Button variant = "outlined" onClick={this.handleSlower}> Go Slower </Button>
-                }
 
 
                 <SplitPane
@@ -156,6 +153,15 @@ class User extends React.Component {
                             <h3> No room FOR TESTING ONLY </h3>
 
                         }
+                        <div class="slower">
+                        <img src = {turtle} width="40" height="40" />
+                        {(this.state.slowerSent) ?
+                            <Button variant = "outlined" disabled > Message Sent</Button>
+                            :
+                            <Button variant = "outlined" onClick={this.handleSlower}> Go Slower </Button>
+                        }
+                        </div>
+
                         <Resources roomID={this.props.location.state.roomID}/>
                     </div>
                 </SplitPane>
