@@ -27,17 +27,24 @@ Thinking of
 
 */
 export function extractFileOrURLType(file){
+    /*
+    if(file.indexOf("https://") > -1 || file.indexOf("http://") > -1){
+        return "URL";
+    }
+    */
     //assume ppl won't name file "https://" or "http://", if that's even allowed
-    if(file.indexOf("https://") > 0 || file.indexOf("http://") > 0){
+    if(file.indexOf("https://") > -1 || file.indexOf("http://") > -1){
         if(file.indexOf(".pdf") > 0){
-            return "pdf";
-        }else if(file.indexOf("presentation" > 0)){
+            return "PDF";
+        }else if(file.indexOf("presentation") > 0){
             return "slides";
         }else if(file.indexOf("document") > 0){
             return "docs";
         }else{
-            return "unknown";
+            return "URL";
         }
+    }
+    /*
     }else{
         if(file.indexOf(".ppt") > 0){
             return "powerPoint";
@@ -51,6 +58,7 @@ export function extractFileOrURLType(file){
             return "unknown";
         }
     }
+    */
 
 }
 
