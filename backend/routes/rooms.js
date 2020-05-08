@@ -224,13 +224,11 @@ router.route("/resources/").get((req, res) => {
 router.route('/:id/feedback/add').post((req, res) => {
     const roomId = req.params.id;
     const email = req.body;
-    console.log(email);
     // database query
     WorkshopRoom.findById(roomId)
         .then(room => {
             //let questions = room.questions;
             room.attendees.push(email.email);
-            console.log(room.attendees);
             // save the room with the updated questions array
             room.save()
                 .then(() => res.json(room))
@@ -257,13 +255,13 @@ router.route('/:id/feedback/').get((req, res) => {
 */
 router.route('/:id/feedback/send').post((req, res) => {
     let transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
+    host: 'smtp.ethereal.email',
     //service: 'gmail',
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-        user: 'srabharris@gmail.com', 
-        pass: '7hzrx32am' 
+        user: 'jaime.beatty@ethereal.email', 
+        pass: 'AeyDDBBbau7N4kWqvy'  
     },
     tls:{
         rejectUnauthrized: false
@@ -273,14 +271,16 @@ router.route('/:id/feedback/send').post((req, res) => {
     const emails = req.body.list;
     const subject = req.body.subject;
     const text = req.body.text;
+    const attachments = req.body.attachments;
 
-    //send mail with defined transport object
-  let info = transporter.sendMail({
-    from: '"Workshop Facilitator" <srabharris@gmail.com>', // sender address
-    to: emails, // list of receivers
-    subject: subject, // Subject line
-    text: text, // plain text body
-  });
+    // send mail with defined transport object
+    let info = transporter.sendMail({
+        from: '"Workshop Facilitator" <s5harris@ucsd.edu>', // sender address
+        to: emails, // list of receivers
+        subject: subject, // Subject line
+        text: text, // plain text body
+        attachments: attachments
+    });
 
     console.log("Message sent: %s", info.messageId);
     // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>

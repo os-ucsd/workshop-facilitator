@@ -37,21 +37,31 @@ class SendMail extends React.Component {
     send = () => {
         const id = this.state.roomId;
 
-        let getString = "http://localhost:5000/rooms/" + id + '/feedback';
+        let getMail = "http://localhost:5000/rooms/" + id + '/feedback';
+        let getResources = "http://localhost:5000/rooms/" + id + "/resources";
+        let resources;
 
-        fetch(getString, {
+        fetch(getResources, {
+            mrthod: 'get',
+        })
+        .then((resp) => resp.json())
+        .then((data) => resources = data)
+        .then((err) => console.log("Error", err))
+
+        fetch(getMail, {
             method: 'get',
         })
         .then((resp) => resp.json())
-        .then((data) => this.collectEmails(data, getString))
+        .then((data) => this.collectEmails(data, getMail, resources))
         // if failure, log the error
         .catch((err) => console.log("Error", err));
 
         alert("Email Sent Subject: " + this.state.subject);
     }
 
-    collectEmails(emails, getString) {
+    collectEmails(emails, getMail, resources) {
         let emailList = "";
+        let attachments = [];
         for(const email of emails) {
             if(email !== "" && emailList === "") {
                 emailList = email;
@@ -60,11 +70,17 @@ class SendMail extends React.Component {
                 emailList = emailList + ', ' + email;
             }
         }
+        for(const resource of resources) {
+            attachments.push({
+                filename: resource.title, 
+                path: resource.src
+            })
+        }
         console.log('emails: ' + emailList);
-        getString = getString + '/send';
-        let emailData = {"list": emailList, "subject": this.state.subject, "text": this.state.text};
+        let postString = getMail + '/send';
+        let emailData = {"list": emailList, "subject": this.state.subject, "text": this.state.text, "attachments": attachments};
         
-        fetch(getString, {
+        fetch(postString, {
             method: 'post',
             headers: {"Content-Type" : "application/json"}, //have to specify content type as json, or else server thinks its something else;
             body: JSON.stringify(emailData)
