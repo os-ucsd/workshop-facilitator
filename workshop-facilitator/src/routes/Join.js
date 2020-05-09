@@ -102,7 +102,7 @@ class Join extends React.Component {
                 console.log("This is a join code!");
                 //resolve join code
                 flagValid = true;
-                this.props.history.push(`/user`, {roomID: room._id}); //now just sends the room ID instead of obj
+                this.props.history.push(`/Feedback`, {roomID: room._id}); //now just sends the room ID instead of obj
 
                 break;
             }
