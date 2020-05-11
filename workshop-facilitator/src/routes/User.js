@@ -10,6 +10,7 @@ import io_client from "socket.io-client"
 import "../styles/User.css";
 
 import turtle from "../TURTLE.png";
+import turtleNo from "../TURTLENO.png";
 
 
 
@@ -176,11 +177,10 @@ class User extends React.Component {
 
                         }
                         <div class="slower">
-                        <img src = {turtle} width="40" height="40" />
                         {(this.state.slowerSent) ?
-                            <Button variant = "outlined" disabled > Message Sent</Button>
+                            <img src = {turtleNo} width="40" height="40" title="Message Sent" />
                             :
-                            <Button variant = "outlined" onClick={this.handleSlower}> Go Slower </Button>
+                            <img src = {turtle} width="40" height="40" title="Go Slower" onClick={this.handleSlower} />
                         }
                         </div>
 
@@ -191,6 +191,13 @@ class User extends React.Component {
         )
     }
 }
+
+/*
+old slower buttons in case
+<Button variant = "outlined" disabled > Message Sent</Button>
+ <Button variant = "outlined" onClick={this.handleSlower}> Go Slower </Button>
+
+*/
 
 function handleSuccess(data){
     console.log("Success. here is the resp.() dump: ", data);
