@@ -23,7 +23,8 @@ class User extends React.Component {
             // should be the same as the port you're using for server
             ENDPOINT: "localhost:5000",
             room: null,
-            slowerSent: false
+            slowerSent: false,
+            id: ""
         }
     }
 
@@ -48,6 +49,7 @@ class User extends React.Component {
 
              // join the socket room for this workshop room
             const roomID = this.props.location.state.roomID;
+            this.setState({id: roomID});
             socket.emit("join", {name: roomID});
 
             socket.on("welcome", data => console.log(data));
@@ -114,9 +116,10 @@ class User extends React.Component {
     }
 
     handleSlower = () => {
-        socket.emit("slower", {data:"nothing"});
+        socket.emit("slower", {name: this.state.id});
         this.setState({slowerSent: true});
         console.log("slower sent is:  " + this.state.slowerSent);
+        console.log("Here is the state RoomID: " + this.state.id);
     }
 
     render() {

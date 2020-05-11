@@ -70,7 +70,6 @@ class Resources extends React.Component {
 
                         {this.state.resources ? this.state.resources.map(resource =>
                             <li>
-                            {console.log(extractFileOrURLType(resource.src))}
                             {/*https://s3.amazonaws.com/iconbros/icons/icon_pngs/000/000/288/original/file-empty.png?1510679782" original width and height 10,13 */}
                                 <img className="icons"  src={this.iconReturnWeb(resource.src)}  width="30" height="30"
                                 /*require(String(extractFileOrURLType(resource.src)))*/ /*} width="30" height="30" alt="file icon"*//>

@@ -44,6 +44,7 @@ class Host extends React.Component {
 
         // join the socket room for this workshop room
         const roomID = this.props.location.state.roomID;
+        this.setState({id: roomID});
         socket.emit("join", {name: roomID});
 
         socket.on("welcome", data => console.log(data));
@@ -93,7 +94,7 @@ class Host extends React.Component {
 
     resetSlow = () =>{
         this.setState({slowerPeople: 0});
-        socket.emit("slowerReset", {data:"none"});
+        socket.emit("slowerReset", {name: this.state.id});
     }
 
 
@@ -104,7 +105,7 @@ class Host extends React.Component {
         //if there is a room, change hostCode to the designated hostCode, else it will remain the emtpy strig.
 
         if (!socket) return null;
-        
+
         return (
             <div>
                 {(this.state.room != null) ?

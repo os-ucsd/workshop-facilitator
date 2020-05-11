@@ -74,7 +74,7 @@ io.on("connection", socket => {
             console.log("question is already published for room " + pollData.name);
             socket.emit("err", {error: "question is already published for room " + pollData.name + ": " + publishedPolls[hasPublishedIdx].poll.question})
         }
-        
+
         else{
             console.log("published", pollData);
             // to keep track of what the current question is
@@ -189,16 +189,16 @@ io.on("connection", socket => {
         console.log("a user disconnected");
     })
 
-    //testing go slow
-    socket.on("slower", () => {
+    //Someone wants to go slower
+    socket.on("slower", (data) => {
         console.log("someone wants to go slower");
-        io.sockets.emit("slower", {data:"nothing"});
+        io.in(data.name).emit("slower", {data:"nothing"});
     })
 
-    socket.on("slowerReset", () => {
+    //host has seen slower
+    socket.on("slowerReset", (data) => {
         console.log("slower reset");
-        io.sockets.emit("slowerReset", {data:"nothing"});
-
+        io.in(data.name).emit("slowerReset", {data:"nothing"});
     })
 
 
