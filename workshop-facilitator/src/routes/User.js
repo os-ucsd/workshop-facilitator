@@ -9,8 +9,8 @@ import Polls from "../components/Polls";
 import io_client from "socket.io-client"
 import "../styles/User.css";
 
-import turtle from "../TURTLE.png";
-import turtleNo from "../TURTLENO.png";
+import turtle from "../hostUserIcons/TURTLE.png";
+import turtleNo from "../hostUserIcons/TURTLENO.png";
 
 
 
