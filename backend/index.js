@@ -201,8 +201,24 @@ io.on("connection", socket => {
         io.in(data.name).emit("slowerReset", {data:"nothing"});
     })
 
+    //Someone clicks yes
+    socket.on("yesClick", (data) => {
+        console.log("someone clicked yes");
+        io.in(data.name).emit("yesClick", {data:"nothing"});
+    })
 
 
+    //Someone clicks No
+    socket.on("noClick", (data) => {
+        console.log("someone clicked no");
+        io.in(data.name).emit("noClick", {data:"nothing"});
+    })
+
+    //host want to reset yes/no
+    socket.on("yesNoReset", (data) => {
+        console.log("yes/no reset");
+        io.in(data.name).emit("yesNoReset", {data:"nothing"});
+    })
 })
 
 // make room routes visible
