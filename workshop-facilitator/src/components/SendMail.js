@@ -1,6 +1,14 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from "@material-ui/core/TextField";
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import AttachmentIcon from '@material-ui/icons/Attachment';
+import SendIcon from '@material-ui/icons/Send';
+import Checkbox from '@material-ui/core/Checkbox';
+import Typography from '@material-ui/core/Typography';
+import "../styles/SendMail.css";
 
 class SendMail extends React.Component {
 
@@ -11,15 +19,53 @@ class SendMail extends React.Component {
             expanded: false,
             subject: "",
             text: "",
+            resources: null,
+            selectedResources: [],
         };
-        this.collectEmails = this.collectEmails.bind(this);
+        this.checkEmails = this.checkEmails.bind(this);
 
+    }
+
+    componentDidMount() {
+        let reqURL = "http://localhost:5000/rooms/" + this.props.id + "/resources"
+        fetch(reqURL)
+            .then(res => res.json())
+            .then(resources => this.setState({resources}))
     }
 
     componentWillReceiveProps(nextProps){
         if(nextProps.id !== this.props.id){
             this.setState({roomId: nextProps.id});
         }
+    }
+
+    addResource = (e) => {
+        for(const resource of this.state.resources) {
+            if(e.target.id === resource.src) {
+                let newArr = this.state.selectedResources;
+                let removed = false;
+                for(const elem of newArr) {
+                    if(elem === resource) {
+                        removed = true;
+                        let i = 0;
+                        while (i < newArr.length) {
+                            if(newArr[i] === elem) {
+                                newArr.splice(i, 1);
+                            } else {
+                                ++i;
+                            }
+                        }
+                    }
+                }
+                if(!removed) {
+                    newArr.push(resource);
+                    this.setState({
+                        selectedResources: newArr,
+                    })
+                }
+            }
+        }
+        console.log(this.state.selectedResources);
     }
 
     handleChange = (e) => {
@@ -32,34 +78,23 @@ class SendMail extends React.Component {
         this.setState({
             expanded: (!(this.state.expanded))
         })
+        this.setState({
+            selectedResources: [],
+        })
     }
 
     send = () => {
-        const id = this.state.roomId;
-
-        let getMail = "http://localhost:5000/rooms/" + id + '/feedback';
-        let getResources = "http://localhost:5000/rooms/" + id + "/resources";
-        let resources;
-
-        fetch(getResources, {
-            mrthod: 'get',
-        })
-        .then((resp) => resp.json())
-        .then((data) => resources = data)
-        .then((err) => console.log("Error", err))
-
+        let getMail = "http://localhost:5000/rooms/" + this.state.roomId + '/feedback';
         fetch(getMail, {
             method: 'get',
         })
         .then((resp) => resp.json())
-        .then((data) => this.collectEmails(data, getMail, resources))
+        .then((data) => this.checkEmails(data, getMail, this.state.selectedResources))
         // if failure, log the error
         .catch((err) => console.log("Error", err));
-
-        alert("Email Sent Subject: " + this.state.subject);
     }
 
-    collectEmails(emails, getMail, resources) {
+    checkEmails(emails, getMail, resources) {
         let emailList = "";
         let attachments = [];
         for(const email of emails) {
@@ -73,7 +108,7 @@ class SendMail extends React.Component {
         for(const resource of resources) {
             attachments.push({
                 filename: resource.title, 
-                path: resource.src
+                path: resource.src,
             })
         }
         console.log('emails: ' + emailList);
@@ -85,9 +120,10 @@ class SendMail extends React.Component {
             headers: {"Content-Type" : "application/json"}, //have to specify content type as json, or else server thinks its something else;
             body: JSON.stringify(emailData)
         })
-        .then((resp) => resp.json())
-        .then((data) => console.log("Email sent"))
+        .then((resp) => console.log("Email sent"))
         .catch((err) => console.log("Error", err));
+        
+        alert("Email Sent; Subject: " + this.state.subject);
     }
 
 
@@ -95,11 +131,31 @@ class SendMail extends React.Component {
     render() {
         return (
             <div>
-                <Button onClick={this.expand}>Send Mail</Button>
+                <Button onClick={this.expand}>
+                    Send Mail 
+                </Button>
                 <br></br>
                 <br></br>
                 {this.state.expanded ? 
                 <form noValidate autoComplete = "off" onChange = {this.handleChange}>
+                    <ExpansionPanel>
+                    <ExpansionPanelSummary aria-controls="panel1a-content" id="panel1a-header">
+                        <Typography>Add Attachments</Typography>
+                        <AttachmentIcon></AttachmentIcon>
+                    </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                            <div className="Attachments">
+                                {this.state.resources ? this.state.resources.map(resource =>
+                                <div>
+                                    {resource.title}
+                                    <Checkbox id={resource.src} color="primary" onClick={this.addResource}></Checkbox>
+                                </div>
+                                ) : null}
+                            </div>
+                        </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                    <br></br>
+                    <br></br>
                     <TextField id="subject" label="Subject" variant="outlined" multiline></TextField>
                     <br></br>
                     <br></br>
@@ -107,8 +163,9 @@ class SendMail extends React.Component {
                     <br></br>
                     <br></br>
                     <div>
-                        <Button onClick={this.send} variant="contained" color="secondary">
+                        <Button onClick={this.send} variant="contained" color="primary">
                             Send
+                            <SendIcon/>
                         </Button>
                     </div>
                 </form>

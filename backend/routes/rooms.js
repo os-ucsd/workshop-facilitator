@@ -256,7 +256,6 @@ router.route('/:id/feedback/').get((req, res) => {
 router.route('/:id/feedback/send').post((req, res) => {
     let transporter = nodemailer.createTransport({
     host: 'smtp.ethereal.email',
-    //service: 'gmail',
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
@@ -274,7 +273,7 @@ router.route('/:id/feedback/send').post((req, res) => {
     const attachments = req.body.attachments;
 
     // send mail with defined transport object
-    let info = transporter.sendMail({
+    transporter.sendMail({
         from: '"Workshop Facilitator" <s5harris@ucsd.edu>', // sender address
         to: emails, // list of receivers
         subject: subject, // Subject line
@@ -282,7 +281,8 @@ router.route('/:id/feedback/send').post((req, res) => {
         attachments: attachments
     });
 
-    console.log("Message sent: %s", info.messageId);
+    console.log("Message sent");
+    res.sendStatus(200);
     // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 })
 
