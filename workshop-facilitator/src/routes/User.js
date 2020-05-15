@@ -28,20 +28,6 @@ class User extends React.Component {
     }
 
     componentDidMount(){
-        // make connection between this client and the server (which is active on port 5000)
-        socket = io_client(this.state.ENDPOINT);
-
-        socket.on("slowerReset", () =>{
-            console.log("host noticed you!");
-            this.setState({slowerSent: false});
-        })
-
-         /* if a new user joins, publish the already published question if any
-         socket.on("publishNewUser", data => {
-             alert(data);
-         })*/
-
-
         //get fetches the room by ID if the ID was sent,saves in state
         if(this.props.location.state != null){
             console.log("Here is the ID: " + this.props.location.state.roomID);
@@ -69,7 +55,22 @@ class User extends React.Component {
             // if failure, log the error
             .catch((err) => console.log("Error", err));
 
+            // make connection between this client and the server (which is active on port 5000)
+            socket = io_client(this.state.ENDPOINT);
 
+            socket.on("slowerReset", () =>{
+                console.log("host noticed you!");
+                this.setState({slowerSent: false});
+            })
+
+            /* if a new user joins, publish the already published question if any
+            socket.on("publishNewUser", data => {
+                alert(data);
+            })*/
+        }
+        else{
+            // no room obj, so redirect user to front page
+            this.props.history.push("/");
         }
 
     }
