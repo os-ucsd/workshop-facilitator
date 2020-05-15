@@ -33,6 +33,27 @@ class Host extends React.Component {
     }
 
     componentDidMount(){
+         /*
+        make the connection to the socket (when user visits this component,
+        connection event will be emitted because of this connection)
+
+        now, there exists a websocket between this client and our server, so
+        we can emit events to our server
+        */
+        socket = io(this.state.ENDPOINT);
+
+        // join the socket room for this workshop room
+        const roomID = this.props.location.state.roomID;
+        socket.emit("join", {name: roomID});
+
+        socket.on("welcome", data => console.log(data));
+
+        socket.on("slower", () =>{
+            console.log("someone wanna go slower");
+            this.setState({slowerPeople: (this.state.slowerPeople + 1)});
+            console.log("slowerPeople: " +  this.state.slowerPeople);
+
+        })
         //will fetch the room given the ID if it was passed it, saves it in state
 
         if(this.props.location.state != null){
@@ -56,28 +77,6 @@ class Host extends React.Component {
             .then((data) => this.roomInit(data) ) //this.setState({room: data}) )
             // if failure, log the error
             .catch((err) => console.log("Error", err));
-
-             /*
-            make the connection to the socket (when user visits this component,
-            connection event will be emitted because of this connection)
-
-            now, there exists a websocket between this client and our server, so
-            we can emit events to our server
-            */
-            socket = io(this.state.ENDPOINT);
-
-            // join the socket room for this workshop room
-            const roomID = this.props.location.state.roomID;
-            socket.emit("join", {name: roomID});
-
-            socket.on("welcome", data => console.log(data));
-
-            socket.on("slower", () =>{
-                console.log("someone wanna go slower");
-                this.setState({slowerPeople: (this.state.slowerPeople + 1)});
-                console.log("slowerPeople: " +  this.state.slowerPeople);
-
-            })
         }
         else{
             // if the room obj is null, then no room passed in and redirect user to front page

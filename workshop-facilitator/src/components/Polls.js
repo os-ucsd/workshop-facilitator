@@ -23,7 +23,7 @@ class Polls extends React.Component {
             // template poll object
             polls: [{
                 _id: 1,
-                question: "hello, what is ree act?",
+                question: "Example question. Delete this question pls",
                 options: {
                     A: "A",
                     B: "B",
@@ -31,16 +31,6 @@ class Polls extends React.Component {
                     D: "D"
                 },
                 answer: "C"
-            }, {
-                _id: 2,
-                question: "question 2",
-                options: {
-                    A: "1",
-                    B: "2",
-                    C: "3",
-                    D: "4"
-                },
-                answer: "B"
             }],
             poll: {},
             answers: {},
@@ -61,6 +51,7 @@ class Polls extends React.Component {
     componentDidMount(){
         //socket = io_client("http://localhost:5000");
         socket = this.props.socket;
+        const {roomId} = this.props;
         console.log(this.props);
         if (socket){
             socket.on("err", errorData => {
@@ -125,7 +116,16 @@ class Polls extends React.Component {
         const colors = this.state.colors;
         this.setState({selectedColor: Math.floor(Math.random() * colors.length)});
 
-        // should also make the http request to get all polls and store in state
+        // make the http request to get all polls and store in state
+        fetch(`http://localhost:5000/rooms/${roomId}/polls`)
+            .then(resp => resp.json())
+            .then(data => {
+                this.setState(prevState => {
+                    let {polls} = prevState;
+                    let allPolls = polls.concat(data);
+                    return {polls: allPolls};
+                })
+            })
     }
 
     handleOpen = () => {
@@ -157,8 +157,9 @@ class Polls extends React.Component {
 
     handleAdd = () => {
         let polls = this.state.polls;
+        const {roomId} = this.props;
         let newPoll = {
-            _id: this.state.polls.length+1,
+            //_id: this.state.polls.length+1,
             question: this.state.question,
             options : {
                 A: this.state.optionA,
@@ -173,6 +174,15 @@ class Polls extends React.Component {
             polls
         })
         //currRoom.wfclickers.push(newPoll);  attempting to record information in room obj as well
+        // add this poll to the database
+        fetch(`http://localhost:5000/rooms/${roomId}/polls/add`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(newPoll)
+        })
+            .then(resp => resp.json())
+            .then(data => console.log(data));
+
         this.handleClose();
     }
 
@@ -214,6 +224,7 @@ class Polls extends React.Component {
     deletePoll = evt => {
         evt.preventDefault();
         const pollId = evt.target.id;
+        const {roomId} = this.props;
 
         // if this poll is published, tell user to unpublish before deleting
         if (this.state.publishedPoll._id && (pollId === this.state.publishedPoll._id.toString())){
@@ -222,12 +233,23 @@ class Polls extends React.Component {
         }
 
         // find poll in the array of polls and remove it
-        const pollIndx = this.state.polls.findIndex(poll => poll._id === parseInt(pollId));
+        const pollIndx = this.state.polls.findIndex(poll => poll._id.toString() === pollId);
+        console.log(pollIndx);
         this.setState(prevState => {
             prevState.polls.splice(pollIndx, 1);
             let polls = prevState.polls;
             return {polls}
         })
+
+        // delete this poll from the db
+        console.log(pollId);    
+        fetch(`http://localhost:5000/rooms/${roomId}/polls/delete`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({pollId})
+        })
+            .then(resp => resp.json())
+            .then(data => console.log(data));
     }
 
     publishPoll = evt => {
