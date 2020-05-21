@@ -100,7 +100,6 @@ class Join extends React.Component {
             if(code === room.hostCode.toString()){ //don't type check as well, cuz code is a string
                 console.log("This is a host code!");
                 //resolve host code
-                flagValid = true;
                 //this.props.history.push(`/customers/${customer.id}`);/
                 this.props.history.push(`/host`, {roomID: room._id});//now just sends the room ID instead of obj
                 //window.location.replace('http://localhost:3000/host');
@@ -108,7 +107,6 @@ class Join extends React.Component {
             }else if(code === room.joinCode.toString()){
                 console.log("This is a join code!");
                 //resolve join code
-                flagValid = true;
                 this.props.history.push(`/Feedback`, {roomID: room._id}); //now just sends the room ID instead of obj
 
                 break;
@@ -135,29 +133,26 @@ class Join extends React.Component {
                 Home
               </Button>
 
-
             <Dialog
-                    open = {!(this.state.valid)}
-                    onClose={this.handleClose}
-                     aria-labelledby="alert-dialog-title"
-                     aria-describedby="alert-dialog-description"
-                   >
-                     <DialogTitle id="alert-dialog-title">{"Incorrect Code!"}</DialogTitle>
-                     <DialogContent>
-                       <DialogContentText id="alert-dialog-description">
-                       You entered an incorrect code!
-                       Remeber codes are 4 digits with only numbers!
-                       Double check the join code with your workshop host.
-                       </DialogContentText>
-                     </DialogContent>
-                     <DialogActions>
-                       <Button onClick={this.handleClose} color="primary" autoFocus>
-                            Close
-                       </Button>
-                     </DialogActions>
+                open = {!(this.state.valid)}
+                onClose={this.handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"Incorrect Code!"}</DialogTitle>
+                <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    You entered an incorrect code!
+                    Remeber codes are 4 digits with only numbers!
+                    Double check the join code with your workshop host.
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                   <Button onClick={this.handleClose} color="primary" autoFocus>
+                        Close
+                   </Button>
+                </DialogActions>
             </Dialog>
-
-
 
             </div>
             <div className="vertical-center">

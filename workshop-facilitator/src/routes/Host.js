@@ -75,6 +75,20 @@ class Host extends React.Component {
 
         })
 
+        socket.on("clickUndo", (data) =>{
+            console.log("someone wants to undo their answer");
+            if(data.answer === "Yes"){
+                this.setState({yesCount: (this.state.yesCount- 1)});
+            }else if(data.answer === "No"){
+                this.setState({noCount: (this.state.noCount- 1)});
+            }
+        })
+
+        socket.on("clickUndoTurtle",() => {
+            console.log("someone wants to undo their turtle");
+            this.setState({slowerPeople: (this.state.slowerPeople - 1)});
+        })
+
         //will fetch the room given the ID if it was passed it, saves it in state
         if(this.props.location.state != null){
             console.log("Here is the ID: " + this.props.location.state.roomID);
