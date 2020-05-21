@@ -47,3 +47,9 @@
 .Resizer.disabled:hover {
   border-color: transparent;
 }
+
+.yesNo{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
