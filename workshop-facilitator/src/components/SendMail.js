@@ -8,7 +8,10 @@ import AttachmentIcon from '@material-ui/icons/Attachment';
 import SendIcon from '@material-ui/icons/Send';
 import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
+import io_client from "socket.io-client";
 import "../styles/SendMail.css";
+
+let socket;
 
 class SendMail extends React.Component {
 
@@ -31,6 +34,17 @@ class SendMail extends React.Component {
         fetch(reqURL)
             .then(res => res.json())
             .then(resources => this.setState({resources}))
+
+        // socket for sending resources in real time
+        socket = io_client("http://localhost:5000");
+
+        socket.on("uploadURL", data => {
+            let curResources = this.state.resources;
+            curResources.push(data.urlData);
+            this.setState({
+                resources: curResources
+            })
+        })
     }
 
     componentWillReceiveProps(nextProps){
@@ -106,10 +120,32 @@ class SendMail extends React.Component {
             }
         }
         for(const resource of resources) {
-            attachments.push({
-                filename: resource.title, 
-                path: resource.src,
-            })
+            let url = resource.src;
+            let index = url.indexOf('.');
+            let type = url.substring(index, url.length);
+            console.log(type); 
+            let file = (resource.resType === "url");
+            if(file || type.indexOf('.ade') !== -1||type.indexOf('.adp') !== -1||type.indexOf('.appx') !== -1||type.indexOf('.appxbundle') !== -1||type.indexOf('.bat') !== -1||
+            type.indexOf('.cab') !== -1||type.indexOf('.cer') !== -1||type.indexOf('.chm') !== -1||type.indexOf('.cmd') !== -1||type.indexOf('.com') !== -1||
+            type.indexOf('.cpl') !== -1||type.indexOf('.dll') !== -1||type.indexOf('.dmg') !== -1||type.indexOf('.exe') !== -1||type.indexOf('.hlp') !== -1||
+            type.indexOf('.hta') !== -1||type.indexOf('.ins') !== -1||type.indexOf('.iso') !== -1||type.indexOf('.isp') !== -1||type.indexOf('.jar') !== -1||
+            type.indexOf('.js') !== -1||type.indexOf('.jse') !== -1||type.indexOf('.lib') !== -1||type.indexOf('.lnk') !== -1||type.indexOf('.mde') !== -1||
+            type.indexOf('.msc') !== -1||type.indexOf('.msi') !== -1||type.indexOf('.msix') !== -1||type.indexOf('.msixbundle') !== -1||type.indexOf('.msp') !== -1||
+            type.indexOf('.mst') !== -1||type.indexOf('.nsh') !== -1||type.indexOf('.pif') !== -1||type.indexOf('.ps1') !== -1||type.indexOf('.pst') !== -1||
+            type.indexOf('.reg') !== -1||type.indexOf('.scr') !== -1||type.indexOf('.sct') !== -1||type.indexOf('.shb') !== -1||type.indexOf('.sys') !== -1||
+            type.indexOf('.tmp') !== -1||type.indexOf('.url') !== -1||type.indexOf('.vb') !== -1||type.indexOf('.vbe') !== -1||type.indexOf('.vbs') !== -1||
+            type.indexOf('.vxd') !== -1||type.indexOf('.wsc') !== -1||type.indexOf('.wsf') !== -1||type.indexOf('.wsh') !== -1) {
+                let curState = this.state.text;
+                this.setState({
+                    text: resource.title + ': ' + resource.src + "\n\n" + curState
+                })
+            }
+            else {
+                attachments.push({
+                    filename: resource.title, 
+                    path: resource.src,
+                }) 
+            }
         }
         console.log('emails: ' + emailList);
         let postString = getMail + '/send';

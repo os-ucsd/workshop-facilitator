@@ -42,7 +42,7 @@ class Feedback extends React.Component {
         this.setState({
             [e.target.id]: e.target.value
         })
-        if(this.state.email!="") {
+        if(this.state.email!=="") {
           this.setState({
             feedback: true
           })
@@ -59,7 +59,6 @@ class Feedback extends React.Component {
         let emailData = {"email" : this.state.email}
         let getRoom = 'http://localhost:5000/rooms/' + this.state.room._id + '/feedback/add';
         console.log('getRoom: ' + getRoom);
-
 
         if(this.state.feedback) {
           fetch(getRoom, {
@@ -93,7 +92,6 @@ class Feedback extends React.Component {
                 <h1>Enter your email if you would like feedback after the workshop!</h1>
                 <form noValidate autoComplete="off" onSubmit={this.submitForm} onChange = {this.handleChange} className="FollowupForm">
                   <TextField
-                    required
                     id="email"
                     label="e-mail"
                     defaultValue=""
@@ -102,7 +100,7 @@ class Feedback extends React.Component {
                   <br />
                   <br />
                   <FormLabel>I would not like feedback</FormLabel>
-                  <Checkbox></Checkbox>
+                  <Checkbox id="feedback" color="primary" onClick={this.handleChange}></Checkbox>
                   <br />
                   <br />
                   <br />

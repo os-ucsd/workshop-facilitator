@@ -223,15 +223,15 @@ router.route("/resources/").get((req, res) => {
 */
 router.route('/:id/feedback/add').post((req, res) => {
     const roomId = req.params.id;
-    const email = req.body;
+    const email = req.body.email;
     // database query
     WorkshopRoom.findById(roomId)
         .then(room => {
-            //let questions = room.questions;
-            room.attendees.push(email.email);
+            room.attendees.push(email);
+            console.log(room.attendees);
             // save the room with the updated questions array
             room.save()
-                .then(() => res.json(room))
+                .then(() => res.json(room.attendees))
                 .catch(err => res.status(400).json(err));
         })
         .catch(err => res.status(404).json(err));;
@@ -255,12 +255,12 @@ router.route('/:id/feedback/').get((req, res) => {
 */
 router.route('/:id/feedback/send').post((req, res) => {
     let transporter = nodemailer.createTransport({
-    host: 'smtp.ethereal.email',
+    host: 'smtp.zoho.com',
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-        user: 'jaime.beatty@ethereal.email', 
-        pass: 'AeyDDBBbau7N4kWqvy'  
+        user: 'workshopfacilitator@zohomail.com', 
+        pass: '361Pwd437V'  
     },
     tls:{
         rejectUnauthrized: false
@@ -274,7 +274,7 @@ router.route('/:id/feedback/send').post((req, res) => {
 
     // send mail with defined transport object
     transporter.sendMail({
-        from: '"Workshop Facilitator" <s5harris@ucsd.edu>', // sender address
+        from: '"Workshop Facilitator" <workshopfacilitator@zohomail.com>', // sender address
         to: emails, // list of receivers
         subject: subject, // Subject line
         text: text, // plain text body
