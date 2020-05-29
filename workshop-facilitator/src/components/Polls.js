@@ -104,10 +104,15 @@ class Polls extends React.Component {
 
             // listen for showanswer event and set the showanswer state to previous
             socket.on("showAnswer", answer => {
-                console.log("showing answer...");
-                this.setState(prevState => {
-                    return {showAnswer: !prevState.showAnswer};
-                })
+                console.log("showing answer...", answer);
+                if (answer.answer === ""){
+                    alert("There was no answer");
+                }
+                else{
+                    this.setState(prevState => {
+                        return {showAnswer: !prevState.showAnswer};
+                    })
+                }
             })
         }
 
@@ -318,7 +323,6 @@ class Polls extends React.Component {
 
     showAnswer = evt => {
         evt.preventDefault();
-
         // emit show answer event so users can see the answer on their screen too
         socket.emit("showAnswer", {answer: this.state.poll.answer});
     }
@@ -356,7 +360,8 @@ class Polls extends React.Component {
             <div>
                 <div className="poll-header-container">
                     {
-                        this.state.isPollState ?
+                        // only show back arrow for host
+                        this.state.isPollState && isHost ?
                             <div className="back-container"><ArrowBackIosIcon onClick={this.handleBack} /></div> : null
                     }
                     <h2>Polls</h2>
