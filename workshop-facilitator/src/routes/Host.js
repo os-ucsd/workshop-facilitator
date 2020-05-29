@@ -12,6 +12,9 @@ import Button from "@material-ui/core/Button";
 import HostCode from "../components/HostCode";
 import JoinCode from "../components/JoinCode";
 
+import yes from "../hostUserIcons/yesIcon.png";
+import no from "../hostUserIcons/noIcon.png";
+
 import io from "socket.io-client";
 
 
@@ -28,12 +31,26 @@ class Host extends React.Component {
             hostCode: "",
             joinCode: "",
             id: null,
-            slowerPeople: 0
+            slowerPeople: 0,
+            yesCount: 0,
+            noCount:0
         }
     }
 
     componentDidMount(){
-        //will fetch the room given the ID if it was passed it, saves it in state
+        /*
+        make the connection to the socket (when user visits this component,
+        connection event will be emitted because of this connection)
+
+        now, there exists a websocket between this client and our server, so
+        we can emit events to our server
+        */
+        socket = io(this.state.ENDPOINT);
+
+        // join the socket room for this workshop room
+        const roomID = this.props.location.state.roomID;
+        this.setState({id: roomID});
+        socket.emit("join", {name: roomID});
 
         if(this.props.location.state != null){
             /*
@@ -49,14 +66,22 @@ class Host extends React.Component {
             const roomID = this.props.location.state.roomID;
             socket.emit("join", {name: roomID});
 
-            socket.on("welcome", data => console.log(data));
+        socket.on("yesClick", () =>{
+            console.log("someone clicked yes");
+            this.setState({yesCount: (this.state.yesCount+ 1)});
+            console.log("yesclicked: "  +  this.state.yesCount);
 
-            socket.on("slower", () =>{
-                console.log("someone wanna go slower");
-                this.setState({slowerPeople: (this.state.slowerPeople + 1)});
-                console.log("slowerPeople: " +  this.state.slowerPeople);
+        })
 
-            })
+        socket.on("noClick", () =>{
+            console.log("someone clicked no");
+            this.setState({noCount: (this.state.noCount+ 1)});
+            console.log("noClicked: " +  this.state.noCount);
+
+        })
+
+        //will fetch the room given the ID if it was passed it, saves it in state
+        //if(this.props.location.state != null){
             console.log("Here is the ID: " + this.props.location.state.roomID);
             this.setState({
                 id: this.props.location.state.roomID
@@ -93,7 +118,14 @@ class Host extends React.Component {
 
     resetSlow = () =>{
         this.setState({slowerPeople: 0});
-        socket.emit("slowerReset", {data:"none"});
+        socket.emit("slowerReset", {name: this.state.id});
+    }
+
+
+    resetYesNo= () =>{
+        this.setState({yesCount: 0});
+        this.setState({noCount: 0});
+        socket.emit("yesNoReset", {name: this.state.id});
     }
 
 
@@ -104,7 +136,7 @@ class Host extends React.Component {
         //if there is a room, change hostCode to the designated hostCode, else it will remain the emtpy strig.
 
         if (!socket) return null;
-        
+
         return (
             <div>
                 {(this.state.room != null) ?
@@ -147,8 +179,19 @@ class Host extends React.Component {
                         <HostCode hostCode={this.state.hostCode} />
                         <JoinCode joinCode={this.state.joinCode} />
 
-                        <h3> People wanna go slower: {this.state.slowerPeople} </h3>
+                        <h3> Slower Please: {this.state.slowerPeople} </h3>
                         <Button variant="outlined" onClick={this.resetSlow}> Went Slower </Button>
+                        <br></br>
+                        <br></br>
+                        <div class="yesNo">
+                            <img src = {yes} width="30" height="30"  alt="Yes" />
+                            <h3> : {this.state.yesCount} </h3>
+                            <img src = {no} width="30" height="30"  alt="No" />
+                            <h3> : {this.state.noCount} </h3>
+                        </div>
+
+                        <Button variant="outlined" onClick={this.resetYesNo}> Reset Yes/No </Button>
+
                         <Resources isHost={true} roomID={this.props.location.state.roomID}/>
 
                     </div>

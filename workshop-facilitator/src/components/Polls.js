@@ -169,10 +169,10 @@ class Polls extends React.Component {
             },
             answer: this.state.answer
         }
-        polls.push(newPoll)
-        this.setState({
-            polls
-        })
+        //polls.push(newPoll)
+        //this.setState({
+            //polls
+        //})
         //currRoom.wfclickers.push(newPoll);  attempting to record information in room obj as well
         // add this poll to the database
         fetch(`http://localhost:5000/rooms/${roomId}/polls/add`, {
@@ -181,7 +181,7 @@ class Polls extends React.Component {
             body: JSON.stringify(newPoll)
         })
             .then(resp => resp.json())
-            .then(data => console.log(data));
+            .then(data => this.setState({polls: data}));
 
         this.handleClose();
     }
@@ -259,10 +259,10 @@ class Polls extends React.Component {
 
         // find poll in the array of polls
         const poll = this.state.polls.filter(poll =>{
-            return poll._id === parseInt(pollId);
+            return parseInt(poll._id) === parseInt(pollId);
         })
 
-        console.log(roomId);
+        console.log(poll);
         // emit poll to server to emit to all clients
         socket.emit("publish", {pollData: poll[0], name: roomId})
     }
@@ -281,13 +281,25 @@ class Polls extends React.Component {
         socket.emit("unpublish", {pollId, name: roomId});
     }
 
-    triggerPollState = e => {
-        let pollId = e.currentTarget.value - 1
+    triggerPollState = evt => {
+        //let pollId = e.currentTarget.value - 1
+        const pollId = evt.target.id;
+        const {polls} = this.state;
+        
+        // find the poll that was clicked
+        let clickedPoll = {};
+        for (let i = 0; i < polls.length; i++){
+            if (polls[i]._id.toString() === pollId){
+                clickedPoll = polls[i];
+                break;
+            }
+        }
+
         this.setState({
             ...this.state,
             isEmptyState: false,
             isPollState: true,
-            poll : this.state.polls[pollId]
+            poll : clickedPoll
         })
     }
 
@@ -398,7 +410,7 @@ class Polls extends React.Component {
 const PollQuestion = props => {
     return (
     <div>
-        <button className="pollQuestion" onClick={props.handleClick} value={props.poll._id}
+        <button  id={props.poll._id} className="pollQuestion" onClick={props.handleClick} value={props.poll._id}
             style={{backgroundColor: props.isPublished ? props.selectedColor : null,
             color: props.isPublished ? "white" : "black"}}>
             {props.poll._id}. {props.poll.question}
