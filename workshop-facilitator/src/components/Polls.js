@@ -49,7 +49,6 @@ class Polls extends React.Component {
     }
 
     componentDidMount(){
-        //socket = io_client("http://localhost:5000");
         socket = this.props.socket;
         const {roomId} = this.props;
         console.log(this.props);
@@ -259,7 +258,7 @@ class Polls extends React.Component {
 
         // find poll in the array of polls
         const poll = this.state.polls.filter(poll =>{
-            return parseInt(poll._id) === parseInt(pollId);
+            return poll._id.toString() === pollId;
         })
 
         console.log(poll);

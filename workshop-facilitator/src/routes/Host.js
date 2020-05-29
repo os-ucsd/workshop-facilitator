@@ -47,25 +47,12 @@ class Host extends React.Component {
         */
         socket = io(this.state.ENDPOINT);
 
-        // join the socket room for this workshop room
-        const roomID = this.props.location.state.roomID;
-        this.setState({id: roomID});
-        socket.emit("join", {name: roomID});
-
         if(this.props.location.state != null){
-            /*
-            make the connection to the socket (when user visits this component,
-            connection event will be emitted because of this connection)
-
-            now, there exists a websocket between this client and our server, so
-            we can emit events to our server
-            */
-            socket = io(this.state.ENDPOINT);
-
             // join the socket room for this workshop room
             const roomID = this.props.location.state.roomID;
+            this.setState({id: roomID});
             socket.emit("join", {name: roomID});
-
+            
         socket.on("yesClick", () =>{
             console.log("someone clicked yes");
             this.setState({yesCount: (this.state.yesCount+ 1)});
@@ -91,8 +78,6 @@ class Host extends React.Component {
             let getString = "http://localhost:5000/rooms/" + this.props.location.state.roomID;
             console.log("getString: " + getString);
 
-            // join the socket room with the given room
-            socket.emit("join", {name: this.props.location.state.roomID});
 
             fetch(getString, {
                 method: 'get',
