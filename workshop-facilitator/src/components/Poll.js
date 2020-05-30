@@ -96,7 +96,7 @@ class Poll extends React.Component {
             <div>
                 <div className="header">
                     <div className="header-text">
-                        <h2>{poll._id}. {poll.question} </h2>
+                        <h2>{poll.question} </h2>
                         <p className="is-published-text">{isPublished && isHost ? "(published)" : null}</p>
                     </div>
                     {

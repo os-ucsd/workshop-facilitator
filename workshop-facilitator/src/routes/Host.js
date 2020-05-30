@@ -5,7 +5,7 @@ import SendMail from '../components/SendMail';
 import Resources from "../components/Resources";
 import Questions from "../components/Questions";
 import Polls from "../components/Polls";
-
+import TopBar from "../components/TopBar";
 
 import Button from "@material-ui/core/Button";
 
@@ -117,24 +117,24 @@ class Host extends React.Component {
     render() {
         // when pass in newly created room from Create.js/Join.js will be in this.props.location.state
         // if we pass props through this.props.history.push
-        //console.log("State room: " + this.state.room);
+        //console.log("State room: ", this.state.room);
         //if there is a room, change hostCode to the designated hostCode, else it will remain the emtpy strig.
 
         if (!socket) return null;
 
         return (
             <div>
-                {(this.state.room != null) ?
+                {
+                /*(this.state.room != null) ?
                     <div>
                         <h3> Host code is: {this.state.room.hostCode} </h3>
                         <h3> User code is: {this.state.room.joinCode} </h3>
                     </div>
                     :
-                    <h3> No room FOR TESTING ONLY </h3>
+                    <h3> No room FOR TESTING ONLY </h3>*/
 
                 }
-
-
+                <TopBar room={this.state.room}/>
 
                 <SplitPane
                     split="vertical"

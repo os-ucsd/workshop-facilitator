@@ -1,0 +1,41 @@
+.top-bar{
+    align-items: center;
+    background-color: #7BB4EA;
+    display: flex;
+    height: 50px;
+    width: 100%;
+}
+
+.room-name-container{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.room-name{
+    color: white;
+    display: flex;
+    margin-left: 30px;
+    font-size: 25px;
+}
+
+.join-code{
+    color: white;
+    display: flex;
+    margin-left: 30px;
+    font-size: 25px;
+}
+
+.options-container{
+    margin-left: auto;
+    margin-right: 30px;
+}
+
+.options-icon{
+    color: white;
+    margin-top: 25px;
+}
+
+.options-icon:hover{
+    cursor: pointer;
+}
