@@ -40,27 +40,23 @@ class Questions extends React.Component {
 
     /*
     5/29 update:
-    GOt the post request to work, but for some reason backend is only getting the question:String pair
-    doesn't eget the currID, but maybe that's for the better
+    Got the post request to work, but for some reason backend is only getting the question:String pair
+    doesn't eget the currID, but maybe that's for the better *look at line 28
 
     made a state to set the "latest" question to to keep track, my need to incldue more info in the obj
 
     currID resets, so its isn't helpful in tracking order, maybe the indecies of the array are good enough
-
-    clarify on what this array of questions is going to be used for? maybe keyvalue should include if it
-    is resovled or not?
-
-
+    can change the setState line in 28
 
     */
 
     updateQuestions = () => {
         const {roomID} = this.props;
-        console.log("HEre is the roomID in questions: " + roomID );
+        //console.log("HEre is the roomID in questions: " + roomID );
         const postQuestion = "http://localhost:5000/room/" + roomID + "/questions/add";
-        console.log("Post request URL: " + postQuestion);
+        //console.log("Post request URL: " + postQuestion);
         let question = this.state.latestQ;
-        console.log(question);
+        //console.log(question); For somereason currID goes bye bye at this point, question remain
 
         fetch(postQuestion, {
             method: 'post',
