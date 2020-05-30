@@ -50,12 +50,6 @@ class User extends React.Component {
             this.setState({noSent: false});
         })
 
-         /* if a new user joins, publish the already published question if any
-         socket.on("publishNewUser", data => {
-             alert(data);
-         })*/
-
-
         //get fetches the room by ID if the ID was sent,saves in state
         if(this.props.location.state != null){
             console.log("Here is the ID: " + this.props.location.state.roomID);
@@ -72,9 +66,6 @@ class User extends React.Component {
             let getString = "http://localhost:5000/rooms/" + this.props.location.state.roomID;
             console.log("getString: " + getString);
 
-            // join the socket room with the given room id
-            socket.emit("join", {name: this.props.location.state.roomID});
-
             fetch(getString, {
                 method: 'get',
             })
@@ -84,7 +75,22 @@ class User extends React.Component {
             // if failure, log the error
             .catch((err) => console.log("Error", err));
 
+            // make connection between this client and the server (which is active on port 5000)
+            //socket = io_client(this.state.ENDPOINT);
 
+            socket.on("slowerReset", () =>{
+                console.log("host noticed you!");
+                this.setState({slowerSent: false});
+            })
+
+            /* if a new user joins, publish the already published question if any
+            socket.on("publishNewUser", data => {
+                alert(data);
+            })*/
+        }
+        else{
+            // no room obj, so redirect user to front page
+            this.props.history.push("/");
         }
 
     }
@@ -194,7 +200,7 @@ class User extends React.Component {
                         defaultSize="40%"
                     >
                         <div>
-                            <Polls isHost={false} socket={socket} roomID={this.props.location.state.roomID}/>
+                            <Polls isHost={false} socket={socket} roomId={this.props.location.state.roomID}/>
                         </div>
                         <div>
                             <Questions roomID={this.props.location.state.roomID} />

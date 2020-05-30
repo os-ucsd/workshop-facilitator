@@ -133,42 +133,76 @@ router.route('/:roomId/questions/:qId').get((req, res) => {
 })
 
 /*
-@route GET /rooms/:id/clickers/
+@route GET /rooms/:id/polls/
 @desc Gets all clicker questions in a specific room
 */
-router.route('/:id/clickers/').get((req, res) => {
+router.route('/:id/polls/').get((req, res) => {
     const roomId = req.params.id;
+    console.log(`getting all polls for room ${roomId}`)
     // database query
     WorkshopRoom.findById(roomId)
         // send the clicker questions back to client-side
-        .then(room => res.json(room.wfclickers))
+        .then(room => res.json(room.polls))
         .catch(err => res.status(400).json(err));
 })
 
 /*
-@route POST /rooms/:id/clickers/add
+@route POST /rooms/:id/polls/add
 @desc Adds a clicker question to a specific workshop room
 */
-router.route('/:id/clickers/add').post((req, res) => {
+router.route('/:id/polls/add').post((req, res) => {
     const roomId = req.params.id;
     //const wfclicker = req.body.clicker;
     const wfclicker = req.body;
+    console.log(wfclicker);
     // database query
     WorkshopRoom.findById(roomId)
         .then(room => {
             //let wfclickers = room.wfclickers;
-            room.wfclickers.push(wfclicker);
+            room.polls.push(wfclicker);
             room.save()
-                .then(() => res.json(room.wfclickers))
+                .then(() => res.json(room.polls))
                 .catch(err => res.status(400).json(err))
         });
 })
 
 /*
-@route GET /rooms/:roomId/clickers/:cId
+@route POST /rooms/:id/polls/delete
+@desc Adds a clicker question to a specific workshop room
+*/
+router.route('/:id/polls/delete').post((req, res) => {
+    const roomId = req.params.id;
+    //const wfclicker = req.body.clicker;
+    const {pollId} = req.body;
+    console.log(pollId);
+    // database query
+    WorkshopRoom.findById(roomId)
+        .then(room => {
+            //let wfclickers = room.wfclickers;
+            const indexOfPoll = findIndexOfPoll(pollId, room);
+            if (indexOfPoll == -1) res.status(404).json({"err": `no such poll in room ${roomId}`});
+            else{
+                room.polls.splice(indexOfPoll, 1);
+                room.save()
+                    .then(() => res.json(room.polls))
+                    .catch(err => res.status(400).json(err))
+            }
+        });
+})
+
+findIndexOfPoll = (pollId, room) => {
+    const {polls} = room;
+    for (let i = 0; i < polls.length; i++){
+        if (polls[i]._id.toString() === pollId) return i;
+    }
+    return -1;
+}
+
+/*
+@route GET /rooms/:roomId/polls/:cId
 @desc Gets a specific clicker question from a specific room
 */
-router.route('/:roomId/clickers/:cId').get((req, res) => {
+router.route('/:roomId/polls/:cId').get((req, res) => {
     const roomId = req.params.roomId;
     const wfclickerId = req.params.cId;
 

@@ -23,7 +23,7 @@ class Polls extends React.Component {
             // template poll object
             polls: [{
                 _id: 1,
-                question: "hello, what is ree act?",
+                question: "Example question. Delete this question pls",
                 options: {
                     A: "A",
                     B: "B",
@@ -31,16 +31,6 @@ class Polls extends React.Component {
                     D: "D"
                 },
                 answer: "C"
-            }, {
-                _id: 2,
-                question: "question 2",
-                options: {
-                    A: "1",
-                    B: "2",
-                    C: "3",
-                    D: "4"
-                },
-                answer: "B"
             }],
             poll: {},
             answers: {},
@@ -59,8 +49,8 @@ class Polls extends React.Component {
     }
 
     componentDidMount(){
-        //socket = io_client("http://localhost:5000");
         socket = this.props.socket;
+        const {roomId} = this.props;
         console.log(this.props);
         if (socket){
             socket.on("err", errorData => {
@@ -114,10 +104,15 @@ class Polls extends React.Component {
 
             // listen for showanswer event and set the showanswer state to previous
             socket.on("showAnswer", answer => {
-                console.log("showing answer...");
-                this.setState(prevState => {
-                    return {showAnswer: !prevState.showAnswer};
-                })
+                console.log("showing answer...", answer);
+                if (answer.answer === ""){
+                    alert("There was no answer");
+                }
+                else{
+                    this.setState(prevState => {
+                        return {showAnswer: !prevState.showAnswer};
+                    })
+                }
             })
         }
 
@@ -125,7 +120,16 @@ class Polls extends React.Component {
         const colors = this.state.colors;
         this.setState({selectedColor: Math.floor(Math.random() * colors.length)});
 
-        // should also make the http request to get all polls and store in state
+        // make the http request to get all polls and store in state
+        fetch(`http://localhost:5000/rooms/${roomId}/polls`)
+            .then(resp => resp.json())
+            .then(data => {
+                this.setState(prevState => {
+                    let {polls} = prevState;
+                    let allPolls = polls.concat(data);
+                    return {polls: allPolls};
+                })
+            })
     }
 
     handleOpen = () => {
@@ -157,8 +161,9 @@ class Polls extends React.Component {
 
     handleAdd = () => {
         let polls = this.state.polls;
+        const {roomId} = this.props;
         let newPoll = {
-            _id: this.state.polls.length+1,
+            //_id: this.state.polls.length+1,
             question: this.state.question,
             options : {
                 A: this.state.optionA,
@@ -168,11 +173,20 @@ class Polls extends React.Component {
             },
             answer: this.state.answer
         }
-        polls.push(newPoll)
-        this.setState({
-            polls
-        })
+        //polls.push(newPoll)
+        //this.setState({
+            //polls
+        //})
         //currRoom.wfclickers.push(newPoll);  attempting to record information in room obj as well
+        // add this poll to the database
+        fetch(`http://localhost:5000/rooms/${roomId}/polls/add`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(newPoll)
+        })
+            .then(resp => resp.json())
+            .then(data => this.setState({polls: data}));
+
         this.handleClose();
     }
 
@@ -214,6 +228,7 @@ class Polls extends React.Component {
     deletePoll = evt => {
         evt.preventDefault();
         const pollId = evt.target.id;
+        const {roomId} = this.props;
 
         // if this poll is published, tell user to unpublish before deleting
         if (this.state.publishedPoll._id && (pollId === this.state.publishedPoll._id.toString())){
@@ -222,12 +237,23 @@ class Polls extends React.Component {
         }
 
         // find poll in the array of polls and remove it
-        const pollIndx = this.state.polls.findIndex(poll => poll._id === parseInt(pollId));
+        const pollIndx = this.state.polls.findIndex(poll => poll._id.toString() === pollId);
+        console.log(pollIndx);
         this.setState(prevState => {
             prevState.polls.splice(pollIndx, 1);
             let polls = prevState.polls;
             return {polls}
         })
+
+        // delete this poll from the db
+        console.log(pollId);    
+        fetch(`http://localhost:5000/rooms/${roomId}/polls/delete`, {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({pollId})
+        })
+            .then(resp => resp.json())
+            .then(data => console.log(data));
     }
 
     publishPoll = evt => {
@@ -237,10 +263,10 @@ class Polls extends React.Component {
 
         // find poll in the array of polls
         const poll = this.state.polls.filter(poll =>{
-            return poll._id === parseInt(pollId);
+            return poll._id.toString() === pollId;
         })
 
-        console.log(roomId);
+        console.log(poll);
         // emit poll to server to emit to all clients
         socket.emit("publish", {pollData: poll[0], name: roomId})
     }
@@ -259,13 +285,25 @@ class Polls extends React.Component {
         socket.emit("unpublish", {pollId, name: roomId});
     }
 
-    triggerPollState = e => {
-        let pollId = e.currentTarget.value - 1
+    triggerPollState = evt => {
+        //let pollId = e.currentTarget.value - 1
+        const pollId = evt.target.id;
+        const {polls} = this.state;
+        
+        // find the poll that was clicked
+        let clickedPoll = {};
+        for (let i = 0; i < polls.length; i++){
+            if (polls[i]._id.toString() === pollId){
+                clickedPoll = polls[i];
+                break;
+            }
+        }
+
         this.setState({
             ...this.state,
             isEmptyState: false,
             isPollState: true,
-            poll : this.state.polls[pollId]
+            poll : clickedPoll
         })
     }
 
@@ -285,7 +323,6 @@ class Polls extends React.Component {
 
     showAnswer = evt => {
         evt.preventDefault();
-
         // emit show answer event so users can see the answer on their screen too
         socket.emit("showAnswer", {answer: this.state.poll.answer});
     }
@@ -323,7 +360,8 @@ class Polls extends React.Component {
             <div>
                 <div className="poll-header-container">
                     {
-                        this.state.isPollState ?
+                        // only show back arrow for host
+                        this.state.isPollState && isHost ?
                             <div className="back-container"><ArrowBackIosIcon onClick={this.handleBack} /></div> : null
                     }
                     <h2>Polls</h2>
@@ -376,7 +414,7 @@ class Polls extends React.Component {
 const PollQuestion = props => {
     return (
     <div>
-        <button className="pollQuestion" onClick={props.handleClick} value={props.poll._id}
+        <button  id={props.poll._id} className="pollQuestion" onClick={props.handleClick} value={props.poll._id}
             style={{backgroundColor: props.isPublished ? props.selectedColor : null,
             color: props.isPublished ? "white" : "black"}}>
             {props.poll._id}. {props.poll.question}

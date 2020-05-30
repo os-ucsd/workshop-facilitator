@@ -47,20 +47,12 @@ class Host extends React.Component {
         */
         socket = io(this.state.ENDPOINT);
 
-        // join the socket room for this workshop room
-        const roomID = this.props.location.state.roomID;
-        this.setState({id: roomID});
-        socket.emit("join", {name: roomID});
-
-        socket.on("welcome", data => console.log(data));
-
-        socket.on("slower", () =>{
-            console.log("someone wanna go slower");
-            this.setState({slowerPeople: (this.state.slowerPeople + 1)});
-            console.log("slowerPeople: " +  this.state.slowerPeople);
-
-        })
-
+        if(this.props.location.state != null){
+            // join the socket room for this workshop room
+            const roomID = this.props.location.state.roomID;
+            this.setState({id: roomID});
+            socket.emit("join", {name: roomID});
+            
         socket.on("yesClick", () =>{
             console.log("someone clicked yes");
             this.setState({yesCount: (this.state.yesCount+ 1)});
@@ -90,7 +82,7 @@ class Host extends React.Component {
         })
 
         //will fetch the room given the ID if it was passed it, saves it in state
-        if(this.props.location.state != null){
+        //if(this.props.location.state != null){
             console.log("Here is the ID: " + this.props.location.state.roomID);
             this.setState({
                 id: this.props.location.state.roomID
@@ -100,8 +92,6 @@ class Host extends React.Component {
             let getString = "http://localhost:5000/rooms/" + this.props.location.state.roomID;
             console.log("getString: " + getString);
 
-            // join the socket room with the given room
-            socket.emit("join", {name: this.props.location.state.roomID});
 
             fetch(getString, {
                 method: 'get',
@@ -111,8 +101,10 @@ class Host extends React.Component {
             .then((data) => this.roomInit(data) ) //this.setState({room: data}) )
             // if failure, log the error
             .catch((err) => console.log("Error", err));
-
-
+        }
+        else{
+            // if the room obj is null, then no room passed in and redirect user to front page
+            this.props.history.push("/");
         }
 
     }
@@ -172,7 +164,7 @@ class Host extends React.Component {
                         defaultSize="50%"
                     >
                         <div>
-                            <Polls isHost= {true} roomID={this.props.location.state.roomID} socket={socket}/>
+                            <Polls isHost= {true} roomId={this.props.location.state.roomID} socket={socket}/>
                         </div>
                         <div>
                             <Questions roomID = {this.props.location.state.roomID} />
