@@ -92,14 +92,16 @@ router.route('/:id/questions/').get((req, res) => {
 */
 router.route('/:id/questions/add').post((req, res) => {
     const roomId = req.params.id;
+    console.log("Here is roomID on backend: " + roomId)
     //const question = req.body.question;
     const question = req.body;
+    console.log("here is question on backend");
     console.log(question);
     // database query
     WorkshopRoom.findById(roomId)
         .then(room => {
             //let questions = room.questions;
-            room.questions.push(question.question);
+            room.questions.push(question);
             console.log(room.questions);
             // save the room with the updated questions array
             room.save()
@@ -203,7 +205,7 @@ router.route("/:roomId/resources/upload").post((req, res) => {
 router.route("/:roomId/resources/").get((req, res) => {
     // find the file resource with the given name
     const roomId = req.params.roomId;
-    
+
     WorkshopRoom.findById(roomId)
         .then(room => res.json(room.resources))
         .catch(err => res.status(400).json(err));
@@ -260,8 +262,8 @@ router.route('/:id/feedback/send').post((req, res) => {
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-        user: 'jaime.beatty@ethereal.email', 
-        pass: 'AeyDDBBbau7N4kWqvy'  
+        user: 'jaime.beatty@ethereal.email',
+        pass: 'AeyDDBBbau7N4kWqvy'
     },
     tls:{
         rejectUnauthrized: false

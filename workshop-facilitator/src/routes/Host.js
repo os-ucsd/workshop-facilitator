@@ -175,7 +175,7 @@ class Host extends React.Component {
                             <Polls isHost= {true} roomID={this.props.location.state.roomID} socket={socket}/>
                         </div>
                         <div>
-                            <Questions />
+                            <Questions roomID = {this.props.location.state.roomID} />
                         </div>
                     </SplitPane>
 
