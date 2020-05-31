@@ -52,7 +52,7 @@ class Host extends React.Component {
             const roomID = this.props.location.state.roomID;
             this.setState({id: roomID});
             socket.emit("join", {name: roomID});
-            
+
         socket.on("yesClick", () =>{
             console.log("someone clicked yes");
             this.setState({yesCount: (this.state.yesCount+ 1)});
@@ -184,9 +184,9 @@ class Host extends React.Component {
                         <br></br>
                         <div class="yesNo">
                             <img src = {yes} width="30" height="30"  alt="Yes" />
-                            <h3> : {this.state.yesCount} </h3>
+                            <h3> {this.state.yesCount} </h3>
                             <img src = {no} width="30" height="30"  alt="No" />
-                            <h3> : {this.state.noCount} </h3>
+                            <h3>  {this.state.noCount} </h3>
                         </div>
 
                         <Button variant="outlined" onClick={this.resetYesNo}> Reset Yes/No </Button>
