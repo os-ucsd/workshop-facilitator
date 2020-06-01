@@ -65,16 +65,8 @@
 
 .eraser{
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    padding-right:10px;
-    padding-left:10px;
-}
-
-.item1{
-    align-self: flex-start;
-}
-
-.item2{
-    align-self: flex-end;
+    padding-right:11%;
+    padding-left:11%;
 }

@@ -15,7 +15,7 @@ import JoinCode from "../components/JoinCode";
 import yes from "../hostUserIcons/yesIcon.png";
 import no from "../hostUserIcons/noIcon.png";
 import turtle from "../hostUserIcons/TURTLE.png";
-import eraser from "../hostUserIcons/Eraser.jpg";
+import eraser from "../hostUserIcons/eraser.png";
 
 import io from "socket.io-client";
 
@@ -199,8 +199,8 @@ class Host extends React.Component {
                                 <h4>{this.state.noCount}</h4>
                             </div>
                             <div class="eraser">
-                                <img class="item1" src = {eraser} width="40" height="40"  alt="eraser" onClick={this.resetSlow}/>
-                                <img class="item2" src = {eraser} width="40" height="40"  alt="eraser" onClick={this.resetYesNo}/>
+                                <img src = {eraser} width="40" height="40"  alt="eraser" onClick={this.resetSlow}/>
+                                <img src = {eraser} width="40" height="40"  alt="eraser" onClick={this.resetYesNo}/>
                             </div>
                         </div>
 
