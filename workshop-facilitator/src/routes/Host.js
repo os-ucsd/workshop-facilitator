@@ -14,6 +14,8 @@ import JoinCode from "../components/JoinCode";
 
 import yes from "../hostUserIcons/yesIcon.png";
 import no from "../hostUserIcons/noIcon.png";
+import turtle from "../hostUserIcons/TURTLE.png";
+import eraser from "../hostUserIcons/Eraser.jpg";
 
 import io from "socket.io-client";
 
@@ -64,6 +66,13 @@ class Host extends React.Component {
             console.log("someone clicked no");
             this.setState({noCount: (this.state.noCount+ 1)});
             console.log("noClicked: " +  this.state.noCount);
+
+        })
+
+        socket.on("slower", () =>{
+            console.log("someone wants to go slower");
+            this.setState({slowerPeople: (this.state.slowerPeople+ 1)});
+            console.log("slowerPeople: " +  this.state.slowerPeople);
 
         })
 
@@ -178,18 +187,23 @@ class Host extends React.Component {
                         <HostCode hostCode={this.state.hostCode} />
                         <JoinCode joinCode={this.state.joinCode} />
 
-                        <h3> Slower Please: {this.state.slowerPeople} </h3>
-                        <Button variant="outlined" onClick={this.resetSlow}> Went Slower </Button>
-                        <br></br>
-                        <br></br>
-                        <div class="yesNo">
-                            <img src = {yes} width="30" height="30"  alt="Yes" />
-                            <h3> {this.state.yesCount} </h3>
-                            <img src = {no} width="30" height="30"  alt="No" />
-                            <h3>  {this.state.noCount} </h3>
+                        <div>
+                            <div class="yesNo">
+                                <img src = {turtle} width="40" height="40"  alt="Turtle" />
+                                <img src = {yes} width="40" height="40"  alt="Yes" />
+                                <img src = {no} width="40" height="40"  alt="No" />
+                            </div>
+                            <div class="yesNoCount">
+                                <h4>{this.state.slowerPeople}</h4>
+                                <h4>{this.state.yesCount}</h4>
+                                <h4>{this.state.noCount}</h4>
+                            </div>
+                            <div class="eraser">
+                                <img class="item1" src = {eraser} width="40" height="40"  alt="eraser" onClick={this.resetSlow}/>
+                                <img class="item2" src = {eraser} width="40" height="40"  alt="eraser" onClick={this.resetYesNo}/>
+                            </div>
                         </div>
 
-                        <Button variant="outlined" onClick={this.resetYesNo}> Reset Yes/No </Button>
 
                         <Resources isHost={true} roomID={this.props.location.state.roomID}/>
 

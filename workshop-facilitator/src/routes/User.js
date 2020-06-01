@@ -15,6 +15,8 @@ import yes from "../hostUserIcons/yesIcon.png";
 import yesNo from "../hostUserIcons/yesIconNo.png";
 import no from "../hostUserIcons/noIcon.png";
 import noNo from "../hostUserIcons/noIconNoNew.png";
+import yesC from "../hostUserIcons/yesIconNoC.png";
+import noC from "../hostUserIcons/noIconNoNewC.png";
 
 
 
@@ -225,7 +227,7 @@ class User extends React.Component {
                         <div class="slower">
                         {(this.state.yesSent || this.state.noSent) ?
                             (this.state.yesSent === true) ?
-                                <img src = {yesNo} width="40" height="40" title="Yes Sent"  alt="disabledYes" onClick={this.handleUndo} />
+                                <img src = {yesC} width="40" height="40" title="Yes Sent"  alt="disabledYes" onClick={this.handleUndo} />
                                 :
                                 <img src = {yesNo} width="40" height="40" title="No Sent"  alt="disabledYes" onClick={this.handleUndo} />
                             :
@@ -233,7 +235,7 @@ class User extends React.Component {
                         }
                         {(this.state.noSent || this.state.yesSent) ?
                             (this.state.noSent === true) ?
-                                <img src = {noNo} width="40" height="40" title="No Sent" alt="disabledNo" onClick={this.handleUndo}/>
+                                <img src = {noC} width="40" height="40" title="No Sent" alt="disabledNo" onClick={this.handleUndo}/>
                                 :
                                 <img src = {noNo} width="40" height="40" title="Yes Sent" alt="disabledNo" onClick={this.handleUndo}/>
                             :
