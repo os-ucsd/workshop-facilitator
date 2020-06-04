@@ -17,10 +17,15 @@ var roomSchema = new Schema({
     // list of emails
     attendees: [String],
     polls: [{
-        id: String,
+        //id: String,
         question: String,
-        answers: [String],
-        correct: String
+        options: {
+            A: String,
+            B: String,
+            C: String,
+            D: String
+        },
+        answer: String
     }],
     // email template
     feedback: String

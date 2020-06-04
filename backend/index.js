@@ -34,7 +34,6 @@ let answerB = 0;
 let answerC = 0;
 let answerD = 0;
 
-//let currPollQuestion = {};
 // contents: [{poll: {}, name: ""}]
 let publishedPolls = [];
 
@@ -48,7 +47,6 @@ roomHasPublishedQuestion = roomName => {
 // io object will listen for connection event
 io.on("connection", socket => {
     // whenever user connected, if there's a published poll, automatically send to the new user
-    //if (currPollQuestion._id) io.sockets.emit("publish", currPollQuestion);
     socket.on("join", data => {
         // name is the id of the workshop room
         socket.join(data.name);
@@ -81,35 +79,12 @@ io.on("connection", socket => {
             publishedPolls.push({poll: pollData.pollData, name: pollData.name});
 
             // send poll question to all clients and allow host to know which question is published
-            //io.sockets.emit("publish", currPollQuestion);
+            //io.sockets.emit("publish", pollData.pollData);
             io.in(pollData.name).emit("publish", pollData.pollData);
         }
     })
 
     socket.on("unpublish", data => {
-        // store question and answers in db
-        const {pollId, name} = pollData;
-        // find if room has an active question already
-        const active = findIfActiveQuestion(null, name);
-
-        /* check if there was a poll actually published before this
-        if (! currPollQuestion._id){
-            console.log("no poll published, so can't unpublish");
-            socket.emit("err", {error: "no question is currently published"});
-            return;
-        }
-        // check to make poll the host is trying to unpublish is the current poll
-        //if (currPollQuestion._id.toString() !== pollId){
-        console.log(currPollQuestions, active)
-        if (currPollQuestions[active].currPollQuestion._id.toString() !== pollId){
-            console.log("a different poll is published, so cannot unpublish this poll");
-            socket.emit("err", {error: "a different poll is published, so cannot unpublish this poll"});
-            return;
-        }
-
-        // reset to empty
-        currPollQuestion = {};
-        */
         // check if poll actually published
         const hasPublishedIdx = roomHasPublishedQuestion(data.name);
         if (hasPublishedIdx === -1) {
