@@ -76,7 +76,7 @@ const UploadDialog = (props) => {
             >
                 <DialogTitle id="upload-dialog-title">Upload via Local</DialogTitle>
                 <DialogContent className="UploadDialogContent">
-                    <Upload />
+                    <Upload roomID={props.roomID}/>
                 </DialogContent>
                 <DialogActions>
                 </DialogActions>

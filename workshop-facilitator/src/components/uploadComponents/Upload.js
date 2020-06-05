@@ -3,6 +3,10 @@ import "../../styles/Upload.css";
 import Dropzone from './Dropzone';
 import { Button } from '@material-ui/core';
 import Progress from './Progress';
+import axios from "axios";
+import io_client from "socket.io-client";
+
+let socket;
 
 class Upload extends Component {
   constructor() {
@@ -18,6 +22,11 @@ class Upload extends Component {
     this.uploadFiles = this.uploadFiles.bind(this);
     this.sendRequest = this.sendRequest.bind(this);
     this.renderActions = this.renderActions.bind(this);
+    this.addFile = this.addFile.bind(this);
+  }
+
+  componentDidMount() {
+    socket = io_client("http://localhost:5000");
   }
 
   onFilesAdded(newFiles) {
@@ -90,12 +99,8 @@ class Upload extends Component {
   }
 
   sendRequest(file) {
-    // insert POST request here.
+    console.log(file);
 
-    // this is what I found, but am pretty sure it doesn't
-    // integrate with what we want
-
-    /*
     return new Promise((resolve, reject) => {
       const req = new XMLHttpRequest();
 
@@ -124,13 +129,37 @@ class Upload extends Component {
         reject(req.response);
       });
 
+      // Format the file to send
       const formData = new FormData();
-      formData.append("file", file, file.name);
+      formData.append("name", file.name);
+      formData.append("file", file);
+      let fileName = file.name;
 
-      req.open("POST", "https://localhost/blah blah");
-      req.send(formData);
+      // Upload the file
+      axios.post("/upload", formData)
+        .then((res) => (this.addFile(res.data, fileName)))
+        .catch(err => console.log(err));
     })
-    */
+  }
+
+  addFile(encryptedName, fileName) {
+    let urlData = {
+        title: fileName,
+        src: encryptedName,
+        resType: "file"
+      }
+      
+      let reqURL = "http://localhost:5000/rooms/" + this.props.roomID + "/resources/upload"
+      fetch(reqURL, {
+        method: 'POST',
+        body: JSON.stringify(urlData),
+        headers: { 'Content-type': 'application/json' }
+      })
+      .then((res) => res.json())
+      .then((data) => console.log("Success! ", data))
+      .catch(err => console.log("Error " + err));
+  
+      socket.emit("uploadURL", {urlData: urlData});
   }
 
   render() {
