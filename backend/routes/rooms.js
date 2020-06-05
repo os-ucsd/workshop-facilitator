@@ -214,7 +214,7 @@ router.route('/:roomId/polls/:cId').get((req, res) => {
 
 /*
 @route POST /rooms/:roomId/resources/upload
-@desc uploads a file resource to the database
+@desc uploads a url resource to the database
 */
 router.route("/:roomId/resources/upload").post((req, res) => {
     // req should contain the file to upload

@@ -72,7 +72,10 @@ class Resources extends React.Component {
                             <li>
                             {/*https://s3.amazonaws.com/iconbros/icons/icon_pngs/000/000/288/original/file-empty.png?1510679782" original width and height 10,13 */}
                                 <img className="icons"  src={this.iconReturnWeb(resource.src)}  width="30" height="30" alt="resourceIcon" />
+                                {resource.resType === "file" ? 
+                                <a target="_blank" href={'http://localhost:5000/files/' + resource.src} rel="noopener noreferrer">{resource.title} </a> :
                                 <a target="_blank" href={resource.src} rel="noopener noreferrer">{resource.title} </a>
+                            }
                                 {/*resource.resType === "url"?
                                     <img className="redirect" src="https://cdn4.iconfinder.com/data/icons/ui-ux-essentials/24/open-window-512.png" width="15" height="13" alt="open link icon"/> :
                                     <img className="redirect" src="https://img.icons8.com/ios/500/download-from-cloud.png" width="15" height="15" alt="download icon"/>

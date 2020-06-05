@@ -26,7 +26,7 @@ class SendMail extends React.Component {
             selectedResources: [],
         };
         this.checkEmails = this.checkEmails.bind(this);
-
+        this.addFile = this.pushResource.bind(this);
     }
 
     componentDidMount() {
@@ -111,6 +111,7 @@ class SendMail extends React.Component {
     checkEmails(emails, getMail, resources) {
         let emailList = "";
         let attachments = [];
+
         for(const email of emails) {
             if(email !== "" && emailList === "") {
                 emailList = email;
@@ -119,12 +120,14 @@ class SendMail extends React.Component {
                 emailList = emailList + ', ' + email;
             }
         }
+
         for(const resource of resources) {
             let url = resource.src;
             let index = url.indexOf('.');
             let type = url.substring(index, url.length);
             console.log(type); 
             let file = (resource.resType === "url");
+
             if(file || type.indexOf('.ade') !== -1||type.indexOf('.adp') !== -1||type.indexOf('.appx') !== -1||type.indexOf('.appxbundle') !== -1||type.indexOf('.bat') !== -1||
             type.indexOf('.cab') !== -1||type.indexOf('.cer') !== -1||type.indexOf('.chm') !== -1||type.indexOf('.cmd') !== -1||type.indexOf('.com') !== -1||
             type.indexOf('.cpl') !== -1||type.indexOf('.dll') !== -1||type.indexOf('.dmg') !== -1||type.indexOf('.exe') !== -1||type.indexOf('.hlp') !== -1||
@@ -140,13 +143,21 @@ class SendMail extends React.Component {
                     text: resource.title + ': ' + resource.src + "\n\n" + curState
                 })
             }
+
             else {
-                attachments.push({
-                    filename: resource.title, 
-                    path: resource.src,
-                }) 
+                console.log("In file : " + resource.src);
+                let getString = "http://localhost:5000/files/" + resource.src;
+                fetch(getString, {
+                    method: 'get',
+                })
+                .then((resp) => resp.json())
+                // if success and data was sent back, log the data
+                .then((data) => this.pushResource(data, attachments, resource))
+                // if failure, log the error
+                .catch((err) => console.log("Error", err));
             }
         }
+
         console.log('emails: ' + emailList);
         let postString = getMail + '/send';
         let emailData = {"list": emailList, "subject": this.state.subject, "text": this.state.text, "attachments": attachments};
@@ -162,7 +173,13 @@ class SendMail extends React.Component {
         alert("Email Sent; Subject: " + this.state.subject);
     }
 
-
+    pushResource(stream, attachments, resource) {
+        attachments.push({
+            filename: resource.title, 
+            content: stream
+        }) 
+        console.log(attachments);
+    }
 
     render() {
         return (
