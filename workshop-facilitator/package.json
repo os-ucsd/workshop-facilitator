@@ -19,7 +19,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
     "react-split-pane": "^0.1.89",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.4.0",
     "socket.io-client": "^2.3.0",
     "uws": "^10.148.1"
   },
