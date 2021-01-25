@@ -5,7 +5,7 @@ import io_client from "socket.io-client";
 import {extractFileOrURLType} from '../utils';
 
 import URL from "./resourceIcons/URL.png";
-import PDF from "./resourceIcons/PDF.jpg";
+import PDF from "./resourceIcons/PDF.png";
 import SLIDES from "./resourceIcons/SLIDES.png";
 import DOC from "./resourceIcons/DOC.png";
 

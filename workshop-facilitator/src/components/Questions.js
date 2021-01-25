@@ -13,6 +13,7 @@ class Questions extends React.Component {
             questions: [],
             curID: 1,
             ENDPOINT: "localhost:5000",
+            latestQ: ""
         }
     }
 
@@ -21,15 +22,51 @@ class Questions extends React.Component {
 
         // listen for when the server sends a new question that some client sent
         socket.on("question", data => {
-          // update the questions to include the new question
-          this.setState(prevState => {
+            // update the questions to include the new question
+            this.setState(prevState => {
             const questions = prevState.questions.push({id:this.state.curID, question:data.question, upvotes:0});
+            this.setState({latestQ: {"id":this.state.curID, "question":data.question}});
             return questions;
-          })
+            })
+
+            this.setState({
+                curID: this.state.curID + 1
+            })
+            this.updateQuestions();
         })
-        this.setState({
-            curID: this.state.curID + 1
+    }
+
+
+
+    /*
+    5/29 update:
+    Got the post request to work, but for some reason backend is only getting the question:String pair
+    doesn't eget the currID, but maybe that's for the better *look at line 28
+
+    made a state to set the "latest" question to to keep track, my need to incldue more info in the obj
+
+    currID resets, so its isn't helpful in tracking order, maybe the indecies of the array are good enough
+    can change the setState line in 28
+
+    */
+
+    updateQuestions = () => {
+        const {roomID} = this.props;
+        //console.log("HEre is the roomID in questions: " + roomID );
+        const postQuestion = "http://localhost:5000/room/" + roomID + "/questions/add";
+        //console.log("Post request URL: " + postQuestion);
+        let question = this.state.latestQ;
+        //console.log(question); For somereason currID goes bye bye at this point, question remain
+
+        fetch(postQuestion, {
+            method: 'post',
+            headers: {"Content-Type" : "application/json"}, //have to specify content type as json, or else server thinks its something else;
+            body: JSON.stringify(question)
         })
+        .then((resp) => resp.json())
+        .then((data) => console.log("Question added"))
+        .catch((err) => console.log("Error", err));
+
     }
 
     render() {

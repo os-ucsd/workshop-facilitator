@@ -52,4 +52,21 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+    padding:10px;
+}
+
+.yesNoCount{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding-right:10px;
+    padding-left:10px;
+}
+
+.eraser{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-right:11%;
+    padding-left:11%;
 }

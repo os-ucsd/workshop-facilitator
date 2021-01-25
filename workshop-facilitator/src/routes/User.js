@@ -15,6 +15,8 @@ import yes from "../hostUserIcons/yesIcon.png";
 import yesNo from "../hostUserIcons/yesIconNo.png";
 import no from "../hostUserIcons/noIcon.png";
 import noNo from "../hostUserIcons/noIconNoNew.png";
+import yesC from "../hostUserIcons/yesIconNoC.png";
+import noC from "../hostUserIcons/noIconNoNewC.png";
 
 
 
@@ -151,6 +153,24 @@ class User extends React.Component {
         this.setState({noSent: true});
     }
 
+    handleUndo = () => {
+        if(this.state.yesSent === true){
+            console.log("YesSent is true");
+            this.setState({yesSent: false});
+            socket.emit("clickUndo", {name: this.state.id, answer: "Yes"});
+        }else if(this.state.noSent === true){
+            console.log("NoSent is true")
+            this.setState({noSent: false});
+            socket.emit("clickUndo", {name: this.state.id, answer: "No"});
+        }
+    }
+
+    handleUndoTurtle = () =>{
+        console.log("someone says they caught up");
+        this.setState({slowerSent: false});
+        socket.emit("clickUndoTurtle", {name:this.state.id});
+    }
+
     render() {
         if (!socket) return null;
 
@@ -185,7 +205,7 @@ class User extends React.Component {
                             <Polls isHost={false} socket={socket} roomId={this.props.location.state.roomID}/>
                         </div>
                         <div>
-                            <Questions />
+                            <Questions roomID={this.props.location.state.roomID} />
                                 <form noValidate autoComplete = "off" onSubmit = {this.postQuestion} onChange = {this.handleChange}>
                                     <Grid container>
                                     <TextField id="question" fullWidth="true" label="Enter a Question" variant="outlined">Enter Question</TextField>
@@ -207,22 +227,22 @@ class User extends React.Component {
                         <div class="slower">
                         {(this.state.yesSent || this.state.noSent) ?
                             (this.state.yesSent === true) ?
-                                <img src = {yesNo} width="40" height="40" title="Yes Sent"  alt="disabledYes"/>
+                                <img src = {yesC} width="40" height="40" title="Yes Sent"  alt="disabledYes" onClick={this.handleUndo} />
                                 :
-                                <img src = {yesNo} width="40" height="40" title="No Sent"  alt="disabledYes"/>
+                                <img src = {yesNo} width="40" height="40" title="No Sent"  alt="disabledYes" onClick={this.handleUndo} />
                             :
                             <img src = {yes} width="40" height="40" title="Yes" onClick={this.handleYes} alt="Yes" />
                         }
                         {(this.state.noSent || this.state.yesSent) ?
                             (this.state.noSent === true) ?
-                                <img src = {noNo} width="40" height="40" title="No Sent" alt="disabledNo"/>
+                                <img src = {noC} width="40" height="40" title="No Sent" alt="disabledNo" onClick={this.handleUndo}/>
                                 :
-                                <img src = {noNo} width="40" height="40" title="Yes Sent" alt="disabledNo"/>
+                                <img src = {noNo} width="40" height="40" title="Yes Sent" alt="disabledNo" onClick={this.handleUndo}/>
                             :
                             <img src = {no} width="40" height="40" title="No" onClick={this.handleNo} alt="No" />
                         }
                         {(this.state.slowerSent) ?
-                            <img src = {turtleNo} width="40" height="40" title="Slower Message Sent" alt="Turtle No"/>
+                            <img src = {turtleNo} width="40" height="40" title="Slower Message Sent" alt="Turtle No" onClick={this.handleUndoTurtle}/>
                             :
                             <img src = {turtle} width="40" height="40" title="Go Slower" onClick={this.handleSlower} alt="TURTLE" />
                         }

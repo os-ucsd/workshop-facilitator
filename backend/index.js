@@ -194,6 +194,19 @@ io.on("connection", socket => {
         console.log("yes/no reset");
         io.in(data.name).emit("yesNoReset", {data:"nothing"});
     })
+
+    //a user wants to reset their yes/no
+    socket.on("clickUndo", (data) => {
+        console.log("a user wants to reset their yes/no");
+        io.in(data.name).emit("clickUndo", {answer: data.answer});
+    })
+
+    //a user wants to reset their turtle
+    socket.on("clickUndoTurtle", (data) => {
+        console.log("a user wants to reset their turtle");
+        io.in(data.name).emit("clickUndoTurtle", {data: "nothing"});
+    })
+
 })
 
 // make room routes visible

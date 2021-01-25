@@ -3,14 +3,22 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import "../styles/Join.css";
 
+
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+
+
+
 class Join extends React.Component {
     constructor() {
         super();
         this.state = {
           roomCode: "",
           valid: true,
-          onlyNums: true,
-          fourNums: true,
         };
 
         this.checkRooms = this.checkRooms.bind(this);
@@ -53,12 +61,12 @@ class Join extends React.Component {
 
         }else{
             if(!isnum){
-                alert("code is not a number");
-                this.setState({onlyNums: false});
+                //alert("code is not a number");
+                //this.setState({onlyNums: false}); Don't really need onlyNums and fourNums anymore
                 this.setState({valid: false});
             }else if(code.length !== 4){
-                alert("code is 4 digits!");
-                this.setState({fourNums: false});
+                //alert("code is 4 digits!");
+                //this.setState({fourNums: false});
                 this.setState({valid: false});
 
             }
@@ -87,13 +95,11 @@ class Join extends React.Component {
     checkRooms(rooms, code){
         //host code 9485 works
         //join code 7317 works
-        let flagValid = false;
         console.log("Here are all the rooms", rooms);
         for(const room of rooms){
             if(code === room.hostCode.toString()){ //don't type check as well, cuz code is a string
                 console.log("This is a host code!");
                 //resolve host code
-                flagValid = true;
                 //this.props.history.push(`/customers/${customer.id}`);/
                 this.props.history.push(`/host`, {roomID: room._id});//now just sends the room ID instead of obj
                 //window.location.replace('http://localhost:3000/host');
@@ -101,19 +107,21 @@ class Join extends React.Component {
             }else if(code === room.joinCode.toString()){
                 console.log("This is a join code!");
                 //resolve join code
-                flagValid = true;
                 this.props.history.push(`/Feedback`, {roomID: room._id}); //now just sends the room ID instead of obj
 
                 break;
             }
-      }
-      if(!flagValid){
-          alert("code is not valid");
-          //setOpen(true);
-      }
+
+        }
+        this.setState({valid:false});
+
     }
 
+    handleClose = () => {
+        this.setState({valid: true});
+    };
 
+ //             <Alert severity="error">This is an error alert — check it out!</Alert>
 
     render() {
         //const { history } = this.props;
@@ -124,6 +132,28 @@ class Join extends React.Component {
               <Button width="100%" variant="contained" color="primary" href="/">
                 Home
               </Button>
+
+            <Dialog
+                open = {!(this.state.valid)}
+                onClose={this.handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"Incorrect Code!"}</DialogTitle>
+                <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    You entered an incorrect code!
+                    Remeber codes are 4 digits with only numbers!
+                    Double check the join code with your workshop host.
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                   <Button onClick={this.handleClose} color="primary" autoFocus>
+                        Close
+                   </Button>
+                </DialogActions>
+            </Dialog>
+
             </div>
             <div className="vertical-center">
                 <h1>Workshop Code:</h1>
@@ -142,13 +172,14 @@ class Join extends React.Component {
                       Join
                     </Button>
                 </form>
-                {incorrectCode(this.state.onlyNums, this.state.fourNums)}
-
             </div>
           </div>
         );
       }
 }
+
+/*
+Removed because information is now in dialog box.
 
 function incorrectCode( onlyNums, fourNums){
     if(!onlyNums){
@@ -158,6 +189,7 @@ function incorrectCode( onlyNums, fourNums){
     }
 
 }
+*/
 
 
 /*
