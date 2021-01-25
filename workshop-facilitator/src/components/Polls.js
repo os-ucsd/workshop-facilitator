@@ -416,8 +416,8 @@ const PollQuestion = props => {
     <div>
         <button  id={props.poll._id} className="pollQuestion" onClick={props.handleClick} value={props.poll._id}
             style={{backgroundColor: props.isPublished ? props.selectedColor : null,
-            color: props.isPublished ? "white" : "black"}}>
-            {props.poll._id}. {props.poll.question}
+            color: props.isPublished ? "white" : null}}>
+            {props.poll.question}
         </button>
     </div>
     )

@@ -14,18 +14,21 @@
 }
 
 .pollQuestion{
-    padding: 15px;
+    padding: 20px;
     border: 0;
     margin: 8px;
-    font-size: 20px;
-    border-radius: 10px;
+    font-size: 18px;
+    border-radius: 20px;
+    background-color: white;
+    color: black;
     width: 70vw;
     text-align: left;
+    box-shadow: 1px 1px 5px #B6B6B6;
 }
 
 .pollQuestion:hover{
     cursor: pointer;
-    background-color: gray;
+    background-color: #B6B6B6;
     color: white;
 }
 
@@ -43,6 +46,7 @@
     width: 40vw;
     height: 10vh;
     border-radius: 10px;
+    font-size: 18px;
     transition: transform 0.3s ease-out;
     outline: none;
     position: relative;
