@@ -39,3 +39,21 @@
 .options-icon:hover{
     cursor: pointer;
 }
+
+.modal-container{
+    background-color: rgba(0, 0, 0, 0)
+}
+
+.modal{
+    background-color: white;
+    border: 0px;
+    height: 300px;
+    width: 200px;
+    float: right;
+    text-align: center;
+    padding: 20px 35px;
+    margin-top: 25px;
+    margin-right: 70px;
+    border-radius: 15px;
+    border: none;
+}
